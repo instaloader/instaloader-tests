@@ -41,7 +41,8 @@ def test_saved_posts_first_page_download(
     saved_posts = instaloader.Profile.own_profile(
         logged_in_instaloader.context
     ).get_saved_posts()
-    page_length = saved_posts.page_length()
+    raw_page_length = saved_posts.page_length()
+    page_length = raw_page_length if raw_page_length and raw_page_length > 0 else 12
     expected_posts = tuple(islice(saved_posts, page_length))
     if not expected_posts:
         pytest.skip("configured account has no saved posts")
