@@ -24,10 +24,6 @@ def _authentication_label(item: pytest.Item) -> str | None:
     return None
 
 
-def _normalize_authentication_scope(scope: str) -> str:
-    return scope.replace("-", "_")
-
-
 @pytest.hookimpl()
 def pytest_addoption(parser: pytest.Parser) -> None:
     parser.addoption(
@@ -81,9 +77,7 @@ def pytest_collection_modifyitems(
     config: pytest.Config, items: list[pytest.Item]
 ) -> None:
     max_importance = config.getoption("--max-importance")
-    authentication_scope = _normalize_authentication_scope(
-        config.getoption("--authentication")
-    )
+    authentication_scope = config.getoption("--authentication").replace("-", "_")
     for item in items:
         requirement_marker = item.get_closest_marker("requirement_id")
         if requirement_marker:
