@@ -7,6 +7,7 @@ import instaloader
 import pytest
 
 from tests.support.credentials import SessionCredentials, load_session_credentials
+from tests.support.pagination import SAVED_POSTS_FURTHER_PAGES_START
 from tests.support.requirements_map import (
     Authentication,
     REQUIREMENTS,
@@ -129,7 +130,10 @@ def pytest_addoption(parser: pytest.Parser) -> None:
         action="store",
         type=int,
         default=50,
-        help="exclusive islice end for saved-posts further-pages coverage (must be > 12)",
+        help=(
+            "exclusive islice end for saved-posts further-pages coverage "
+            f"(must be > {SAVED_POSTS_FURTHER_PAGES_START})"
+        ),
     )
 
 
@@ -288,8 +292,11 @@ def saved_posts_further_pages_end(pytestconfig: pytest.Config) -> int:
 
 
 def parse_saved_posts_further_pages_end(further_pages_end: int) -> int:
-    if further_pages_end <= 12:
-        raise pytest.UsageError("--saved-posts-further-pages-end must be greater than 12")
+    if further_pages_end <= SAVED_POSTS_FURTHER_PAGES_START:
+        raise pytest.UsageError(
+            "--saved-posts-further-pages-end must be greater than "
+            f"{SAVED_POSTS_FURTHER_PAGES_START}"
+        )
     return further_pages_end
 
 
