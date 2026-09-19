@@ -42,8 +42,26 @@ REQUIREMENTS: dict[str, list[RequirementVariant]] = {
         RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
         RequirementVariant(Authentication.ANONYMOUS, Importance.HIGH),
     ],
+    "profile-posts-further-pages": [
+        RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
+        RequirementVariant(Authentication.ANONYMOUS, Importance.MEDIUM),
+    ],
     "profile-posts-first-page-private-logged-in": [
         RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL)
+    ],
+    # Download Targets / Hashtags / Hashtag Posts
+    "hashtag-posts-first-page": [
+        RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
+        RequirementVariant(Authentication.ANONYMOUS, Importance.HIGH),
+    ],
+    "hashtag-posts-further-pages": [
+        RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
+        RequirementVariant(Authentication.ANONYMOUS, Importance.MEDIUM),
+    ],
+    # Download Targets / Single Post (shortcode)
+    "single-post-shortcode-anonymous": [
+        RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
+        RequirementVariant(Authentication.ANONYMOUS, Importance.CRITICAL),
     ],
     # Post Metadata / Basic Information
     "post-basic-information-anonymous": [

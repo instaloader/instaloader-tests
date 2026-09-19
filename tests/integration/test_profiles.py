@@ -76,6 +76,25 @@ def test_public_profile_first_page_posts_download(
         post_checker(active_instaloader, post, public_profile.username)
 
 
+@requirement("profile-posts-further-pages")
+def test_public_profile_further_pages_posts_download(
+    active_instaloader: instaloader.Instaloader,
+    public_profile: instaloader.Profile,
+    max_items: int,
+    output_dir: Path,
+    post_checker: PostChecker,
+) -> None:
+    further_posts = False
+    stop_index = max(13, max_items)
+    for post in itertools.islice(public_profile.get_posts(), 12, stop_index):
+        post_checker(active_instaloader, post, public_profile.username)
+        further_posts = True
+    if not further_posts:
+        pytest.skip(
+            f"configured target does not provide more than 12 items for profile {public_profile.username!r}"
+        )
+
+
 @requirement("profile-picture-private-logged-in")
 def test_private_profile_picture_download(
     active_instaloader: instaloader.Instaloader,
