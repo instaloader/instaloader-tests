@@ -16,7 +16,7 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
   "black~=26.5",
-  "mypy~=1.17",
+  "mypy~=2.3",
 ]
 
 [tool.setuptools]
