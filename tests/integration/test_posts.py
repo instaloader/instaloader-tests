@@ -43,7 +43,7 @@ def test_saved_posts_first_page_download(
 
     logged_in_instaloader.download_saved_posts(max_count=len(expected_posts))
 
-    saved_dir = output_dir / ":saved"
+    saved_dir = output_dir / logged_in_instaloader.dirname_pattern.format(target=":saved")
     downloaded_filenames = tuple(
         path.name for path in saved_dir.iterdir() if path.is_file()
     )
