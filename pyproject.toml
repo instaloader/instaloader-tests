@@ -39,7 +39,7 @@ ignore_missing_imports = true
 addopts = ["-ra"]
 testpaths = ["tests"]
 markers = [
-  "integration: test requires live Instagram access and must be enabled explicitly",
+  "integration: test requires live Instagram access",
   "importance(level): run only when the configured maximum importance includes this level",
   "requirement_id(id): trace a test to an entry in instaloader-requirements.md",
   "anonymous: test covers anonymous Instagram access",
