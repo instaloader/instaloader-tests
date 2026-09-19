@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Generator
 from collections import defaultdict
 from pathlib import Path
 from typing import Any
@@ -144,7 +145,9 @@ def pytest_collection_modifyitems(
 
 
 @pytest.hookimpl(hookwrapper=True)
-def pytest_runtest_makereport(item: pytest.Item, call: pytest.CallInfo[None]):
+def pytest_runtest_makereport(
+    item: pytest.Item, call: pytest.CallInfo[None]
+) -> Generator[None, None, None]:
     outcome = yield
     report = outcome.get_result()
     report.user_properties.append(
@@ -155,8 +158,13 @@ def pytest_runtest_makereport(item: pytest.Item, call: pytest.CallInfo[None]):
 @pytest.hookimpl()
 def pytest_terminal_summary(terminalreporter: Any) -> None:
     grouped_counts: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
+    seen_reports: set[int] = set()
     for reports in terminalreporter.stats.values():
         for report in reports:
+            report_id = id(report)
+            if report_id in seen_reports:
+                continue
+            seen_reports.add(report_id)
             outcome = _report_outcome_category(report)
             if outcome is None:
                 continue
