@@ -116,7 +116,6 @@ Run the currently implemented anonymous integration tests:
 
 ```bash
 poetry run pytest \
-  --run-instagram \
   --target-public-profile nasa \
   --target-public-shortcode CxD6K_4M8QK
 ```
@@ -125,7 +124,6 @@ Run logged-in tests with Instaloader's default session-file path:
 
 ```bash
 poetry run pytest \
-  --run-instagram \
   --username youraccount \
   --target-public-profile nasa \
   --target-public-shortcode CxD6K_4M8QK
@@ -135,7 +133,6 @@ Run a wider slice of the suite up to a higher importance level:
 
 ```bash
 poetry run pytest \
-  --run-instagram \
   --max-importance high \
   --target-public-profile nasa \
   --target-public-shortcode CxD6K_4M8QK

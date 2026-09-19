@@ -20,12 +20,6 @@ pytest_plugins: list[str] = []
 @pytest.hookimpl()
 def pytest_addoption(parser: pytest.Parser) -> None:
     parser.addoption(
-        "--run-instagram",
-        action="store_true",
-        default=False,
-        help="run Instagram-backed integration tests",
-    )
-    parser.addoption(
         "--max-importance",
         action="store",
         default=Importance.CRITICAL.name.lower(),
@@ -85,15 +79,6 @@ def pytest_collection_modifyitems(
             item.add_marker(
                 pytest.mark.skip(
                     reason=f"requires --max-importance >= {importance_marker.args[0]}"
-                )
-            )
-
-        if item.get_closest_marker("integration") and not config.getoption(
-            "--run-instagram"
-        ):
-            item.add_marker(
-                pytest.mark.skip(
-                    reason="pass --run-instagram to execute Instagram-backed tests"
                 )
             )
 
