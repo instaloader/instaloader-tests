@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "instaloader-tests"
+version = "0.1.0"
+description = "Instagram-backed integration tests for Instaloader"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "instaloader>=4.15,<5",
+  "pytest>=8.0,<9",
+]
+
+[tool.setuptools]
+py-modules = []
+
+[tool.pytest.ini_options]
+addopts = ["-ra"]
+testpaths = ["tests"]
+markers = [
+  "integration: test requires live Instagram access and must be enabled explicitly",
+  "importance(level): run only when the configured maximum importance includes this level",
+  "requirement_id(id): trace a test to an entry in instaloader-requirements.md",
+  "anonymous: test covers anonymous Instagram access",
+  "logged_in: test covers logged-in Instagram access",
+]
