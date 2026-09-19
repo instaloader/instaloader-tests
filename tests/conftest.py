@@ -28,8 +28,8 @@ def pytest_addoption(parser: pytest.Parser) -> None:
     parser.addoption(
         "--max-importance",
         action="store",
-        default=Importance.CRITICAL.value,
-        choices=[importance.value for importance in Importance],
+        default=Importance.CRITICAL.cli_name,
+        choices=[importance.cli_name for importance in Importance],
         help="maximum importance level to execute",
     )
     parser.addoption(

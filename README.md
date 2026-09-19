@@ -41,20 +41,6 @@ tests/
     requirements_map.py
 ```
 
-The intended responsibilities are:
-
-- `tests/integration/`: the actual Instagram-access test cases, grouped by feature
-  area instead of collecting everything in one large file;
-- `tests/conftest.py`: global pytest configuration, shared fixtures, and command
-  line options for selecting targets and execution scope;
-- `tests/support/credentials.py`: loading locally provided session files, cookies,
-  or environment-based credentials;
-- `tests/support/targets.py`: definitions of configurable test targets such as
-  public profiles and posts, plus helper functions for validating configured
-  targets at runtime;
-- `tests/support/requirements_map.py`: traceability between documented
-  requirements and implemented test cases.
-
 This structure is meant to replace the legacy monolithic test module with a suite
 that is easier to extend and discuss feature by feature.
 
@@ -121,8 +107,9 @@ unattended CI execution.
 Install the project and collect the test suite:
 
 ```bash
-python -m pip install -e ".[dev]"
-python -m pytest --collect-only
+python -m pip install poetry
+poetry install --no-root --extras dev
+poetry run pytest --collect-only
 ```
 
 Run the currently implemented anonymous integration tests:

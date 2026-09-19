@@ -1,18 +1,22 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from enum import StrEnum
+from enum import IntEnum, StrEnum
 from typing import Callable
 
 import pytest
 
 
-class Importance(StrEnum):
-    CRITICAL = "critical"
-    HIGH = "high"
-    MEDIUM = "medium"
-    LOW = "low"
-    VERY_LOW = "very-low"
+class Importance(IntEnum):
+    CRITICAL = 0
+    HIGH = 1
+    MEDIUM = 2
+    LOW = 3
+    VERY_LOW = 4
+
+    @property
+    def cli_name(self) -> str:
+        return self.name.lower().replace("_", "-")
 
 
 class Authentication(StrEnum):
@@ -49,21 +53,15 @@ REQUIREMENTS: dict[str, RequirementCase] = {
     ),
 }
 
-_IMPORTANCE_ORDER = (
-    Importance.CRITICAL,
-    Importance.HIGH,
-    Importance.MEDIUM,
-    Importance.LOW,
-    Importance.VERY_LOW,
-)
-
 
 def _coerce_importance(value: Importance | str, *, label: str) -> Importance:
     if isinstance(value, Importance):
         return value
     try:
-        return Importance(value)
+        return Importance[value.upper().replace("-", "_")]
     except ValueError as error:
+        raise pytest.UsageError(f"Unknown {label} importance level: {value}") from error
+    except KeyError as error:
         raise pytest.UsageError(f"Unknown {label} importance level: {value}") from error
 
 
@@ -72,9 +70,7 @@ def is_importance_enabled(
 ) -> bool:
     maximum_importance = _coerce_importance(maximum, label="maximum")
     required_importance = _coerce_importance(required, label="required")
-    return _IMPORTANCE_ORDER.index(required_importance) <= _IMPORTANCE_ORDER.index(
-        maximum_importance
-    )
+    return required_importance <= maximum_importance
 
 
 def requirement(
@@ -86,7 +82,7 @@ def requirement(
 
     def decorator(test_function: Callable[..., object]) -> Callable[..., object]:
         marked = pytest.mark.requirement_id(requirement_id)(test_function)
-        marked = pytest.mark.importance(case.importance.value)(marked)
+        marked = pytest.mark.importance(case.importance.cli_name)(marked)
         marked = getattr(pytest.mark, case.authentication.value)(marked)
         return pytest.mark.integration(marked)
 
