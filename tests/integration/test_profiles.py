@@ -121,7 +121,9 @@ def test_profile_stories_first_page_download(
     public_profile: instaloader.Profile,
     output_dir: Path,
 ) -> None:
-    stories = list(itertools.islice(active_instaloader.get_stories([public_profile.userid]), 1))
+    stories = list(
+        itertools.islice(active_instaloader.get_stories([public_profile.userid]), 1)
+    )
     if not stories:
         pytest.skip(f"profile {public_profile.username!r} has no visible stories")
     story_items_found = False
@@ -131,7 +133,9 @@ def test_profile_stories_first_page_download(
         )
         story_items_found = True
     if not story_items_found:
-        pytest.skip(f"profile {public_profile.username!r} stories contain no downloadable items")
+        pytest.skip(
+            f"profile {public_profile.username!r} stories contain no downloadable items"
+        )
 
 
 @requirement("profile-highlights-cover-picture-logged-in")
@@ -158,7 +162,9 @@ def test_profile_highlights_first_page_download(
     output_dir: Path,
 ) -> None:
     highlights_found = False
-    for highlight in itertools.islice(active_instaloader.get_highlights(public_profile), 12):
+    for highlight in itertools.islice(
+        active_instaloader.get_highlights(public_profile), 12
+    ):
         first_item = next(iter(highlight.get_items()), None)
         if first_item is None:
             continue
@@ -167,7 +173,9 @@ def test_profile_highlights_first_page_download(
         )
         highlights_found = True
     if not highlights_found:
-        pytest.skip(f"profile {public_profile.username!r} has no downloadable highlight items")
+        pytest.skip(
+            f"profile {public_profile.username!r} has no downloadable highlight items"
+        )
 
 
 @requirement("profile-followers-first-page-logged-in")
