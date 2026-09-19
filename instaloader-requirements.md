@@ -60,6 +60,10 @@ The integration suite shall maintain reusable targets for at least the following
 
 ### Profiles
 
+Authenticated tagged-post, reel, and IGTV requirements shall be exercised
+against both public profiles and, where Instagram permissions allow it,
+followed private profiles.
+
 | ID | Importance | Access | Coverage | Requirement |
 |----|------------|--------|----------|-------------|
 | DL-PROFILE-1 | critical | anonymous | single item | Instaloader shall be able to download the profile picture of a profile. |
@@ -90,8 +94,8 @@ The integration suite shall maintain reusable targets for at least the following
 
 | ID | Importance | Access | Coverage | Requirement |
 |----|------------|--------|----------|-------------|
-| DL-HASHTAG-1 | high | authenticated | single item | Instaloader shall be able to download the profile picture of a hashtag. |
-| DL-HASHTAG-2 | medium | anonymous | single item | Instaloader shall be able to download the profile picture of a hashtag. |
+| DL-HASHTAG-1 | high | authenticated | single item | Instaloader shall be able to download the profile picture of a hashtag in an authenticated run. |
+| DL-HASHTAG-2 | medium | anonymous | single item | Instaloader shall be able to download the profile picture of a hashtag in an anonymous run. |
 | DL-HASHTAG-3 | critical | authenticated | first page | Instaloader shall be able to download the first page of posts of a hashtag. |
 | DL-HASHTAG-4 | high | anonymous | first page | Instaloader shall be able to download the first page of posts of a hashtag. |
 | DL-HASHTAG-5 | critical | authenticated | first 50 items | Instaloader shall be able to download the first 50 posts of a hashtag. |
@@ -126,6 +130,9 @@ The integration suite shall maintain reusable targets for at least the following
 ## Metadata and Relationship Requirements
 
 ### Post metadata
+
+Comment pagination requirements are measured in comments rather than in
+commenter profiles.
 
 | ID | Importance | Access | Coverage | Requirement |
 |----|------------|--------|----------|-------------|
