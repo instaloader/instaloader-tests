@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test-project:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install project
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install poetry
+          poetry install --no-root --extras dev
+
+      - name: Check formatting
+        run: poetry run black --check .
+
+      - name: Check types
+        run: poetry run mypy
+
+      - name: Validate integration test collection
+        run: poetry run pytest --collect-only

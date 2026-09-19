@@ -1,0 +1,1 @@
+"""Instaloader integration test suite."""

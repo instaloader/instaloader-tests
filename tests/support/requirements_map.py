@@ -1,0 +1,83 @@
+from __future__ import annotations
+
+from dataclasses import dataclass
+from enum import IntEnum, StrEnum
+from typing import Callable
+
+import pytest
+
+
+class Importance(IntEnum):
+    CRITICAL = 0
+    HIGH = 1
+    MEDIUM = 2
+    LOW = 3
+    VERYLOW = 4
+
+
+class Authentication(StrEnum):
+    ANONYMOUS = "anonymous"
+    LOGGED_IN = "logged_in"
+
+
+@dataclass(frozen=True)
+class RequirementCase:
+    section: str
+    statement: str
+    importance: Importance
+    authentication: Authentication
+
+
+REQUIREMENTS: dict[str, RequirementCase] = {
+    "profile-picture-anonymous-critical": RequirementCase(
+        section="Download Targets / Profile / Profile Picture",
+        statement="Instaloader shall be able to download the profile picture of a Profile.",
+        importance=Importance.CRITICAL,
+        authentication=Authentication.ANONYMOUS,
+    ),
+    "profile-posts-first-page-anonymous-critical": RequirementCase(
+        section="Download Targets / Profile / Profile Posts",
+        statement="Instaloader shall be able to download the Posts of a Profile (first page / 12 posts).",
+        importance=Importance.CRITICAL,
+        authentication=Authentication.ANONYMOUS,
+    ),
+    "post-basic-information-anonymous-critical": RequirementCase(
+        section="Post Metadata / Basic Information",
+        statement="Instaloader shall be able to access the Caption and Date of a Post.",
+        importance=Importance.CRITICAL,
+        authentication=Authentication.ANONYMOUS,
+    ),
+}
+
+
+def _coerce_importance(value: Importance | str, *, label: str) -> Importance:
+    if isinstance(value, Importance):
+        return value
+    try:
+        return Importance[value.upper()]
+    except KeyError as error:
+        raise pytest.UsageError(f"Unknown {label} importance level: {value}") from error
+
+
+def is_importance_enabled(
+    maximum: Importance | str, required: Importance | str
+) -> bool:
+    maximum_importance = _coerce_importance(maximum, label="maximum")
+    required_importance = _coerce_importance(required, label="required")
+    return required_importance <= maximum_importance
+
+
+def requirement(
+    requirement_id: str,
+) -> Callable[[Callable[..., object]], Callable[..., object]]:
+    if requirement_id not in REQUIREMENTS:
+        raise pytest.UsageError(f"Unknown requirement_id marker: {requirement_id}")
+    case = REQUIREMENTS[requirement_id]
+
+    def decorator(test_function: Callable[..., object]) -> Callable[..., object]:
+        marked = pytest.mark.requirement_id(requirement_id)(test_function)
+        marked = pytest.mark.importance(case.importance.name.lower())(marked)
+        marked = getattr(pytest.mark, case.authentication.value)(marked)
+        return pytest.mark.integration(marked)
+
+    return decorator

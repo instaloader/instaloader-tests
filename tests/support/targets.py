@@ -1,0 +1,47 @@
+from __future__ import annotations
+
+from collections.abc import Iterable
+from dataclasses import dataclass
+from typing import TypeVar
+
+import pytest
+
+
+@dataclass(frozen=True)
+class IntegrationTargets:
+    public_profile: str | None = None
+    public_shortcode: str | None = None
+    public_hashtag: str | None = None
+
+
+TargetItem = TypeVar("TargetItem")
+
+
+def load_targets(
+    *,
+    public_profile: str | None,
+    public_shortcode: str | None,
+    public_hashtag: str | None,
+) -> IntegrationTargets:
+    return IntegrationTargets(
+        public_profile=public_profile,
+        public_shortcode=public_shortcode,
+        public_hashtag=public_hashtag,
+    )
+
+
+def require_target(value: str | None, *, option_name: str) -> str:
+    if value:
+        return value
+    pytest.skip(f"configure {option_name}")
+
+
+def take_first_items(
+    items: Iterable[TargetItem], *, count: int, description: str
+) -> list[TargetItem]:
+    selected: list[TargetItem] = []
+    for item in items:
+        selected.append(item)
+        if len(selected) == count:
+            return selected
+    pytest.skip(f"configured target does not provide {count} items for {description}")

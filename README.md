@@ -24,39 +24,22 @@ covered. The test suite should be organized around those requirements and make i
 easy to see which integration behavior is already covered and which still needs a
 test.
 
-## Planned Project Structure
+## Project Structure
 
-The project is expected to use a small pytest-based layout with clear separation
-between test cases and shared support code:
+The project uses a small pytest-based layout with clear separation between test
+cases and shared support code:
 
 ```text
 tests/
   conftest.py
   integration/
-    test_session_creation.py
     test_profiles.py
-    test_stories_and_highlights.py
-    test_hashtags.py
-    test_locations.py
-    test_saved_feed_explore.py
+    test_posts.py
   support/
     credentials.py
     targets.py
     requirements_map.py
 ```
-
-The intended responsibilities are:
-
-- `tests/integration/`: the actual Instagram-access test cases, grouped by feature
-  area instead of collecting everything in one large file;
-- `tests/conftest.py`: global pytest configuration, shared fixtures, and command
-  line options for selecting targets and execution scope;
-- `tests/support/credentials.py`: loading locally provided session files, cookies,
-  or environment-based credentials;
-- `tests/support/targets.py`: definitions of configurable test targets such as
-  public profiles, private profiles, hashtags, locations, and posts;
-- `tests/support/requirements_map.py`: traceability between documented
-  requirements and implemented test cases.
 
 This structure is meant to replace the legacy monolithic test module with a suite
 that is easier to extend and discuss feature by feature.
@@ -83,14 +66,18 @@ Instagram-backed integration scenarios.
 In particular, CI should be limited to things such as:
 
 - installing the project and test dependencies;
+- running local project-quality checks such as formatting and type validation;
 - validating that the test suite imports and collects correctly;
-- running formatting, linting, or similar project-quality checks if such checks are
-  added later.
+- running additional repository-quality checks that stay independent of live
+  Instagram access.
 
 The integration tests themselves must not run in CI. This is a hard constraint for
 this repository and should be reflected in the eventual test configuration, for
 example by keeping those tests behind explicit markers or explicit local-only
 commands that CI never enables.
+
+The current GitHub Actions workflow therefore installs the project, runs Black
+and mypy, and performs pytest collection only.
 
 ## Integration Test Execution
 
@@ -114,3 +101,48 @@ The suite should support:
 This keeps the repository practical for real-world Instagram integration checks
 while avoiding any assumption that the tests are safe or stable enough for
 unattended CI execution.
+
+### Running the suite locally
+
+Install the project and collect the test suite:
+
+```bash
+python -m pip install poetry
+poetry install --no-root --extras dev
+poetry run pytest --collect-only
+```
+
+Run the currently implemented anonymous integration tests:
+
+```bash
+poetry run pytest \
+  --run-instagram \
+  --target-public-profile nasa \
+  --target-public-shortcode CxD6K_4M8QK
+```
+
+Run logged-in tests with Instaloader's default session-file path:
+
+```bash
+poetry run pytest \
+  --run-instagram \
+  --username youraccount \
+  --target-public-profile nasa \
+  --target-public-shortcode CxD6K_4M8QK
+```
+
+Run a wider slice of the suite up to a higher importance level:
+
+```bash
+poetry run pytest \
+  --run-instagram \
+  --max-importance high \
+  --target-public-profile nasa \
+  --target-public-shortcode CxD6K_4M8QK
+```
+
+If `--username` is set, the suite uses Instaloader's default session-file path
+unless `--sessionfile` overrides it.
+
+Use `--max-importance` to widen execution beyond critical tests as more coverage
+is added.
