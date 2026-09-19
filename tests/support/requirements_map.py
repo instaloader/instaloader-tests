@@ -110,6 +110,7 @@ def requirement(
         marked = pytest.mark.parametrize(
             "active_authentication", params, indirect=True
         )(test_function)
+        marked = pytest.mark.usefixtures("active_authentication")(marked)
         marked = pytest.mark.requirement_id(requirement_id)(marked)
         return pytest.mark.integration(marked)
 
