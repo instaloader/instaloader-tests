@@ -9,7 +9,7 @@ description = "Instagram-backed integration tests for Instaloader"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-  "instaloader>=4.15,<5",
+  "instaloader~=4.15",
   "pytest>=8.4,<9",
 ]
 
