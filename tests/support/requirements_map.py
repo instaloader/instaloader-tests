@@ -28,36 +28,26 @@ class RequirementVariant:
 
 @dataclass(frozen=True)
 class RequirementCase:
-    section: str
-    statement: str
     variants: tuple[RequirementVariant, ...]
 
 
 REQUIREMENTS: dict[str, RequirementCase] = {
     "test-login-query-username-logged-in-critical": RequirementCase(
-        section="Session Creation / Test login",
-        statement="Instaloader shall be able to query Instagram for the username of the used Session.",
         variants=(RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),),
     ),
     "profile-picture-anonymous-critical": RequirementCase(
-        section="Download Targets / Profile / Profile Picture",
-        statement="Instaloader shall be able to download the profile picture of a Profile.",
         variants=(
             RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
             RequirementVariant(Authentication.ANONYMOUS, Importance.CRITICAL),
         ),
     ),
     "profile-posts-first-page-anonymous-critical": RequirementCase(
-        section="Download Targets / Profile / Profile Posts",
-        statement="Instaloader shall be able to download the Posts of a Profile (first page / 12 posts).",
         variants=(
             RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
             RequirementVariant(Authentication.ANONYMOUS, Importance.HIGH),
         ),
     ),
     "post-basic-information-anonymous-critical": RequirementCase(
-        section="Post Metadata / Basic Information",
-        statement="Instaloader shall be able to access the Caption and Date of a Post.",
         variants=(
             RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
             RequirementVariant(Authentication.ANONYMOUS, Importance.CRITICAL),
@@ -65,20 +55,15 @@ REQUIREMENTS: dict[str, RequirementCase] = {
     ),
     **{
         requirement_id: RequirementCase(
-            section=f"Download Targets / Saved Posts / {window}",
-            statement=(
-                "Instaloader shall be able to download the saved Posts of the logged-in user."
+            variants=(
+                RequirementVariant(Authentication.LOGGED_IN, importance),
             ),
-            importance=importance,
-            authentication=Authentication.LOGGED_IN,
         )
-        for requirement_id, (window, importance) in {
+        for requirement_id, importance in {
             "saved-posts-first-page-logged-in-critical": (
-                "First page (12 Posts)",
                 Importance.CRITICAL,
             ),
             "saved-posts-first-50-logged-in-critical": (
-                "First 50 Posts",
                 Importance.CRITICAL,
             ),
         }.items()
