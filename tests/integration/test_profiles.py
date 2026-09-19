@@ -44,15 +44,16 @@ def public_profile(
 
 
 @pytest.fixture()
-def private_profile(
+def logged_in_private_profile(
+    request: pytest.FixtureRequest,
     integration_targets: IntegrationTargets,
-    logged_in_instaloader: instaloader.Instaloader,
     profile_cache: dict[tuple[str, str], instaloader.Profile],
-) -> instaloader.Profile:
+) -> tuple[instaloader.Instaloader, instaloader.Profile]:
     username = require_target(
         integration_targets.private_profile, option_name="--target-private-profile"
     )
-    return _profile_from_username(
+    logged_in_instaloader = request.getfixturevalue("logged_in_instaloader")
+    return logged_in_instaloader, _profile_from_username(
         logged_in_instaloader.context,
         "logged_in",
         username,
@@ -83,10 +84,10 @@ def test_public_profile_first_page_posts_download(
 @pytest.mark.logged_in
 @pytest.mark.importance("critical")
 def test_private_profile_picture_download(
-    logged_in_instaloader: instaloader.Instaloader,
-    private_profile: instaloader.Profile,
+    logged_in_private_profile: tuple[instaloader.Instaloader, instaloader.Profile],
     output_dir: Path,
 ) -> None:
+    logged_in_instaloader, private_profile = logged_in_private_profile
     logged_in_instaloader.download_profilepic(private_profile)
 
 
@@ -94,9 +95,9 @@ def test_private_profile_picture_download(
 @pytest.mark.logged_in
 @pytest.mark.importance("critical")
 def test_private_profile_first_page_posts_download(
-    logged_in_instaloader: instaloader.Instaloader,
-    private_profile: instaloader.Profile,
+    logged_in_private_profile: tuple[instaloader.Instaloader, instaloader.Profile],
     output_dir: Path,
 ) -> None:
+    logged_in_instaloader, private_profile = logged_in_private_profile
     for post in itertools.islice(private_profile.get_posts(), 12):
         logged_in_instaloader.download_post(post, target=private_profile.username)
