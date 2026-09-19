@@ -23,3 +23,11 @@ def test_public_shortcode_caption_and_date_accessible(
     assert isinstance(post.caption, str)
     assert post.caption.strip()
     assert isinstance(post.date_utc, datetime)
+
+
+@requirement("saved-posts-first-page-logged-in-critical")
+def test_saved_posts_first_page_download(
+    logged_in_instaloader: instaloader.Instaloader,
+    output_dir,
+) -> None:
+    logged_in_instaloader.download_saved_posts(max_count=12)
