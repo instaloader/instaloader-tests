@@ -51,15 +51,12 @@ REQUIREMENTS: dict[str, list[RequirementVariant]] = {
         RequirementVariant(Authentication.ANONYMOUS, Importance.CRITICAL),
     ],
     # Download Targets / Saved Posts
-    **{
-        requirement_id: [
-            RequirementVariant(Authentication.LOGGED_IN, importance),
-        ]
-        for requirement_id, importance in {
-            "saved-posts-first-page-logged-in": Importance.CRITICAL,
-            "saved-posts-further-pages-logged-in": Importance.CRITICAL,
-        }.items()
-    },
+    "saved-posts-first-page-logged-in": [
+        RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
+    ],
+    "saved-posts-further-pages-logged-in": [
+        RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
+    ],
 }
 
 
