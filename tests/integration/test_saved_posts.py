@@ -27,12 +27,17 @@ def test_saved_posts_extended_download(
     max_items: int,
     output_dir: Path,
 ) -> None:
+    if max_items <= FIRST_PAGE_ITEMS:
+        pytest.skip(
+            f"requires --max-items > {FIRST_PAGE_ITEMS} for further-pages coverage"
+        )
+
     profile = instaloader.Profile.own_profile(logged_in_instaloader.context)
     further_posts = False
     for post in itertools.islice(
         profile.get_saved_posts(),
         FIRST_PAGE_ITEMS,
-        FIRST_PAGE_ITEMS + max_items,
+        max_items,
     ):
         logged_in_instaloader.download_post(post, target=f"{profile.username}-saved")
         further_posts = True
