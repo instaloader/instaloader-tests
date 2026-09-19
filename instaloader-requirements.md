@@ -19,7 +19,8 @@ Instagram or to fetch Instagram data.
 - Quantitative scopes:
   - **first page** means one page of items as returned by Instagram for the target;
   - **first 50 items** applies only when the target provides at least 50 items.
-  - For story surfaces, **first page** means the first 12 story items when at least 12 story items are available.
+  - For story-item surfaces, **first page** means the first 12 story items when at least 12 story items are available.
+  - For highlights, **first page** means the first 12 highlights when at least 12 highlights are available.
 - Logged-in profile download requirements shall be exercised against both a public profile
   and, where Instagram permissions allow it, a followed private profile.
 
@@ -119,8 +120,8 @@ The integration suite shall maintain reusable targets for at least the following
 
 ### Post metadata
 
-Authenticated comment retrieval remains a higher-priority regression target than
-anonymous comment retrieval.
+For the same coverage depth, authenticated comment retrieval remains a
+higher-priority regression target than anonymous comment retrieval.
 
 | ID | Importance | Access | Coverage | Requirement |
 |----|------------|--------|----------|-------------|
