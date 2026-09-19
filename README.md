@@ -116,36 +116,36 @@ Run the currently implemented anonymous integration tests:
 
 ```bash
 poetry run pytest \
-  --target-public-profile nasa \
-  --target-public-shortcode CxD6K_4M8QK
+  --target-public-profile=nasa \
+  --target-public-shortcode=CxD6K_4M8QK
 ```
 
 Run logged-in tests with Instaloader's default session-file path:
 
 ```bash
 poetry run pytest \
-  --username youraccount \
-  --authentication logged_in \
-  --target-public-profile nasa \
-  --target-public-shortcode CxD6K_4M8QK
+  --username=youraccount \
+  --authentication=logged_in \
+  --target-public-profile=nasa \
+  --target-public-shortcode=CxD6K_4M8QK
 ```
 
 Run only anonymous tests:
 
 ```bash
 poetry run pytest \
-  --authentication anonymous \
-  --target-public-profile nasa \
-  --target-public-shortcode CxD6K_4M8QK
+  --authentication=anonymous \
+  --target-public-profile=nasa \
+  --target-public-shortcode=CxD6K_4M8QK
 ```
 
 Run a wider slice of the suite up to a higher importance level:
 
 ```bash
 poetry run pytest \
-  --max-importance high \
-  --target-public-profile nasa \
-  --target-public-shortcode CxD6K_4M8QK
+  --max-importance=high \
+  --target-public-profile=nasa \
+  --target-public-shortcode=CxD6K_4M8QK
 ```
 
 If `--username` is set, the suite uses Instaloader's default session-file path
