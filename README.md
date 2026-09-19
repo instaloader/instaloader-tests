@@ -111,7 +111,6 @@ option is configured.
 | `--max-importance`          | `critical` (default), `high`, `medium`, `low`, `verylow` |
 | `--post-checker`            | `download` (default), `fast`                             |
 | `--username`                | Instagram username                                       |
-| `--password`                | Instagram password (login-creation test only)            |
 | `--sessionfile`             | Filesystem path                                          |
 | `--target-public-profile`   | Public Instagram username                                |
 | `--target-private-profile`  | Private Instagram username                               |
