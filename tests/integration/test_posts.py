@@ -4,7 +4,7 @@ import instaloader
 import pytest
 
 from tests.support.requirements_map import requirement
-from tests.support.targets import require_target
+from tests.support.targets import require_target, take_first_items
 
 
 @requirement("post-basic-information-anonymous-critical")
@@ -30,4 +30,25 @@ def test_saved_posts_first_page_download(
     logged_in_instaloader: instaloader.Instaloader,
     output_dir,
 ) -> None:
-    logged_in_instaloader.download_saved_posts(max_count=12)
+    expected_posts = tuple(
+        take_first_items(
+            instaloader.Profile.own_profile(
+                logged_in_instaloader.context
+            ).get_saved_posts(),
+            count=12,
+            description="logged-in user's saved posts",
+        )
+    )
+
+    logged_in_instaloader.download_saved_posts(max_count=len(expected_posts))
+
+    saved_dir = output_dir / ":saved"
+    downloaded_filenames = tuple(
+        path.name for path in saved_dir.iterdir() if path.is_file()
+    )
+
+    assert downloaded_filenames
+    for post in expected_posts:
+        assert any(
+            filename.startswith(post.shortcode) for filename in downloaded_filenames
+        )
