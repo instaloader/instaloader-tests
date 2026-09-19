@@ -1,6 +1,4 @@
-from collections.abc import Iterable
 from dataclasses import dataclass
-from typing import TypeVar
 
 import pytest
 
@@ -10,9 +8,6 @@ class IntegrationTargets:
     public_profile: str | None = None
     public_shortcode: str | None = None
     public_hashtag: str | None = None
-
-
-TargetItem = TypeVar("TargetItem")
 
 
 def load_targets(
@@ -32,14 +27,3 @@ def require_target(value: str | None, *, option_name: str) -> str:
     if value:
         return value
     pytest.skip(f"configure {option_name}")
-
-
-def take_first_items(
-    items: Iterable[TargetItem], *, count: int, description: str
-) -> list[TargetItem]:
-    selected: list[TargetItem] = []
-    for item in items:
-        selected.append(item)
-        if len(selected) == count:
-            return selected
-    pytest.skip(f"configured target does not provide {count} items for {description}")
