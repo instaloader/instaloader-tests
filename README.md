@@ -115,7 +115,7 @@ option is configured.
 | `--target-private-profile`  | Private Instagram username                               |
 | `--target-public-shortcode` | Public post shortcode                                    |
 | `--target-public-hashtag`   | Public hashtag name                                      |
-| `--max-items`               | Maximum list index for further-pages style list tests (`50` default, must be `> 12`) |
+| `--max-items`               | Exclusive stop index for further-pages list slices; first 12 items are always skipped (`50` default, must be `> 12`) |
 
 At the end of each run, pytest prints a `results by criticality` summary that
 groups the observed outcomes by importance level.

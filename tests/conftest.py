@@ -129,7 +129,7 @@ def pytest_addoption(parser: pytest.Parser) -> None:
         action="store",
         type=int,
         default=50,
-        help="maximum list index for further-pages style list tests",
+        help="exclusive stop index for further-pages list slices (after first 12 items)",
     )
 
 
