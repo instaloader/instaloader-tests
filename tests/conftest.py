@@ -19,6 +19,14 @@ from tests.support.targets import IntegrationTargets, load_targets
 pytest_plugins: list[str] = []
 _SUMMARY_OUTCOME_ORDER = ("failed", "error", "passed", "skipped", "xfailed", "xpassed")
 _REPORT_IMPORTANCE_PROPERTY = "importance"
+_SUMMARY_OUTCOME_PRECEDENCE = {
+    "failed": 0,
+    "error": 1,
+    "xpassed": 2,
+    "passed": 3,
+    "xfailed": 4,
+    "skipped": 5,
+}
 
 
 def _authentication_label(item: pytest.Item) -> str | None:
@@ -151,6 +159,8 @@ def pytest_runtest_makereport(
 ) -> Generator[None, None, None]:
     outcome = yield
     report = cast(Any, outcome).get_result()
+    if _report_outcome_category(report) is None:
+        return
     report.user_properties.append(
         (_REPORT_IMPORTANCE_PROPERTY, _importance_label(item))
     )
@@ -160,6 +170,7 @@ def pytest_runtest_makereport(
 def pytest_terminal_summary(terminalreporter: Any) -> None:
     grouped_counts: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
     seen_reports: set[int] = set()
+    test_outcomes: dict[str, tuple[str, str]] = {}
     for reports in terminalreporter.stats.values():
         for report in reports:
             report_id = id(report)
@@ -177,7 +188,15 @@ def pytest_terminal_summary(terminalreporter: Any) -> None:
                 ),
                 "unmarked",
             )
-            grouped_counts[str(importance)][outcome] += 1
+            nodeid = str(report.nodeid)
+            current = test_outcomes.get(nodeid)
+            if current is None or _SUMMARY_OUTCOME_PRECEDENCE[
+                outcome
+            ] < _SUMMARY_OUTCOME_PRECEDENCE[current[0]]:
+                test_outcomes[nodeid] = (outcome, str(importance))
+
+    for outcome, importance in test_outcomes.values():
+        grouped_counts[importance][outcome] += 1
 
     ordered_levels = [importance.name.lower() for importance in Importance]
     summary_levels = [
