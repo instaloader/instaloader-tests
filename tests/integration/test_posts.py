@@ -4,7 +4,6 @@ import instaloader
 import pytest
 
 from tests.support.requirements_map import requirement
-from tests.support.targets import require_target
 
 
 @requirement("post-basic-information-anonymous-critical")
@@ -12,9 +11,7 @@ def test_public_shortcode_caption_and_date_accessible(
     active_instaloader: instaloader.Instaloader,
     integration_targets,
 ) -> None:
-    shortcode = require_target(
-        integration_targets.public_shortcode, option_name="--target-public-shortcode"
-    )
+    shortcode = integration_targets.require("public_shortcode")
 
     post = instaloader.Post.from_shortcode(active_instaloader.context, shortcode)
     if not post.caption:

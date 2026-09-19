@@ -4,7 +4,7 @@ from pathlib import Path
 import instaloader
 import pytest
 
-from tests.support.targets import IntegrationTargets, require_target
+from tests.support.targets import IntegrationTargets
 from tests.support.requirements_map import requirement
 
 
@@ -32,9 +32,7 @@ def public_profile(
     integration_targets: IntegrationTargets,
     profile_cache: dict[tuple[str, str], instaloader.Profile],
 ) -> instaloader.Profile:
-    username = require_target(
-        integration_targets.public_profile, option_name="--target-public-profile"
-    )
+    username = integration_targets.require("public_profile")
     return _profile_from_username(
         active_instaloader.context,
         active_authentication,
@@ -52,9 +50,7 @@ def private_profile(
     return _profile_from_username(
         logged_in_instaloader.context,
         "logged_in",
-        require_target(
-            integration_targets.private_profile, option_name="--target-private-profile"
-        ),
+        integration_targets.require("private_profile"),
         profile_cache,
     )
 
