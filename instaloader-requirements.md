@@ -43,6 +43,7 @@ The integration suite shall maintain reusable targets for at least the following
 - a login target account with two-factor authentication enabled;
 - a profile with at least 50 story items and at least 50 highlight containers;
 - a profile with at least 50 tagged posts, 50 reels, and 50 IGTV items when those surfaces exist;
+- a profile with at least 50 followers and at least 50 followees;
 - a profile fixture whose username can be changed between two download runs while preserving the same Instagram identity;
 - a hashtag with at least 50 posts;
 - a location with at least 50 posts;
