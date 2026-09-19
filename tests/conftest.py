@@ -104,14 +104,11 @@ def pytest_collection_modifyitems(
             )
 
         authentication_label = _authentication_label(item)
-        if (
-            authentication_label
-            and authentication_scope != "all"
-            and authentication_label != authentication_scope
-        ):
+        if authentication_scope != "all" and authentication_label != authentication_scope:
+            required_scope = authentication_label or "unmarked"
             item.add_marker(
                 pytest.mark.skip(
-                    reason=f"requires --authentication={authentication_label}"
+                    reason=f"requires --authentication={required_scope}"
                 )
             )
         if authentication_label and f"[{authentication_label}]" not in item.nodeid:
