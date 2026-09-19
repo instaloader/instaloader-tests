@@ -539,5 +539,5 @@ dev = ["black", "mypy"]
 
 [metadata]
 lock-version = "2.1"
-python-versions = ">=3.12"
-content-hash = "f2bbc1cdf52ed0ac0d2ad2cfa906a1d1963a45aa095cc55129be1b76ffd6ebf0"
+python-versions = ">=3.14"
+content-hash = "a09cbf8ee863e1f35a4a255c5db9be2ce4d13c6d33077bca659f14d1b0c523cf"
