@@ -48,7 +48,7 @@ The integration suite shall maintain reusable targets for at least the following
 - a profile fixture whose username can be changed between two download runs while preserving the same Instagram identity;
 - a hashtag with at least 50 posts;
 - a location with at least 50 posts;
-- a reusable public post fixture that is accessible in both anonymous and authenticated runs and, in its authenticated view, exposes caption, date, geotag, a liker list with at least 50 entries, and a comment list with at least 50 entries; the same fixture shall also satisfy the anonymous post-metadata requirements;
+- a reusable public post fixture that is accessible in both anonymous and authenticated runs, exposes caption and date in its anonymous view, and in its authenticated view additionally exposes geotag, a liker list with at least 50 entries, and a comment list with at least 50 entries; the same fixture shall satisfy all post-metadata requirements in this document;
 - a shortcode for a downloadable post with one or more media items;
 - an owner account with at least 50 saved posts, 50 feed items, and 50 visible story items.
 
@@ -145,10 +145,10 @@ followed private profiles.
 | MD-POST-2 | critical | authenticated | single item | Instaloader shall be able to access the caption and date of a post. |
 | MD-POST-3 | high | authenticated | first page | Instaloader shall be able to list the first page of profiles that liked a post. |
 | MD-POST-4 | high | authenticated | first 50 items | Instaloader shall be able to list the first 50 profiles that liked a post. |
-| MD-POST-5 | high | authenticated | first page | Instaloader shall be able to list the first page of comments of a post. |
-| MD-POST-6 | medium | anonymous | first page | Instaloader shall be able to list the first page of comments of a public post. |
-| MD-POST-7 | medium | authenticated | first 50 items | Instaloader shall be able to list the first 50 comments of a post. |
-| MD-POST-8 | low | anonymous | first 50 items | Instaloader shall be able to list the first 50 comments of a public post. |
+| MD-POST-5 | high | authenticated | first page | Instaloader shall be able to retrieve the first page of comments of a post. |
+| MD-POST-6 | medium | anonymous | first page | Instaloader shall be able to retrieve the first page of comments of a public post. |
+| MD-POST-7 | medium | authenticated | first 50 items | Instaloader shall be able to retrieve the first 50 comments of a post. |
+| MD-POST-8 | low | anonymous | first 50 items | Instaloader shall be able to retrieve the first 50 comments of a public post. |
 | MD-POST-9 | low | authenticated | single item | Instaloader shall be able to access the geotag of a post. |
 
 ### Profile relationships
