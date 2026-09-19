@@ -24,65 +24,34 @@ class RequirementVariant:
     importance: Importance
 
 
-@dataclass(frozen=True)
-class RequirementCase:
-    section: str
-    statement: str
-    variants: tuple[RequirementVariant, ...]
-
-
-REQUIREMENTS: dict[str, RequirementCase] = {
-    "test-login-query-username-logged-in-critical": RequirementCase(
-        section="Session Creation / Test login",
-        statement="Instaloader shall be able to query Instagram for the username of the used Session.",
-        variants=(RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),),
-    ),
-    "profile-picture-anonymous-critical": RequirementCase(
-        section="Download Targets / Profile / Profile Picture",
-        statement="Instaloader shall be able to download the profile picture of a Profile.",
-        variants=(
-            RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
-            RequirementVariant(Authentication.ANONYMOUS, Importance.CRITICAL),
-        ),
-    ),
-    "profile-posts-first-page-anonymous-critical": RequirementCase(
-        section="Download Targets / Profile / Profile Posts",
-        statement="Instaloader shall be able to download the Posts of a Profile (first page / 12 posts).",
-        variants=(
-            RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
-            RequirementVariant(Authentication.ANONYMOUS, Importance.HIGH),
-        ),
-    ),
-    "post-basic-information-anonymous-critical": RequirementCase(
-        section="Post Metadata / Basic Information",
-        statement="Instaloader shall be able to access the Caption and Date of a Post.",
-        variants=(
-            RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
-            RequirementVariant(Authentication.ANONYMOUS, Importance.CRITICAL),
-        ),
-    ),
+REQUIREMENTS: dict[str, list[RequirementVariant]] = {
+    # Session Creation / Test login
+    "test-login-query-username-logged-in-critical": [
+        RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL)
+    ],
+    # Download Targets / Profile / Profile Picture
+    "profile-picture-anonymous-critical": [
+        RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
+        RequirementVariant(Authentication.ANONYMOUS, Importance.CRITICAL),
+    ],
+    # Download Targets / Profile / Profile Posts
+    "profile-posts-first-page-anonymous-critical": [
+        RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
+        RequirementVariant(Authentication.ANONYMOUS, Importance.HIGH),
+    ],
+    # Post Metadata / Basic Information
+    "post-basic-information-anonymous-critical": [
+        RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
+        RequirementVariant(Authentication.ANONYMOUS, Importance.CRITICAL),
+    ],
+    # Download Targets / Saved Posts
     **{
-        requirement_id: RequirementCase(
-            section=f"Download Targets / Saved Posts / {window}",
-            statement=(
-                "Instaloader shall be able to download the saved Posts of the logged-in user."
-            ),
-            variants=(
-                RequirementVariant(
-                    importance=importance,
-                    authentication=Authentication.LOGGED_IN,
-                ),
-            ),
-        )
-        for requirement_id, (window, importance) in {
-            "saved-posts-first-page-logged-in-critical": (
-                "First page (12 Posts)",
-                Importance.CRITICAL,
-            ),
-            "saved-posts-first-50-logged-in-critical": (
-                "First 50 Posts",
-                Importance.CRITICAL,
-            ),
+        requirement_id: [
+            RequirementVariant(Authentication.LOGGED_IN, importance),
+        ]
+        for requirement_id, importance in {
+            "saved-posts-first-page-logged-in-critical": Importance.CRITICAL,
+            "saved-posts-first-50-logged-in-critical": Importance.CRITICAL,
         }.items()
     },
 }
@@ -110,7 +79,7 @@ def requirement(
 ) -> Callable[[Callable[..., object]], Callable[..., object]]:
     if requirement_id not in REQUIREMENTS:
         raise pytest.UsageError(f"Unknown requirement_id marker: {requirement_id}")
-    case = REQUIREMENTS[requirement_id]
+    variants = REQUIREMENTS[requirement_id]
     params = [
         pytest.param(
             variant.authentication.value,
@@ -120,7 +89,7 @@ def requirement(
             ),
             id=variant.authentication.value,
         )
-        for variant in case.variants
+        for variant in variants
     ]
 
     def decorator(test_function: Callable[..., object]) -> Callable[..., object]:
