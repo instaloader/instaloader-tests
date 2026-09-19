@@ -145,10 +145,10 @@ commenter profiles.
 | MD-POST-2 | critical | authenticated | single item | Instaloader shall be able to access the caption and date of a post. |
 | MD-POST-3 | high | authenticated | first page | Instaloader shall be able to list the first page of profiles that liked a post. |
 | MD-POST-4 | high | authenticated | first 50 items | Instaloader shall be able to list the first 50 profiles that liked a post. |
-| MD-POST-5 | medium | anonymous | first page | Instaloader shall be able to list the first page of comments of a post. |
-| MD-POST-6 | high | authenticated | first page | Instaloader shall be able to list the first page of comments of a post. |
-| MD-POST-7 | low | anonymous | first 50 items | Instaloader shall be able to list the first 50 comments of a post. |
-| MD-POST-8 | medium | authenticated | first 50 items | Instaloader shall be able to list the first 50 comments of a post. |
+| MD-POST-5 | high | authenticated | first page | Instaloader shall be able to list the first page of comments of a post. |
+| MD-POST-6 | medium | anonymous | first page | Instaloader shall be able to list the first page of comments of a post. |
+| MD-POST-7 | medium | authenticated | first 50 items | Instaloader shall be able to list the first 50 comments of a post. |
+| MD-POST-8 | low | anonymous | first 50 items | Instaloader shall be able to list the first 50 comments of a post. |
 | MD-POST-9 | low | authenticated | single item | Instaloader shall be able to access the geotag of a post. |
 
 ### Profile relationships
