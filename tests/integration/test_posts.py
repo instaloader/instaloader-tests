@@ -55,6 +55,7 @@ def test_saved_posts_first_page_download(
         logged_in_instaloader.download_post(post, target=saved_posts_target)
 
     saved_dir = Path.cwd() / saved_posts_target
+    assert saved_dir.is_dir()
     downloaded_filenames = tuple(
         path.name for path in saved_dir.iterdir() if path.is_file()
     )
