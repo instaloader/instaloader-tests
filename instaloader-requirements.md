@@ -1,278 +1,139 @@
 # Instaloader Integration Requirements
 
+## Scope
+
+This document specifies the Instagram-access-related behaviors that the integration
+suite shall cover. It excludes purely local concerns such as formatting, CLI text,
+and filesystem details unless they are directly required to authenticate against
+Instagram or to fetch Instagram data.
+
 ## Conventions
 
-Requirements that should be tested describe Instaloaders behavior with the modal verb *shall*.
+- Each requirement describes one externally observable behavior and uses *shall* wording.
+- Importance expresses how valuable a regression test is for routine execution.
+- Access modes:
+  - **anonymous**: no authenticated Instagram session is available;
+  - **authenticated**: a valid Instagram session is available;
+  - **owner**: the authenticated session belongs to the account whose own data is accessed.
+- Quantitative scopes:
+  - **first page** means one page of items as returned by Instagram for the target;
+  - **first 50 items** applies only when the target provides at least 50 items.
+- Logged-in profile download requirements shall be exercised against both a public profile
+  and, where Instagram permissions allow it, a followed private profile.
 
-## Session Creation
+## Shared Fixture Expectations
 
-Instaloader is able to create a session by logging in or by importing cookies.
+The integration suite shall maintain reusable targets for at least the following cases:
 
-Instaloader saves a created session (`Instaloader.save_session_to_file()`, and is able to reload the saved session 
-(`Instaloader.load_session_from_file()`).
+- a public profile with posts;
+- a followed private profile with posts;
+- a profile with stories and highlights;
+- a profile with tagged posts, reels, and IGTV content when those surfaces exist;
+- a hashtag with posts;
+- a location with posts;
+- a post with caption, timestamp, comments, likes, and geotag;
+- a shortcode for a downloadable post with one or more media items;
+- an owner account with saved posts, feed items, and visible stories.
 
-### Import session from Firefox
+## Session Management Requirements
 
-| Importance |
-|------------|
-| critical   |
+| ID | Importance | Access | Requirement |
+|----|------------|--------|-------------|
+| SM-1 | critical | authenticated | Instaloader shall be able to create a reusable session by importing cookies from Firefox with `instaloader --load-cookies firefox`. |
+| SM-2 | high | authenticated | Instaloader shall be able to create a reusable session by importing cookies from another supported browser with `instaloader --load-cookies BROWSER`. |
+| SM-3 | high | authenticated | Instaloader shall be able to create a reusable session with `Instaloader.interactive_login()` when two-factor authentication is not required. |
+| SM-4 | medium | authenticated | Instaloader shall be able to create a reusable session with `Instaloader.interactive_login()` when two-factor authentication is required. |
+| SM-5 | high | authenticated | Instaloader shall be able to save a created session with `Instaloader.save_session_to_file()` and reload it with `Instaloader.load_session_from_file()`. |
+| SM-6 | critical | authenticated | Instaloader shall be able to reuse an existing valid session for a non-interactive authenticated download run. |
 
-Instaloader will provide a single-command way to import Cookies from Firefox.
+## Download Requirements
 
-This can be done by the command
+### Profiles
 
-```
-instaloader --load-cookies firefox
-```
-
-As an alternative, the codesnippet [615_import_firefox_session.py](https://github.
-com/instaloader/instaloader/blob/master/docs/codesnippets/615_import_firefox_session.py) is provided. However, it is 
-preferred that this functionality is integrated into Instaloader.
-
-### Import session from other browsers
-
-| Importance |
-|------------|
-| high       |
-
-Instaloader will provide a single-command way to import Cookies from a browser.
-
-This can be done by the command
-
-```
-instaloader --load-cookies BROWSER
-```
-
-### Login
-
-| Importance |
-|------------|
-| high       |
-
-Instaloader shall be able to create a Session file with `Instaloader.interactive_login()` if no 2FA is configured.
-
-Note that this calls `Instaloader.login()`:
-
-```python
-try:
-    password = None
-    while password is None:
-        password = getpass.getpass(prompt="Enter Instagram password for %s: " % username)
-        try:
-            self.login(username, password)
-        except BadCredentialsException as err:
-            print(err, file=sys.stderr)
-            password = None
-except TwoFactorAuthRequiredException:
-    while True:
-        try:
-            code = input("Enter 2FA verification code: ")
-            self.two_factor_login(code)
-            break
-        except BadCredentialsException as err:
-            print(err, file=sys.stderr)
-            pass
-```
-
-### 2FA
-
-| Importance |
-|------------|
-| medium     |
-
-Instaloader shall be able to create a Session file with `Instaloader.interactive_login()` if 2FA is configured.
-
-## Download Targets
-
-### Profile
-
-#### Profile Picture
-
-| Importance | logged-in | anonymous |
-|------------|-----------|-----------|
-|            | critical  | critical  |
-
-Instaloader shall be able to download the profile picture of a Profile.
-
-#### Profile Posts
-
-| Importance            | logged-in | anonymous |
-|-----------------------|-----------|-----------|
-| First page (12 Posts) | critical  | high      |
-| First 50 Posts        | critical  | medium    |
-
-Instaloader shall be able to download the Posts of a Profile.
-
-#### Stories
-
-| Importance                 | logged-in |
-|----------------------------|-----------|
-| First page (12 StoryItems) | high      |
-| First 50 posts             | medium    |
-
-Instaloader shall be able to download the Stories of a Profile (if logged-in).
-
-#### Highlights
-
-##### Cover Picture
-
-| Importance |
-|------------|
-| high       |
-
-Instaloader shall be able to download the cover picture of a Highlight (if logged-in).
-
-##### Highlights
-
-| Importance                 | logged-in |
-|----------------------------|-----------|
-| First page (12 Highlights) | high      |
-| First 50 Highlights        | medium    |
-
-Instaloader shall be able to download the Highlights of a Profile (if logged-in).
-
-#### Tagged
-
-| Importance            | logged-in | anonymous |
-|-----------------------|-----------|-----------|
-| First page (12 Posts) | medium    | low       |
-| First 50 Posts        | low       | very low  |
-
-Instaloader shall be able to download the Posts where the Profile is tagged.
-
-#### Reels
-
-| Importance            | logged-in | anonymous |
-|-----------------------|-----------|-----------|
-| First page (12 Posts) | medium    | low       |
-| First 50 Posts        | low       | very low  |
-
-Instaloader shall be able to download the Reels videos of a Profile.
-
-#### IGTV
-
-| Importance            | logged-in | anonymous |
-|-----------------------|-----------|-----------|
-| First page (12 Posts) | medium    | low       |
-| First 50 Posts        | low       | very low  |
-
-Instaloader shall be able to download the IGTV videos of a Profile.
+| ID | Importance | Access | Coverage | Requirement |
+|----|------------|--------|----------|-------------|
+| DL-PROFILE-1 | critical | anonymous | single item | Instaloader shall be able to download the profile picture of a profile. |
+| DL-PROFILE-2 | critical | authenticated | first page | Instaloader shall be able to download the first page of posts of a profile. |
+| DL-PROFILE-3 | high | anonymous | first page | Instaloader shall be able to download the first page of posts of a public profile. |
+| DL-PROFILE-4 | critical | authenticated | first 50 items | Instaloader shall be able to download the first 50 posts of a profile. |
+| DL-PROFILE-5 | medium | anonymous | first 50 items | Instaloader shall be able to download the first 50 posts of a public profile. |
+| DL-PROFILE-6 | high | authenticated | first page | Instaloader shall be able to download the first page of a profile's stories. |
+| DL-PROFILE-7 | medium | authenticated | first 50 items | Instaloader shall be able to download the first 50 story items of a profile's stories. |
+| DL-PROFILE-8 | high | authenticated | single item | Instaloader shall be able to download the cover picture of a profile highlight. |
+| DL-PROFILE-9 | high | authenticated | first page | Instaloader shall be able to download the first page of highlights of a profile. |
+| DL-PROFILE-10 | medium | authenticated | first 50 items | Instaloader shall be able to download the first 50 highlights of a profile. |
+| DL-PROFILE-11 | medium | authenticated | first page | Instaloader shall be able to download the first page of posts in which a profile is tagged. |
+| DL-PROFILE-12 | low | anonymous | first page | Instaloader shall be able to download the first page of posts in which a public profile is tagged. |
+| DL-PROFILE-13 | low | authenticated | first 50 items | Instaloader shall be able to download the first 50 posts in which a profile is tagged. |
+| DL-PROFILE-14 | very low | anonymous | first 50 items | Instaloader shall be able to download the first 50 posts in which a public profile is tagged. |
+| DL-PROFILE-15 | medium | authenticated | first page | Instaloader shall be able to download the first page of reels of a profile. |
+| DL-PROFILE-16 | low | anonymous | first page | Instaloader shall be able to download the first page of reels of a public profile. |
+| DL-PROFILE-17 | low | authenticated | first 50 items | Instaloader shall be able to download the first 50 reels of a profile. |
+| DL-PROFILE-18 | very low | anonymous | first 50 items | Instaloader shall be able to download the first 50 reels of a public profile. |
+| DL-PROFILE-19 | medium | authenticated | first page | Instaloader shall be able to download the first page of IGTV videos of a profile. |
+| DL-PROFILE-20 | low | anonymous | first page | Instaloader shall be able to download the first page of IGTV videos of a public profile. |
+| DL-PROFILE-21 | low | authenticated | first 50 items | Instaloader shall be able to download the first 50 IGTV videos of a profile. |
+| DL-PROFILE-22 | very low | anonymous | first 50 items | Instaloader shall be able to download the first 50 IGTV videos of a public profile. |
+| DL-PROFILE-23 | medium | authenticated | update run | Instaloader shall detect a profile username change during a subsequent download run and continue the download under the renamed profile target. |
 
 ### Hashtags
 
-#### Hashtag Profile Picture
-
-| Importance | logged-in | anonymous |
-|------------|-----------|-----------|
-|            | high      | medium    |
-
-Instaloader shall be able to download the profile picture of a Hashtag.
-
-#### Hashtag Posts
-
-| Importance            | logged-in | anonymous |
-|-----------------------|-----------|-----------|
-| First page (12 Posts) | critical  | high      |
-| First 50 Posts        | critical  | medium    |
-
-Instaloader shall be able to download the Posts of a Hashtag.
+| ID | Importance | Access | Coverage | Requirement |
+|----|------------|--------|----------|-------------|
+| DL-HASHTAG-1 | high | authenticated | single item | Instaloader shall be able to download the profile picture of a hashtag. |
+| DL-HASHTAG-2 | medium | anonymous | single item | Instaloader shall be able to download the profile picture of a hashtag. |
+| DL-HASHTAG-3 | critical | authenticated | first page | Instaloader shall be able to download the first page of posts of a hashtag. |
+| DL-HASHTAG-4 | high | anonymous | first page | Instaloader shall be able to download the first page of posts of a hashtag. |
+| DL-HASHTAG-5 | critical | authenticated | first 50 items | Instaloader shall be able to download the first 50 posts of a hashtag. |
+| DL-HASHTAG-6 | medium | anonymous | first 50 items | Instaloader shall be able to download the first 50 posts of a hashtag. |
 
 ### Locations
 
-| Importance            | logged-in |
-|-----------------------|-----------|
-| First page (12 Posts) | medium    |
-| First 50 Posts        | low       |
+| ID | Importance | Access | Coverage | Requirement |
+|----|------------|--------|----------|-------------|
+| DL-LOCATION-1 | medium | authenticated | first page | Instaloader shall be able to download the first page of posts of a location. |
+| DL-LOCATION-2 | low | authenticated | first 50 items | Instaloader shall be able to download the first 50 posts of a location. |
 
-Instaloader shall be able to download the Posts of a Location (if logged-in).
+### Owner-only surfaces
 
-### Saved Posts
+| ID | Importance | Access | Coverage | Requirement |
+|----|------------|--------|----------|-------------|
+| DL-OWNER-1 | critical | owner | first page | Instaloader shall be able to download the first page of the owner's saved posts. |
+| DL-OWNER-2 | critical | owner | first 50 items | Instaloader shall be able to download the first 50 saved posts of the owner. |
+| DL-OWNER-3 | high | owner | first page | Instaloader shall be able to download the first page of the owner's feed. |
+| DL-OWNER-4 | medium | owner | first 50 items | Instaloader shall be able to download the first 50 feed posts of the owner. |
+| DL-OWNER-5 | high | owner | first page | Instaloader shall be able to download the first page of the owner's currently visible stories. |
+| DL-OWNER-6 | medium | owner | first 50 items | Instaloader shall be able to download the first 50 currently visible stories of the owner. |
 
-| Importance            | logged-in |
-|-----------------------|-----------|
-| First page (12 Posts) | critical  |
-| First 50 Posts        | critical  |
+### Single-post targets
 
-Instaloader shall be able to download the saved Posts of the logged-in user.
+| ID | Importance | Access | Coverage | Requirement |
+|----|------------|--------|----------|-------------|
+| DL-POST-1 | critical | anonymous | single item | Instaloader shall be able to download a post specified by its shortcode. |
+| DL-POST-2 | critical | authenticated | single item | Instaloader shall be able to download a post specified by its shortcode. |
+| DL-POST-3 | high | authenticated | media set | Instaloader shall download all media items that belong to the addressed post, including sidecar items when present. |
 
-### Feed
+## Metadata and Relationship Requirements
 
-| Importance            | logged-in |
-|-----------------------|-----------|
-| First page (12 Posts) | high      |
-| First 50 Posts        | medium    |
+### Post metadata
 
-Instaloader shall be able to download the Feed of the logged-in user.
+| ID | Importance | Access | Coverage | Requirement |
+|----|------------|--------|----------|-------------|
+| MD-POST-1 | critical | anonymous | single item | Instaloader shall be able to access the caption and timestamp of a post. |
+| MD-POST-2 | critical | authenticated | single item | Instaloader shall be able to access the caption and timestamp of a post. |
+| MD-POST-3 | high | authenticated | first page | Instaloader shall be able to list the first page of profiles that liked a post. |
+| MD-POST-4 | high | authenticated | first 50 items | Instaloader shall be able to list the first 50 profiles that liked a post. |
+| MD-POST-5 | medium | anonymous | first page | Instaloader shall be able to list the first page of comments of a post. |
+| MD-POST-6 | high | authenticated | first page | Instaloader shall be able to list the first page of comments of a post. |
+| MD-POST-7 | low | anonymous | first 50 items | Instaloader shall be able to list the first 50 comments of a post. |
+| MD-POST-8 | medium | authenticated | first 50 items | Instaloader shall be able to list the first 50 comments of a post. |
+| MD-POST-9 | low | authenticated | single item | Instaloader shall be able to access the geotag of a post. |
 
-### Stories
+### Profile relationships
 
-| Importance              | logged-in |
-|-------------------------|-----------|
-| First page (12 Stories) | high      |
-| First 50 Stories        | medium    |
-
-Instaloader shall be able to download the currently-visible Stories of the logged-in user.
-
-### Single Post (shortcode)
-
-| Importance | logged-in | anonymous |
-|------------|-----------|-----------|
-|            | critical  | critical  |
-
-Instaloader shall be able to download a single Post specified by its shortcode.
-
-## Post Metadata
-
-### Basic Information
-
-| Importance | logged-in | anonymous |
-|------------|-----------|-----------|
-|            | critical  | critical  |
-
-Instaloader shall be able to access the Caption and Date of a Post.
-
-### Likes
-
-| Importance               | logged-in |
-|--------------------------|-----------|
-| First page (12 Profiles) | high      |
-| First 50 Profiles        | high      |
-
-Instaloader shall be able to list the Profiles that have liked a Post (if logged-in).
-
-### Comments
-
-| Importance               | logged-in | anonymous |
-|--------------------------|-----------|-----------|
-| First page (12 Profiles) | high      | medium    |
-| First 50 Profiles        | medium    | low       |
-
-Instaloader shall be able to list the comments of a Post.
-
-### Geotags
-
-| Importance | logged-in |
-|------------|-----------|
-|            | low       |
-
-Instaloader shall be able to access the geotag of a Post (if logged-in).
-
-## Profile Metadata
-
-### Followers
-
-| Importance               | logged-in |
-|--------------------------|-----------|
-| First page (12 Profiles) | high      |
-| First 50 Profiles        | medium    |
-
-Instaloader shall be able to list the followers of a Profile (if logged-in). 
-
-### Followees
-
-| Importance               | logged-in |
-|--------------------------|-----------|
-| First page (12 Profiles) | high      |
-| First 50 Profiles        | medium    |
-
-Instaloader shall be able to list the followees of a Profile (if logged-in). 
+| ID | Importance | Access | Coverage | Requirement |
+|----|------------|--------|----------|-------------|
+| MD-PROFILE-1 | high | authenticated | first page | Instaloader shall be able to list the first page of followers of a profile. |
+| MD-PROFILE-2 | medium | authenticated | first 50 items | Instaloader shall be able to list the first 50 followers of a profile. |
+| MD-PROFILE-3 | high | authenticated | first page | Instaloader shall be able to list the first page of followees of a profile. |
+| MD-PROFILE-4 | medium | authenticated | first 50 items | Instaloader shall be able to list the first 50 followees of a profile. |
