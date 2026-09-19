@@ -333,14 +333,13 @@ def active_authentication(request: pytest.FixtureRequest) -> Authentication:
 
 @pytest.fixture()
 def active_instaloader(
+    request: pytest.FixtureRequest,
     active_authentication: Authentication,
-    anonymous_instaloader: instaloader.Instaloader,
-    logged_in_instaloader: instaloader.Instaloader,
 ) -> instaloader.Instaloader:
     if active_authentication is Authentication.ANONYMOUS:
-        return anonymous_instaloader
+        return request.getfixturevalue("anonymous_instaloader")
     if active_authentication is Authentication.LOGGED_IN:
-        return logged_in_instaloader
+        return request.getfixturevalue("logged_in_instaloader")
     raise pytest.UsageError(f"Unknown authentication variant: {active_authentication}")
 
 
