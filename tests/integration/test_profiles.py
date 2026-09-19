@@ -73,7 +73,7 @@ def test_public_profile_first_page_posts_download(
     post_checker: PostChecker,
 ) -> None:
     for post in itertools.islice(public_profile.get_posts(), 12):
-        post_checker(active_instaloader, post, target=public_profile.username)
+        post_checker(active_instaloader, post, public_profile.username)
 
 
 @requirement("profile-picture-private-logged-in-critical")
@@ -93,4 +93,4 @@ def test_private_profile_first_page_posts_download(
     post_checker: PostChecker,
 ) -> None:
     for post in itertools.islice(private_profile.get_posts(), 12):
-        post_checker(active_instaloader, post, target=private_profile.username)
+        post_checker(active_instaloader, post, private_profile.username)

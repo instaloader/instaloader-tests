@@ -16,4 +16,4 @@ def test_public_shortcode_post_check(
     shortcode = integration_targets.require("public_shortcode")
 
     post = instaloader.Post.from_shortcode(active_instaloader.context, shortcode)
-    post_checker(active_instaloader, post, target=shortcode)
+    post_checker(active_instaloader, post, shortcode)

@@ -17,9 +17,7 @@ def test_saved_posts_first_page_download(
 ) -> None:
     profile = instaloader.Profile.own_profile(logged_in_instaloader.context)
     for post in itertools.islice(profile.get_saved_posts(), 12):
-        post_checker(
-            logged_in_instaloader, post, target=f"{profile.username}-saved"
-        )
+        post_checker(logged_in_instaloader, post, f"{profile.username}-saved")
 
 
 @requirement("saved-posts-first-50-logged-in-critical")
@@ -31,9 +29,7 @@ def test_saved_posts_extended_download(
     profile = instaloader.Profile.own_profile(logged_in_instaloader.context)
     further_posts = False
     for post in itertools.islice(profile.get_saved_posts(), 12, 50):
-        post_checker(
-            logged_in_instaloader, post, target=f"{profile.username}-saved"
-        )
+        post_checker(logged_in_instaloader, post, f"{profile.username}-saved")
         further_posts = True
     if not further_posts:
         pytest.skip(
