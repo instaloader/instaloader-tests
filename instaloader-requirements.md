@@ -129,6 +129,8 @@ Instaloader shall be able to download the profile picture of a private Profile (
 
 Instaloader shall be able to download the Posts of a private Profile (if logged-in).
 
+Note: Private-profile requirements assume that the logged-in account follows the target profile.
+
 #### Stories
 
 | Importance                 | logged-in |
