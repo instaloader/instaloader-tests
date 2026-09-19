@@ -36,7 +36,7 @@ module = ["instaloader", "instaloader.*"]
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]
-addopts = ["-rA", "--tb=line"]
+addopts = ["-ra", "--tb=line", "-vv"]
 testpaths = ["tests"]
 markers = [
   "integration: test requires live Instagram access and must be enabled explicitly",
