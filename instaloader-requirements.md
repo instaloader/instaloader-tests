@@ -103,6 +103,14 @@ Instaloader shall be able to create a Session file with `Instaloader.interactive
 
 Instaloader shall be able to download the profile picture of a Profile.
 
+##### Private Profile Picture
+
+| Importance | logged-in |
+|------------|-----------|
+|            | critical  |
+
+Instaloader shall be able to download the profile picture of a private Profile (if logged-in).
+
 #### Profile Posts
 
 | Importance            | logged-in | anonymous |
@@ -111,6 +119,14 @@ Instaloader shall be able to download the profile picture of a Profile.
 | First 50 Posts        | critical  | medium    |
 
 Instaloader shall be able to download the Posts of a Profile.
+
+##### Private Profile Posts
+
+| Importance            | logged-in |
+|-----------------------|-----------|
+| First page (12 Posts) | critical  |
+
+Instaloader shall be able to download the Posts of a private Profile (if logged-in).
 
 #### Stories
 

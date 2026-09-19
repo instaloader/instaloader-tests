@@ -47,6 +47,13 @@ REQUIREMENTS: dict[str, RequirementCase] = {
             RequirementVariant(Authentication.ANONYMOUS, Importance.CRITICAL),
         ),
     ),
+    "profile-picture-private-logged-in-critical": RequirementCase(
+        section="Download Targets / Profile / Profile Picture / Private",
+        statement=(
+            "Instaloader shall be able to download the profile picture of a private Profile (if logged-in)."
+        ),
+        variants=(RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),),
+    ),
     "profile-posts-first-page-anonymous-critical": RequirementCase(
         section="Download Targets / Profile / Profile Posts",
         statement="Instaloader shall be able to download the Posts of a Profile (first page / 12 posts).",
@@ -54,6 +61,13 @@ REQUIREMENTS: dict[str, RequirementCase] = {
             RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
             RequirementVariant(Authentication.ANONYMOUS, Importance.HIGH),
         ),
+    ),
+    "profile-posts-first-page-private-logged-in-critical": RequirementCase(
+        section="Download Targets / Profile / Profile Posts / Private",
+        statement=(
+            "Instaloader shall be able to download the Posts of a private Profile (first page / 12 posts, if logged-in)."
+        ),
+        variants=(RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),),
     ),
     "post-basic-information-anonymous-critical": RequirementCase(
         section="Post Metadata / Basic Information",

@@ -102,6 +102,12 @@ def pytest_addoption(parser: pytest.Parser) -> None:
         help="public profile username for anonymous profile tests",
     )
     parser.addoption(
+        "--target-private-profile",
+        action="store",
+        default=None,
+        help="private profile username for logged-in profile tests",
+    )
+    parser.addoption(
         "--target-public-shortcode",
         action="store",
         default=None,
@@ -250,6 +256,7 @@ def pytest_terminal_summary(terminalreporter: Any) -> None:
 def integration_targets(pytestconfig: pytest.Config) -> IntegrationTargets:
     return load_targets(
         public_profile=pytestconfig.getoption("--target-public-profile"),
+        private_profile=pytestconfig.getoption("--target-private-profile"),
         public_shortcode=pytestconfig.getoption("--target-public-shortcode"),
         public_hashtag=pytestconfig.getoption("--target-public-hashtag"),
     )
