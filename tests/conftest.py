@@ -125,6 +125,13 @@ def pytest_addoption(parser: pytest.Parser) -> None:
         choices=sorted(POST_CHECKERS),
         help="post validation mode to execute: download (default) or fast",
     )
+    parser.addoption(
+        "--max-items",
+        action="store",
+        type=int,
+        default=50,
+        help="exclusive stop index for further-pages list slices (after first 12 items)",
+    )
 
 
 @pytest.hookimpl()
@@ -281,6 +288,14 @@ def session_credentials(pytestconfig: pytest.Config) -> SessionCredentials | Non
         username=pytestconfig.getoption("--username"),
         sessionfile=pytestconfig.getoption("--sessionfile"),
     )
+
+
+@pytest.fixture(scope="session")
+def max_items(pytestconfig: pytest.Config) -> int:
+    max_items_option = int(pytestconfig.getoption("--max-items"))
+    if max_items_option <= 12:
+        raise pytest.UsageError("--max-items must be greater than 12")
+    return max_items_option
 
 
 @pytest.fixture()

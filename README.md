@@ -116,6 +116,7 @@ option is configured.
 | `--target-private-profile`  | Private Instagram username                               |
 | `--target-public-shortcode` | Public post shortcode                                    |
 | `--target-public-hashtag`   | Public hashtag name                                      |
+| `--max-items`               | Stop index for iterators (default 50)                    |
 
 At the end of each run, pytest prints a `results by criticality` summary that
 groups the observed outcomes by importance level.

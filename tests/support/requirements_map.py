@@ -26,40 +26,37 @@ class RequirementVariant:
 
 REQUIREMENTS: dict[str, list[RequirementVariant]] = {
     # Session Creation / Test login
-    "test-login-query-username-logged-in-critical": [
+    "test-login-query-username-logged-in": [
         RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL)
     ],
     # Download Targets / Profile / Profile Picture
-    "profile-picture-anonymous-critical": [
+    "profile-picture-anonymous": [
         RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
         RequirementVariant(Authentication.ANONYMOUS, Importance.CRITICAL),
     ],
-    "profile-picture-private-logged-in-critical": [
+    "profile-picture-private-logged-in": [
         RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL)
     ],
     # Download Targets / Profile / Profile Posts
-    "profile-posts-first-page-anonymous-critical": [
+    "profile-posts-first-page-anonymous": [
         RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
         RequirementVariant(Authentication.ANONYMOUS, Importance.HIGH),
     ],
-    "profile-posts-first-page-private-logged-in-critical": [
+    "profile-posts-first-page-private-logged-in": [
         RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL)
     ],
     # Post Metadata / Basic Information
-    "post-basic-information-anonymous-critical": [
+    "post-basic-information-anonymous": [
         RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
         RequirementVariant(Authentication.ANONYMOUS, Importance.CRITICAL),
     ],
     # Download Targets / Saved Posts
-    **{
-        requirement_id: [
-            RequirementVariant(Authentication.LOGGED_IN, importance),
-        ]
-        for requirement_id, importance in {
-            "saved-posts-first-page-logged-in-critical": Importance.CRITICAL,
-            "saved-posts-first-50-logged-in-critical": Importance.CRITICAL,
-        }.items()
-    },
+    "saved-posts-first-page-logged-in": [
+        RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
+    ],
+    "saved-posts-further-pages-logged-in": [
+        RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
+    ],
 }
 
 
