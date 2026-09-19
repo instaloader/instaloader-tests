@@ -12,9 +12,14 @@ from tests.support.requirements_map import requirement
 def test_saved_posts_first_page_download(
     logged_in_instaloader: instaloader.Instaloader,
     output_dir: Path,
+    verbose_iterate,
 ) -> None:
     profile = instaloader.Profile.own_profile(logged_in_instaloader.context)
-    for post in itertools.islice(profile.get_saved_posts(), 12):
+    for post in verbose_iterate(
+        itertools.islice(profile.get_saved_posts(), 12),
+        label=f"downloading saved posts for {profile.username}",
+        stop=12,
+    ):
         logged_in_instaloader.download_post(post, target=f"{profile.username}-saved")
 
 
@@ -22,10 +27,16 @@ def test_saved_posts_first_page_download(
 def test_saved_posts_extended_download(
     logged_in_instaloader: instaloader.Instaloader,
     output_dir: Path,
+    verbose_iterate,
 ) -> None:
     profile = instaloader.Profile.own_profile(logged_in_instaloader.context)
     further_posts = False
-    for post in itertools.islice(profile.get_saved_posts(), 12, 50):
+    for post in verbose_iterate(
+        itertools.islice(profile.get_saved_posts(), 12, 50),
+        label=f"downloading saved posts for {profile.username}",
+        start=12,
+        stop=50,
+    ):
         logged_in_instaloader.download_post(post, target=f"{profile.username}-saved")
         further_posts = True
     if not further_posts:

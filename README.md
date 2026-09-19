@@ -119,6 +119,10 @@ option is configured.
 At the end of each run, pytest prints a `results by criticality` summary that
 groups the observed outcomes by importance level.
 
+Some integration tests iterate through larger post lists. If you want per-item
+progress lines while those tests are running, add one more verbosity level
+(`-vv` instead of the default `-v`).
+
 #### Example commands
 
 Anonymous smoke run against the currently implemented public-profile and single-
@@ -148,6 +152,7 @@ while iterating on that feature area:
 
 ```bash
 poetry run pytest \
+  -vv \
   tests/integration/test_saved_posts.py \
   --authentication=logged_in \
   --username=youraccount \

@@ -1,7 +1,7 @@
-from collections.abc import Generator
+from collections.abc import Callable, Generator, Iterable, Iterator
 from collections import defaultdict
 from pathlib import Path
-from typing import Any, cast
+from typing import Any, TypeVar, cast
 
 import instaloader
 import pytest
@@ -24,6 +24,7 @@ pytest_plugins: list[str] = []
 _SUMMARY_OUTCOME_ORDER = ("failed", "error", "passed", "skipped", "xfailed", "xpassed")
 _REPORT_IMPORTANCE_PROPERTY = "importance"
 _REPORT_SUMMARY_KEY_PROPERTY = "summary_key"
+_VERBOSE_ITERATION_THRESHOLD = 2
 _SUMMARY_OUTCOME_PRECEDENCE = {
     "failed": 0,
     "error": 1,
@@ -32,6 +33,7 @@ _SUMMARY_OUTCOME_PRECEDENCE = {
     "xfailed": 4,
     "skipped": 5,
 }
+_T = TypeVar("_T")
 
 
 def _authentication_label(item: pytest.Item) -> Authentication | None:
@@ -274,6 +276,34 @@ def session_credentials(pytestconfig: pytest.Config) -> SessionCredentials | Non
 def output_dir(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     monkeypatch.chdir(tmp_path)
     return tmp_path
+
+
+@pytest.fixture()
+def verbose_iterate(
+    pytestconfig: pytest.Config,
+    request: pytest.FixtureRequest,
+) -> Callable[..., Iterator[Any]]:
+    terminalreporter = pytestconfig.pluginmanager.get_plugin("terminalreporter")
+
+    def iterate(
+        iterable: Iterable[_T],
+        *,
+        label: str,
+        start: int = 0,
+        stop: int | None = None,
+    ) -> Iterator[_T]:
+        if (
+            pytestconfig.get_verbosity() < _VERBOSE_ITERATION_THRESHOLD
+            or terminalreporter is None
+        ):
+            yield from iterable
+            return
+        for index, item in enumerate(iterable, start=start + 1):
+            progress = str(index) if stop is None else f"{index}/{stop}"
+            terminalreporter.write_line(f"{request.node.nodeid}: {label} {progress}")
+            yield item
+
+    return iterate
 
 
 @pytest.fixture(scope="session")

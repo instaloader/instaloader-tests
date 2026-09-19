@@ -69,8 +69,13 @@ def test_public_profile_first_page_posts_download(
     active_instaloader: instaloader.Instaloader,
     public_profile: instaloader.Profile,
     output_dir: Path,
+    verbose_iterate,
 ) -> None:
-    for post in itertools.islice(public_profile.get_posts(), 12):
+    for post in verbose_iterate(
+        itertools.islice(public_profile.get_posts(), 12),
+        label=f"downloading posts for {public_profile.username}",
+        stop=12,
+    ):
         active_instaloader.download_post(post, target=public_profile.username)
 
 
@@ -88,6 +93,11 @@ def test_private_profile_first_page_posts_download(
     active_instaloader: instaloader.Instaloader,
     private_profile: instaloader.Profile,
     output_dir: Path,
+    verbose_iterate,
 ) -> None:
-    for post in itertools.islice(private_profile.get_posts(), 12):
+    for post in verbose_iterate(
+        itertools.islice(private_profile.get_posts(), 12),
+        label=f"downloading posts for {private_profile.username}",
+        stop=12,
+    ):
         active_instaloader.download_post(post, target=private_profile.username)
