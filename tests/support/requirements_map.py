@@ -15,14 +15,15 @@ class Importance(IntEnum):
     VERYLOW = 4
 
 
-class Authentication(StrEnum):
+class AuthenticationScope(StrEnum):
+    ALL = "all"
     ANONYMOUS = "anonymous"
     LOGGED_IN = "logged_in"
 
 
 @dataclass(frozen=True)
 class RequirementVariant:
-    authentication: Authentication
+    authentication: AuthenticationScope
     importance: Importance
 
 
@@ -37,30 +38,32 @@ REQUIREMENTS: dict[str, RequirementCase] = {
     "test-login-query-username-logged-in-critical": RequirementCase(
         section="Session Creation / Test login",
         statement="Instaloader shall be able to query Instagram for the username of the used Session.",
-        variants=(RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),),
+        variants=(
+            RequirementVariant(AuthenticationScope.LOGGED_IN, Importance.CRITICAL),
+        ),
     ),
     "profile-picture-anonymous-critical": RequirementCase(
         section="Download Targets / Profile / Profile Picture",
         statement="Instaloader shall be able to download the profile picture of a Profile.",
         variants=(
-            RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
-            RequirementVariant(Authentication.ANONYMOUS, Importance.CRITICAL),
+            RequirementVariant(AuthenticationScope.LOGGED_IN, Importance.CRITICAL),
+            RequirementVariant(AuthenticationScope.ANONYMOUS, Importance.CRITICAL),
         ),
     ),
     "profile-posts-first-page-anonymous-critical": RequirementCase(
         section="Download Targets / Profile / Profile Posts",
         statement="Instaloader shall be able to download the Posts of a Profile (first page / 12 posts).",
         variants=(
-            RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
-            RequirementVariant(Authentication.ANONYMOUS, Importance.HIGH),
+            RequirementVariant(AuthenticationScope.LOGGED_IN, Importance.CRITICAL),
+            RequirementVariant(AuthenticationScope.ANONYMOUS, Importance.HIGH),
         ),
     ),
     "post-basic-information-anonymous-critical": RequirementCase(
         section="Post Metadata / Basic Information",
         statement="Instaloader shall be able to access the Caption and Date of a Post.",
         variants=(
-            RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
-            RequirementVariant(Authentication.ANONYMOUS, Importance.CRITICAL),
+            RequirementVariant(AuthenticationScope.LOGGED_IN, Importance.CRITICAL),
+            RequirementVariant(AuthenticationScope.ANONYMOUS, Importance.CRITICAL),
         ),
     ),
 }

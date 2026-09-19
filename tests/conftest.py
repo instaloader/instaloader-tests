@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from collections.abc import Generator
 from collections import defaultdict
-from enum import StrEnum
 from pathlib import Path
 from typing import Any, cast
 
@@ -11,6 +10,7 @@ import pytest
 
 from tests.support.credentials import SessionCredentials, load_session_credentials
 from tests.support.requirements_map import (
+    AuthenticationScope,
     REQUIREMENTS,
     Importance,
     is_importance_enabled,
@@ -29,12 +29,6 @@ _SUMMARY_OUTCOME_PRECEDENCE = {
     "xfailed": 4,
     "skipped": 5,
 }
-
-
-class AuthenticationScope(StrEnum):
-    ALL = "all"
-    ANONYMOUS = "anonymous"
-    LOGGED_IN = "logged_in"
 
 
 def _authentication_label(item: pytest.Item) -> AuthenticationScope | None:
