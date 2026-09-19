@@ -45,7 +45,13 @@ def _importance_label(item: pytest.Item) -> str:
             raise pytest.UsageError(
                 f"importance marker on {item.nodeid} requires a level argument"
             )
-        return str(importance_marker.args[0]).lower()
+        level = str(importance_marker.args[0]).upper()
+        try:
+            return Importance[level].name.lower()
+        except KeyError as error:
+            raise pytest.UsageError(
+                f"Unknown required importance level: {importance_marker.args[0]}"
+            ) from error
     return "unmarked"
 
 
@@ -122,7 +128,8 @@ def pytest_collection_modifyitems(
 ) -> None:
     max_importance = config.getoption("--max-importance")
     authentication_scope = config.getoption("--authentication")
-    for item in items:
+    for item_index, item in enumerate(items):
+        setattr(item, "_instaloader_summary_key", f"{item_index}:{item.nodeid}")
         requirement_marker = item.get_closest_marker("requirement_id")
         if requirement_marker:
             requirement_id = requirement_marker.args[0]
@@ -167,7 +174,10 @@ def pytest_runtest_makereport(
     if _report_outcome_category(report) is None:
         return
     report.user_properties.append(
-        (_REPORT_SUMMARY_KEY_PROPERTY, f"{item.nodeid}::{id(item)}")
+        (
+            _REPORT_SUMMARY_KEY_PROPERTY,
+            getattr(item, "_instaloader_summary_key"),
+        )
     )
     report.user_properties.append(
         (_REPORT_IMPORTANCE_PROPERTY, _importance_label(item))
