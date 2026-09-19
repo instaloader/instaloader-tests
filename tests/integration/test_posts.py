@@ -57,7 +57,7 @@ def test_saved_posts_first_page_download(
     saved_dir = Path.cwd() / saved_posts_target
     assert saved_dir.is_dir()
     downloaded_filenames = tuple(
-        path.name for path in saved_dir.iterdir() if path.is_file()
+        sorted(path.name for path in saved_dir.iterdir() if path.is_file())
     )
 
     assert downloaded_filenames
