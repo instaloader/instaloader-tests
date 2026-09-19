@@ -13,7 +13,12 @@ from tests.support.requirements_map import (
     Importance,
     is_importance_enabled,
 )
-from tests.support.targets import IntegrationTargets, load_targets
+from tests.support.targets import (
+    IntegrationTargets,
+    TARGET_OPTIONS,
+    load_targets,
+    target_option,
+)
 
 pytest_plugins: list[str] = []
 _SUMMARY_OUTCOME_ORDER = ("failed", "error", "passed", "skipped", "xfailed", "xpassed")
@@ -93,30 +98,13 @@ def pytest_addoption(parser: pytest.Parser) -> None:
         default=None,
         help="Instagram username that matches --sessionfile",
     )
-    parser.addoption(
-        "--target-public-profile",
-        action="store",
-        default=None,
-        help="public profile username for anonymous profile tests",
-    )
-    parser.addoption(
-        "--target-private-profile",
-        action="store",
-        default=None,
-        help="private profile username for logged-in profile tests",
-    )
-    parser.addoption(
-        "--target-public-shortcode",
-        action="store",
-        default=None,
-        help="public shortcode for anonymous single-post tests",
-    )
-    parser.addoption(
-        "--target-public-hashtag",
-        action="store",
-        default=None,
-        help="public hashtag for anonymous hashtag tests",
-    )
+    for target in TARGET_OPTIONS.values():
+        parser.addoption(
+            target.option_name,
+            action="store",
+            default=None,
+            help=target.help_text,
+        )
     parser.addoption(
         "--authentication",
         action="store",
@@ -259,10 +247,18 @@ def pytest_terminal_summary(terminalreporter: Any) -> None:
 @pytest.fixture(scope="session")
 def integration_targets(pytestconfig: pytest.Config) -> IntegrationTargets:
     return load_targets(
-        public_profile=pytestconfig.getoption("--target-public-profile"),
-        private_profile=pytestconfig.getoption("--target-private-profile"),
-        public_shortcode=pytestconfig.getoption("--target-public-shortcode"),
-        public_hashtag=pytestconfig.getoption("--target-public-hashtag"),
+        public_profile=pytestconfig.getoption(
+            target_option("public_profile").option_name
+        ),
+        private_profile=pytestconfig.getoption(
+            target_option("private_profile").option_name
+        ),
+        public_shortcode=pytestconfig.getoption(
+            target_option("public_shortcode").option_name
+        ),
+        public_hashtag=pytestconfig.getoption(
+            target_option("public_hashtag").option_name
+        ),
     )
 
 
