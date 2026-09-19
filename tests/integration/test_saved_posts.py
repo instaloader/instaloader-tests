@@ -21,14 +21,13 @@ def saved_posts_extended(
     logged_in_instaloader: instaloader.Instaloader,
 ) -> Iterator[instaloader.Post]:
     profile = instaloader.Profile.own_profile(logged_in_instaloader.context)
-    extended_iterator = itertools.islice(profile.get_saved_posts(), 12, 50)
+    extended_posts = list(itertools.islice(profile.get_saved_posts(), 12, 50))
     description = f"saved posts of {profile.username!r}"
-    first_extended = next(extended_iterator, None)
-    if first_extended is None:
+    if not extended_posts:
         pytest.skip(
             f"configured target does not provide more than 12 items for {description}"
         )
-    return itertools.chain((first_extended,), extended_iterator)
+    return iter(extended_posts)
 
 
 @requirement("saved-posts-first-page-logged-in-critical")
