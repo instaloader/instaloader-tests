@@ -31,3 +31,7 @@ POST_CHECKERS: dict[PostCheckerName, PostChecker] = {
     "download": check_post_by_download,
     "fast": check_post_basic_information,
 }
+
+
+def load_post_checker(name: PostCheckerName) -> PostChecker:
+    return POST_CHECKERS[name]

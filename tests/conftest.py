@@ -13,7 +13,12 @@ from tests.support.requirements_map import (
     Importance,
     is_importance_enabled,
 )
-from tests.support.post_checkers import POST_CHECKERS, PostChecker
+from tests.support.post_checkers import (
+    POST_CHECKERS,
+    PostChecker,
+    PostCheckerName,
+    load_post_checker,
+)
 from tests.support.targets import (
     IntegrationTargets,
     TARGET_OPTIONS,
@@ -327,5 +332,10 @@ def active_instaloader(
 
 
 @pytest.fixture(scope="session")
-def post_checker(pytestconfig: pytest.Config) -> PostChecker:
-    return POST_CHECKERS[pytestconfig.getoption("--post-checker")]
+def post_checker_name(pytestconfig: pytest.Config) -> PostCheckerName:
+    return pytestconfig.getoption("--post-checker")
+
+
+@pytest.fixture(scope="session")
+def post_checker(post_checker_name: PostCheckerName) -> PostChecker:
+    return load_post_checker(post_checker_name)
