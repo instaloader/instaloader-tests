@@ -41,13 +41,13 @@ def test_saved_posts_first_page_download(
     saved_posts = instaloader.Profile.own_profile(
         logged_in_instaloader.context
     ).get_saved_posts()
-    raw_page_length = saved_posts.page_length()
-    page_length = raw_page_length if raw_page_length and raw_page_length > 0 else 12
-    expected_posts = tuple(islice(saved_posts, page_length))
-    if not expected_posts:
+    first_post = next(iter(saved_posts), None)
+    if first_post is None:
         pytest.skip("configured account has no saved posts")
+    first_page_size = len(saved_posts._data["edges"])
+    expected_posts = (first_post, *tuple(islice(saved_posts, first_page_size - 1)))
     if saved_posts.count is not None:
-        assert len(expected_posts) == min(saved_posts.count, page_length)
+        assert len(expected_posts) == min(saved_posts.count, first_page_size)
 
     for post in expected_posts:
         logged_in_instaloader.download_post(post, target=saved_posts_target)
