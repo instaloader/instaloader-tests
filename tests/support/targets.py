@@ -2,15 +2,9 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 from dataclasses import dataclass
-import os
 from typing import TypeVar
 
 import pytest
-
-
-ENV_PUBLIC_PROFILE = "INSTALOADER_PUBLIC_PROFILE"
-ENV_PUBLIC_SHORTCODE = "INSTALOADER_PUBLIC_SHORTCODE"
-ENV_PUBLIC_HASHTAG = "INSTALOADER_PUBLIC_HASHTAG"
 
 
 @dataclass(frozen=True)
@@ -30,18 +24,16 @@ def load_targets(
     public_hashtag: str | None,
 ) -> IntegrationTargets:
     return IntegrationTargets(
-        public_profile=public_profile or os.getenv(ENV_PUBLIC_PROFILE),
-        public_shortcode=public_shortcode or os.getenv(ENV_PUBLIC_SHORTCODE),
-        public_hashtag=public_hashtag or os.getenv(ENV_PUBLIC_HASHTAG),
+        public_profile=public_profile,
+        public_shortcode=public_shortcode,
+        public_hashtag=public_hashtag,
     )
 
 
 def require_target(value: str | None, *, option_name: str) -> str:
     if value:
         return value
-    pytest.skip(
-        f"configure {option_name} or the matching INSTALOADER_* environment variable"
-    )
+    pytest.skip(f"configure {option_name}")
 
 
 def take_first_items(

@@ -12,11 +12,7 @@ class Importance(IntEnum):
     HIGH = 1
     MEDIUM = 2
     LOW = 3
-    VERY_LOW = 4
-
-    @property
-    def cli_name(self) -> str:
-        return self.name.lower().replace("_", "-")
+    VERYLOW = 4
 
 
 class Authentication(StrEnum):
@@ -58,9 +54,7 @@ def _coerce_importance(value: Importance | str, *, label: str) -> Importance:
     if isinstance(value, Importance):
         return value
     try:
-        return Importance[value.upper().replace("-", "_")]
-    except ValueError as error:
-        raise pytest.UsageError(f"Unknown {label} importance level: {value}") from error
+        return Importance[value.upper()]
     except KeyError as error:
         raise pytest.UsageError(f"Unknown {label} importance level: {value}") from error
 
@@ -82,7 +76,7 @@ def requirement(
 
     def decorator(test_function: Callable[..., object]) -> Callable[..., object]:
         marked = pytest.mark.requirement_id(requirement_id)(test_function)
-        marked = pytest.mark.importance(case.importance.cli_name)(marked)
+        marked = pytest.mark.importance(case.importance.name.lower())(marked)
         marked = getattr(pytest.mark, case.authentication.value)(marked)
         return pytest.mark.integration(marked)
 

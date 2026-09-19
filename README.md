@@ -115,23 +115,34 @@ poetry run pytest --collect-only
 Run the currently implemented anonymous integration tests:
 
 ```bash
-python -m pytest \
+poetry run pytest \
   --run-instagram \
   --target-public-profile nasa \
   --target-public-shortcode CxD6K_4M8QK
 ```
 
-Supported environment variables:
+Run logged-in tests with Instaloader's default session-file path:
 
-- `INSTALOADER_PUBLIC_PROFILE`
-- `INSTALOADER_PUBLIC_SHORTCODE`
-- `INSTALOADER_PUBLIC_HASHTAG`
-- `INSTALOADER_USERNAME`
-- `INSTALOADER_SESSIONFILE`
+```bash
+poetry run pytest \
+  --run-instagram \
+  --username youraccount \
+  --target-public-profile nasa \
+  --target-public-shortcode CxD6K_4M8QK
+```
 
-If `INSTALOADER_USERNAME` or `--username` is set, the suite uses Instaloader's
-default session-file path unless `INSTALOADER_SESSIONFILE` or `--sessionfile`
-overrides it.
+Run a wider slice of the suite up to a higher importance level:
+
+```bash
+poetry run pytest \
+  --run-instagram \
+  --max-importance high \
+  --target-public-profile nasa \
+  --target-public-shortcode CxD6K_4M8QK
+```
+
+If `--username` is set, the suite uses Instaloader's default session-file path
+unless `--sessionfile` overrides it.
 
 Use `--max-importance` to widen execution beyond critical tests as more coverage
 is added.
