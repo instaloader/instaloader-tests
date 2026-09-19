@@ -1,53 +1,39 @@
-from __future__ import annotations
-
 from pathlib import Path
 
 import instaloader
 import pytest
 
 from tests.support.requirements_map import requirement
-from tests.support.targets import (
-    ItemWindows,
-    require_extended_window,
-    require_first_page_window,
-    split_item_windows,
-)
-
-
-@pytest.fixture(scope="module")
-def logged_in_profile(
-    logged_in_instaloader: instaloader.Instaloader,
-) -> instaloader.Profile:
-    username = logged_in_instaloader.test_login()
-    if username is None:
-        pytest.skip("unable to determine logged-in username from session")
-    return instaloader.Profile.from_username(logged_in_instaloader.context, username)
-
-
-@pytest.fixture(scope="module")
-def saved_posts_windows(
-    logged_in_profile: instaloader.Profile,
-) -> ItemWindows[instaloader.Post]:
-    return split_item_windows(
-        logged_in_profile.get_saved_posts(),
-        first_page_count=12,
-        total_count=50,
-        description=f"saved posts of {logged_in_profile.username!r}",
-    )
+from tests.support.targets import take_item_range
 
 
 @pytest.fixture(scope="module")
 def saved_posts_first_page(
-    saved_posts_windows: ItemWindows[instaloader.Post],
+    logged_in_profile: instaloader.Profile,
 ) -> tuple[instaloader.Post, ...]:
-    return require_first_page_window(saved_posts_windows)
+    return tuple(
+        take_item_range(
+            logged_in_profile.get_saved_posts(),
+            start=1,
+            end=12,
+            description=f"saved posts of {logged_in_profile.username!r}",
+        )
+    )
 
 
 @pytest.fixture(scope="module")
 def saved_posts_extended(
-    saved_posts_windows: ItemWindows[instaloader.Post],
+    logged_in_profile: instaloader.Profile,
 ) -> tuple[instaloader.Post, ...]:
-    return require_extended_window(saved_posts_windows)
+    return tuple(
+        take_item_range(
+            logged_in_profile.get_saved_posts(),
+            start=13,
+            end=50,
+            description=f"saved posts of {logged_in_profile.username!r}",
+            skip_prefix_errors=True,
+        )
+    )
 
 
 @requirement("saved-posts-first-page-logged-in-critical")

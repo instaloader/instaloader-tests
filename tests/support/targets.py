@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 from dataclasses import dataclass
-from typing import Generic, TypeVar
+from typing import TypeVar
 
 import pytest
 
@@ -15,16 +15,6 @@ class IntegrationTargets:
 
 
 TargetItem = TypeVar("TargetItem")
-
-
-@dataclass(frozen=True)
-class ItemWindows(Generic[TargetItem]):
-    first_page: tuple[TargetItem, ...]
-    extended: tuple[TargetItem, ...]
-    sampled_count: int
-    first_page_count: int
-    total_count: int
-    description: str
 
 
 def load_targets(
@@ -57,46 +47,42 @@ def take_first_items(
     pytest.skip(f"configured target does not provide {count} items for {description}")
 
 
-def split_item_windows(
+def take_item_range(
     items: Iterable[TargetItem],
     *,
-    first_page_count: int,
-    total_count: int,
+    start: int,
+    end: int,
     description: str,
-) -> ItemWindows[TargetItem]:
+    skip_prefix_errors: bool = False,
+) -> list[TargetItem]:
+    if start < 1:
+        raise pytest.UsageError(f"start must be >= 1, got {start}")
+    if end < start:
+        raise pytest.UsageError(f"end must be >= start, got start={start}, end={end}")
+
+    iterator = iter(items)
+    for _ in range(start - 1):
+        try:
+            next(iterator)
+        except StopIteration:
+            pytest.skip(
+                f"configured target does not provide {start - 1} items for {description}"
+            )
+        except Exception as error:
+            if skip_prefix_errors:
+                pytest.skip(
+                    f"failed while advancing to item {start} for {description}; "
+                    "first-page coverage should report this boundary failure"
+                )
+            raise
+
     selected: list[TargetItem] = []
-    for item in items:
-        selected.append(item)
-        if len(selected) == total_count:
-            break
+    for _ in range(start, end + 1):
+        try:
+            selected.append(next(iterator))
+        except StopIteration:
+            pytest.skip(
+                f"configured target does not provide {end} items for {description}"
+            )
 
-    return ItemWindows(
-        first_page=tuple(selected[:first_page_count]),
-        extended=tuple(selected[first_page_count:total_count]),
-        sampled_count=len(selected),
-        first_page_count=first_page_count,
-        total_count=total_count,
-        description=description,
-    )
-
-
-def require_first_page_window(
-    windows: ItemWindows[TargetItem],
-) -> tuple[TargetItem, ...]:
-    if len(windows.first_page) < windows.first_page_count:
-        pytest.skip(
-            "configured target does not provide "
-            f"{windows.first_page_count} items for {windows.description} first page"
-        )
-    return windows.first_page
-
-
-def require_extended_window(
-    windows: ItemWindows[TargetItem],
-) -> tuple[TargetItem, ...]:
-    if windows.sampled_count < windows.total_count:
-        pytest.skip(
-            "configured target does not provide "
-            f"{windows.total_count} items for {windows.description} first {windows.total_count}"
-        )
-    return windows.extended
+    return selected
