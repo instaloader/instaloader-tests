@@ -3,7 +3,7 @@ from __future__ import annotations
 from collections.abc import Generator
 from collections import defaultdict
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 import instaloader
 import pytest
@@ -149,7 +149,7 @@ def pytest_runtest_makereport(
     item: pytest.Item, call: pytest.CallInfo[None]
 ) -> Generator[None, None, None]:
     outcome = yield
-    report = outcome.get_result()
+    report = cast(Any, outcome).get_result()
     report.user_properties.append(
         (_REPORT_IMPORTANCE_PROPERTY, _importance_label(item))
     )
