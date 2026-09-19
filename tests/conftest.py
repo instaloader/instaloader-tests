@@ -10,6 +10,7 @@ import pytest
 
 from tests.support.credentials import SessionCredentials, load_session_credentials
 from tests.support.requirements_map import (
+    Authentication,
     AuthenticationScope,
     REQUIREMENTS,
     Importance,
@@ -29,14 +30,6 @@ _SUMMARY_OUTCOME_PRECEDENCE = {
     "xfailed": 4,
     "skipped": 5,
 }
-
-
-def _authentication_label(item: pytest.Item) -> AuthenticationScope | None:
-    if item.get_closest_marker("anonymous"):
-        return AuthenticationScope.ANONYMOUS
-    if item.get_closest_marker("logged_in"):
-        return AuthenticationScope.LOGGED_IN
-    return None
 
 
 def _importance_label(item: pytest.Item) -> str:
@@ -129,6 +122,11 @@ def pytest_collection_modifyitems(
 ) -> None:
     max_importance = config.getoption("--max-importance")
     authentication_scope = AuthenticationScope(config.getoption("--authentication"))
+    requested_authentication = (
+        None
+        if authentication_scope is AuthenticationScope.ALL
+        else Authentication(authentication_scope)
+    )
     for item_index, item in enumerate(items):
         setattr(item, "_instaloader_summary_key", f"{item_index}:{item.nodeid}")
         requirement_marker = item.get_closest_marker("requirement_id")
@@ -149,21 +147,28 @@ def pytest_collection_modifyitems(
                 )
             )
 
-        authentication_label = _authentication_label(item)
+        authentication = next(
+            (
+                variant
+                for variant in Authentication
+                if item.get_closest_marker(variant.value)
+            ),
+            None,
+        )
         if (
-            authentication_scope != AuthenticationScope.ALL
-            and authentication_label != authentication_scope
+            requested_authentication is not None
+            and authentication != requested_authentication
         ):
-            if authentication_label is None:
+            if authentication is None:
                 reason = (
                     "missing authentication marker; skipped because "
                     f"--authentication={authentication_scope} was requested"
                 )
             else:
-                reason = f"requires --authentication={authentication_label}"
+                reason = f"requires --authentication={authentication}"
             item.add_marker(pytest.mark.skip(reason=reason))
-        if authentication_label and f"[{authentication_label}]" not in item.nodeid:
-            item._nodeid = f"{item.nodeid}[{authentication_label}]"
+        if authentication and f"[{authentication}]" not in item.nodeid:
+            item._nodeid = f"{item.nodeid}[{authentication}]"
 
 
 @pytest.hookimpl(hookwrapper=True)
@@ -295,18 +300,18 @@ def logged_in_instaloader(
 
 
 @pytest.fixture()
-def active_authentication(request: pytest.FixtureRequest) -> AuthenticationScope:
-    return AuthenticationScope(request.param)
+def active_authentication(request: pytest.FixtureRequest) -> Authentication:
+    return Authentication(request.param)
 
 
 @pytest.fixture()
 def active_instaloader(
-    active_authentication: AuthenticationScope,
+    active_authentication: Authentication,
     anonymous_instaloader: instaloader.Instaloader,
     logged_in_instaloader: instaloader.Instaloader,
 ) -> instaloader.Instaloader:
-    if active_authentication == AuthenticationScope.ANONYMOUS:
+    if active_authentication == Authentication.ANONYMOUS:
         return anonymous_instaloader
-    if active_authentication == AuthenticationScope.LOGGED_IN:
+    if active_authentication == Authentication.LOGGED_IN:
         return logged_in_instaloader
     raise pytest.UsageError(f"Unknown authentication variant: {active_authentication}")
