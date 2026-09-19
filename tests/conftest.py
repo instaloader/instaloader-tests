@@ -163,11 +163,6 @@ def output_dir(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     return tmp_path
 
 
-@pytest.fixture()
-def _output_dir(output_dir: Path) -> Path:
-    return output_dir
-
-
 @pytest.fixture(scope="session")
 def anonymous_instaloader() -> instaloader.Instaloader:
     return instaloader.Instaloader(

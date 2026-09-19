@@ -44,7 +44,7 @@ def _saved_posts(
 @requirement("saved-posts-first-page-logged-in-critical")
 def test_saved_posts_first_page_download(
     logged_in_instaloader: instaloader.Instaloader,
-    _output_dir: Path,
+    output_dir: Path,
 ) -> None:
     take_first_items(
         _saved_posts(logged_in_instaloader),
@@ -57,7 +57,7 @@ def test_saved_posts_first_page_download(
 @requirement("saved-posts-first-50-logged-in-critical")
 def test_saved_posts_first_50_download(
     logged_in_instaloader: instaloader.Instaloader,
-    _output_dir: Path,
+    output_dir: Path,
 ) -> None:
     take_up_to_items(
         _saved_posts(logged_in_instaloader),
@@ -71,7 +71,7 @@ def test_saved_posts_first_50_download(
 @requirement("feed-first-page-logged-in-high")
 def test_feed_first_page_download(
     logged_in_instaloader: instaloader.Instaloader,
-    _output_dir: Path,
+    output_dir: Path,
 ) -> None:
     take_first_items(
         logged_in_instaloader.get_feed_posts(),
@@ -84,7 +84,7 @@ def test_feed_first_page_download(
 @requirement("feed-first-50-logged-in-medium")
 def test_feed_first_50_download(
     logged_in_instaloader: instaloader.Instaloader,
-    _output_dir: Path,
+    output_dir: Path,
 ) -> None:
     take_up_to_items(
         logged_in_instaloader.get_feed_posts(),
@@ -98,7 +98,7 @@ def test_feed_first_50_download(
 @requirement("stories-first-page-logged-in-high")
 def test_visible_stories_first_page_download(
     logged_in_instaloader: instaloader.Instaloader,
-    _output_dir: Path,
+    output_dir: Path,
 ) -> None:
     story_items = take_first_items(
         _story_items(logged_in_instaloader.get_stories()),
@@ -111,7 +111,7 @@ def test_visible_stories_first_page_download(
 @requirement("stories-first-50-logged-in-medium")
 def test_visible_stories_first_50_download(
     logged_in_instaloader: instaloader.Instaloader,
-    _output_dir: Path,
+    output_dir: Path,
 ) -> None:
     story_items = take_up_to_items(
         _story_items(logged_in_instaloader.get_stories()),

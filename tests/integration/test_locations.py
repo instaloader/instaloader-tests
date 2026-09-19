@@ -32,7 +32,7 @@ def _require_location_id(integration_targets: IntegrationTargets) -> int:
 def test_location_first_page_posts_download(
     logged_in_instaloader: instaloader.Instaloader,
     integration_targets: IntegrationTargets,
-    _output_dir: Path,
+    output_dir: Path,
 ) -> None:
     location = _require_location_id(integration_targets)
     take_first_items(
@@ -47,7 +47,7 @@ def test_location_first_page_posts_download(
 def test_location_first_50_posts_download(
     logged_in_instaloader: instaloader.Instaloader,
     integration_targets: IntegrationTargets,
-    _output_dir: Path,
+    output_dir: Path,
 ) -> None:
     location = _require_location_id(integration_targets)
     take_up_to_items(

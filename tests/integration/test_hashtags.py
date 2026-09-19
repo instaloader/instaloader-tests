@@ -25,7 +25,7 @@ def _hashtag_from_name(
 def test_hashtag_first_page_posts_download_anonymous(
     anonymous_instaloader: instaloader.Instaloader,
     integration_targets: IntegrationTargets,
-    _output_dir: Path,
+    output_dir: Path,
 ) -> None:
     hashtag_name = require_target(
         integration_targets.public_hashtag, option_name="--target-public-hashtag"
@@ -45,7 +45,7 @@ def test_hashtag_first_page_posts_download_anonymous(
 def test_hashtag_first_50_posts_download_anonymous(
     anonymous_instaloader: instaloader.Instaloader,
     integration_targets: IntegrationTargets,
-    _output_dir: Path,
+    output_dir: Path,
 ) -> None:
     hashtag_name = require_target(
         integration_targets.public_hashtag, option_name="--target-public-hashtag"
@@ -66,7 +66,7 @@ def test_hashtag_first_50_posts_download_anonymous(
 def test_hashtag_first_page_posts_download_logged_in(
     logged_in_instaloader: instaloader.Instaloader,
     integration_targets: IntegrationTargets,
-    _output_dir: Path,
+    output_dir: Path,
 ) -> None:
     hashtag_name = require_target(
         integration_targets.public_hashtag, option_name="--target-public-hashtag"
@@ -86,7 +86,7 @@ def test_hashtag_first_page_posts_download_logged_in(
 def test_hashtag_first_50_posts_download_logged_in(
     logged_in_instaloader: instaloader.Instaloader,
     integration_targets: IntegrationTargets,
-    _output_dir: Path,
+    output_dir: Path,
 ) -> None:
     hashtag_name = require_target(
         integration_targets.public_hashtag, option_name="--target-public-hashtag"

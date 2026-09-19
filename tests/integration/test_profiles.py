@@ -156,7 +156,7 @@ def logged_in_public_profile(
 def test_public_profile_picture_download(
     anonymous_instaloader: instaloader.Instaloader,
     anonymous_public_profile: instaloader.Profile,
-    _output_dir: Path,
+    output_dir: Path,
 ) -> None:
     anonymous_instaloader.download_profilepic(anonymous_public_profile)
 
@@ -165,7 +165,7 @@ def test_public_profile_picture_download(
 def test_public_profile_first_page_posts_download_anonymous(
     anonymous_instaloader: instaloader.Instaloader,
     anonymous_public_profile: instaloader.Profile,
-    _output_dir: Path,
+    output_dir: Path,
 ) -> None:
     take_first_items(
         anonymous_public_profile.get_posts(),
@@ -183,7 +183,7 @@ def test_public_profile_first_page_posts_download_anonymous(
 def test_public_profile_first_50_posts_download_anonymous(
     anonymous_instaloader: instaloader.Instaloader,
     anonymous_public_profile: instaloader.Profile,
-    _output_dir: Path,
+    output_dir: Path,
 ) -> None:
     take_up_to_items(
         anonymous_public_profile.get_posts(),
@@ -202,7 +202,7 @@ def test_public_profile_first_50_posts_download_anonymous(
 def test_public_profile_first_page_posts_download_logged_in(
     logged_in_instaloader: instaloader.Instaloader,
     logged_in_public_profile: instaloader.Profile,
-    _output_dir: Path,
+    output_dir: Path,
 ) -> None:
     take_first_items(
         logged_in_public_profile.get_posts(),
@@ -220,7 +220,7 @@ def test_public_profile_first_page_posts_download_logged_in(
 def test_public_profile_first_50_posts_download_logged_in(
     logged_in_instaloader: instaloader.Instaloader,
     logged_in_public_profile: instaloader.Profile,
-    _output_dir: Path,
+    output_dir: Path,
 ) -> None:
     take_up_to_items(
         logged_in_public_profile.get_posts(),
@@ -239,7 +239,7 @@ def test_public_profile_first_50_posts_download_logged_in(
 def test_public_profile_tagged_first_page_download_anonymous(
     anonymous_instaloader: instaloader.Instaloader,
     tagged_profile_username: str,
-    _output_dir: Path,
+    output_dir: Path,
 ) -> None:
     profile = _profile_from_username(anonymous_instaloader, tagged_profile_username)
     take_first_items(
@@ -259,7 +259,7 @@ def test_public_profile_tagged_first_page_download_anonymous(
 def test_public_profile_tagged_first_50_download_anonymous(
     anonymous_instaloader: instaloader.Instaloader,
     tagged_profile_username: str,
-    _output_dir: Path,
+    output_dir: Path,
 ) -> None:
     profile = _profile_from_username(anonymous_instaloader, tagged_profile_username)
     take_up_to_items(
@@ -280,7 +280,7 @@ def test_public_profile_tagged_first_50_download_anonymous(
 def test_public_profile_tagged_first_page_download_logged_in(
     logged_in_instaloader: instaloader.Instaloader,
     tagged_profile_username: str,
-    _output_dir: Path,
+    output_dir: Path,
 ) -> None:
     profile = _profile_from_username(logged_in_instaloader, tagged_profile_username)
     take_first_items(
@@ -300,7 +300,7 @@ def test_public_profile_tagged_first_page_download_logged_in(
 def test_public_profile_tagged_first_50_download_logged_in(
     logged_in_instaloader: instaloader.Instaloader,
     tagged_profile_username: str,
-    _output_dir: Path,
+    output_dir: Path,
 ) -> None:
     profile = _profile_from_username(logged_in_instaloader, tagged_profile_username)
     take_up_to_items(
@@ -321,7 +321,7 @@ def test_public_profile_tagged_first_50_download_logged_in(
 def test_public_profile_reels_first_page_download_anonymous(
     anonymous_instaloader: instaloader.Instaloader,
     reels_profile_username: str,
-    _output_dir: Path,
+    output_dir: Path,
 ) -> None:
     profile = _profile_from_username(anonymous_instaloader, reels_profile_username)
     take_first_items(
@@ -341,7 +341,7 @@ def test_public_profile_reels_first_page_download_anonymous(
 def test_public_profile_reels_first_50_download_anonymous(
     anonymous_instaloader: instaloader.Instaloader,
     reels_profile_username: str,
-    _output_dir: Path,
+    output_dir: Path,
 ) -> None:
     profile = _profile_from_username(anonymous_instaloader, reels_profile_username)
     take_up_to_items(
@@ -362,7 +362,7 @@ def test_public_profile_reels_first_50_download_anonymous(
 def test_public_profile_reels_first_page_download_logged_in(
     logged_in_instaloader: instaloader.Instaloader,
     reels_profile_username: str,
-    _output_dir: Path,
+    output_dir: Path,
 ) -> None:
     profile = _profile_from_username(logged_in_instaloader, reels_profile_username)
     take_first_items(
@@ -382,7 +382,7 @@ def test_public_profile_reels_first_page_download_logged_in(
 def test_public_profile_reels_first_50_download_logged_in(
     logged_in_instaloader: instaloader.Instaloader,
     reels_profile_username: str,
-    _output_dir: Path,
+    output_dir: Path,
 ) -> None:
     profile = _profile_from_username(logged_in_instaloader, reels_profile_username)
     take_up_to_items(
@@ -403,7 +403,7 @@ def test_public_profile_reels_first_50_download_logged_in(
 def test_public_profile_igtv_first_page_download_anonymous(
     anonymous_instaloader: instaloader.Instaloader,
     igtv_profile_username: str,
-    _output_dir: Path,
+    output_dir: Path,
 ) -> None:
     profile = _profile_from_username(anonymous_instaloader, igtv_profile_username)
     take_first_items(
@@ -423,7 +423,7 @@ def test_public_profile_igtv_first_page_download_anonymous(
 def test_public_profile_igtv_first_50_download_anonymous(
     anonymous_instaloader: instaloader.Instaloader,
     igtv_profile_username: str,
-    _output_dir: Path,
+    output_dir: Path,
 ) -> None:
     profile = _profile_from_username(anonymous_instaloader, igtv_profile_username)
     take_up_to_items(
@@ -444,7 +444,7 @@ def test_public_profile_igtv_first_50_download_anonymous(
 def test_public_profile_igtv_first_page_download_logged_in(
     logged_in_instaloader: instaloader.Instaloader,
     igtv_profile_username: str,
-    _output_dir: Path,
+    output_dir: Path,
 ) -> None:
     profile = _profile_from_username(logged_in_instaloader, igtv_profile_username)
     take_first_items(
@@ -464,7 +464,7 @@ def test_public_profile_igtv_first_page_download_logged_in(
 def test_public_profile_igtv_first_50_download_logged_in(
     logged_in_instaloader: instaloader.Instaloader,
     igtv_profile_username: str,
-    _output_dir: Path,
+    output_dir: Path,
 ) -> None:
     profile = _profile_from_username(logged_in_instaloader, igtv_profile_username)
     take_up_to_items(
@@ -485,7 +485,7 @@ def test_public_profile_igtv_first_50_download_logged_in(
 def test_profile_story_items_first_page_download(
     logged_in_instaloader: instaloader.Instaloader,
     story_profile_username: str,
-    _output_dir: Path,
+    output_dir: Path,
 ) -> None:
     profile = _profile_from_username(logged_in_instaloader, story_profile_username)
     story = _story_for_profile(logged_in_instaloader, profile)
@@ -503,7 +503,7 @@ def test_profile_story_items_first_page_download(
 def test_profile_story_items_first_50_download(
     logged_in_instaloader: instaloader.Instaloader,
     story_profile_username: str,
-    _output_dir: Path,
+    output_dir: Path,
 ) -> None:
     profile = _profile_from_username(logged_in_instaloader, story_profile_username)
     story = _story_for_profile(logged_in_instaloader, profile)
@@ -522,7 +522,7 @@ def test_profile_story_items_first_50_download(
 def test_profile_highlights_first_page_download(
     logged_in_instaloader: instaloader.Instaloader,
     highlight_profile_username: str,
-    _output_dir: Path,
+    output_dir: Path,
 ) -> None:
     profile = _profile_from_username(logged_in_instaloader, highlight_profile_username)
     highlight_items = take_first_items(
@@ -541,7 +541,7 @@ def test_profile_highlights_first_page_download(
 def test_profile_highlights_first_50_download(
     logged_in_instaloader: instaloader.Instaloader,
     highlight_profile_username: str,
-    _output_dir: Path,
+    output_dir: Path,
 ) -> None:
     profile = _profile_from_username(logged_in_instaloader, highlight_profile_username)
     highlight_items = take_up_to_items(
