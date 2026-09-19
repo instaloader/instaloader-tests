@@ -44,19 +44,22 @@ def public_profile(
 
 
 @pytest.fixture()
-def logged_in_private_profile(
-    request: pytest.FixtureRequest,
-    integration_targets: IntegrationTargets,
-    profile_cache: dict[tuple[str, str], instaloader.Profile],
-) -> tuple[instaloader.Instaloader, instaloader.Profile]:
-    username = require_target(
+def private_profile_username(integration_targets: IntegrationTargets) -> str:
+    return require_target(
         integration_targets.private_profile, option_name="--target-private-profile"
     )
-    logged_in_instaloader = request.getfixturevalue("logged_in_instaloader")
+
+
+@pytest.fixture()
+def logged_in_private_profile(
+    private_profile_username: str,
+    logged_in_instaloader: instaloader.Instaloader,
+    profile_cache: dict[tuple[str, str], instaloader.Profile],
+) -> tuple[instaloader.Instaloader, instaloader.Profile]:
     return logged_in_instaloader, _profile_from_username(
         logged_in_instaloader.context,
         "logged_in",
-        username,
+        private_profile_username,
         profile_cache,
     )
 
