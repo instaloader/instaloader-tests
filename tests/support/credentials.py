@@ -4,6 +4,8 @@ from dataclasses import dataclass
 from pathlib import Path
 import os
 
+from instaloader.instaloader import get_default_session_filename
+
 
 @dataclass(frozen=True)
 class SessionCredentials:
@@ -22,9 +24,14 @@ def _first_value(*values: str | None) -> str | None:
     return None
 
 
-def load_session_credentials(*, username: str | None, sessionfile: str | None) -> SessionCredentials | None:
+def load_session_credentials(
+    *, username: str | None, sessionfile: str | None
+) -> SessionCredentials | None:
     resolved_username = _first_value(username, os.getenv(ENV_USERNAME))
-    resolved_sessionfile = _first_value(sessionfile, os.getenv(ENV_SESSION_FILE))
-    if not resolved_username or not resolved_sessionfile:
+    if not resolved_username:
         return None
-    return SessionCredentials(username=resolved_username, session_file=Path(resolved_sessionfile).expanduser())
+    resolved_sessionfile = _first_value(sessionfile, os.getenv(ENV_SESSION_FILE))
+    session_file = Path(
+        resolved_sessionfile or get_default_session_filename(resolved_username)
+    ).expanduser()
+    return SessionCredentials(username=resolved_username, session_file=session_file)

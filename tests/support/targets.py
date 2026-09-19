@@ -1,8 +1,9 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
 from collections.abc import Iterable
+from dataclasses import dataclass
 import os
+from typing import TypeVar
 
 import pytest
 
@@ -19,8 +20,15 @@ class IntegrationTargets:
     public_hashtag: str | None = None
 
 
+TargetItem = TypeVar("TargetItem")
 
-def load_targets(*, public_profile: str | None, public_shortcode: str | None, public_hashtag: str | None) -> IntegrationTargets:
+
+def load_targets(
+    *,
+    public_profile: str | None,
+    public_shortcode: str | None,
+    public_hashtag: str | None,
+) -> IntegrationTargets:
     return IntegrationTargets(
         public_profile=public_profile or os.getenv(ENV_PUBLIC_PROFILE),
         public_shortcode=public_shortcode or os.getenv(ENV_PUBLIC_SHORTCODE),
@@ -31,11 +39,15 @@ def load_targets(*, public_profile: str | None, public_shortcode: str | None, pu
 def require_target(value: str | None, *, option_name: str) -> str:
     if value:
         return value
-    pytest.skip(f"configure {option_name} or the matching INSTALOADER_* environment variable")
+    pytest.skip(
+        f"configure {option_name} or the matching INSTALOADER_* environment variable"
+    )
 
 
-def take_first_items(items: Iterable[object], *, count: int, description: str) -> list[object]:
-    selected: list[object] = []
+def take_first_items(
+    items: Iterable[TargetItem], *, count: int, description: str
+) -> list[TargetItem]:
+    selected: list[TargetItem] = []
     for item in items:
         selected.append(item)
         if len(selected) == count:

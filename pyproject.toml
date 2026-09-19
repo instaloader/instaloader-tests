@@ -9,12 +9,31 @@ description = "Instagram-backed integration tests for Instaloader"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
-  "instaloader>=4.15,<5",
-  "pytest>=8.0,<9",
+  "instaloader==4.15.3",
+  "pytest==8.4.2",
+]
+
+[project.optional-dependencies]
+dev = [
+  "black==25.1.0",
+  "mypy==1.17.1",
 ]
 
 [tool.setuptools]
 py-modules = []
+
+[tool.black]
+target-version = ["py312"]
+
+[tool.mypy]
+files = ["tests"]
+namespace_packages = true
+python_version = "3.12"
+warn_unused_configs = true
+
+[[tool.mypy.overrides]]
+module = ["instaloader", "instaloader.*"]
+ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 addopts = ["-ra"]

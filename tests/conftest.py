@@ -6,7 +6,11 @@ import instaloader
 import pytest
 
 from tests.support.credentials import SessionCredentials, load_session_credentials
-from tests.support.requirements_map import REQUIREMENTS, is_importance_enabled
+from tests.support.requirements_map import (
+    REQUIREMENTS,
+    Importance,
+    is_importance_enabled,
+)
 from tests.support.targets import IntegrationTargets, load_targets
 
 
@@ -24,15 +28,15 @@ def pytest_addoption(parser: pytest.Parser) -> None:
     parser.addoption(
         "--max-importance",
         action="store",
-        default="critical",
-        choices=["critical", "high", "medium", "low", "very-low"],
+        default=Importance.CRITICAL.value,
+        choices=[importance.value for importance in Importance],
         help="maximum importance level to execute",
     )
     parser.addoption(
         "--sessionfile",
         action="store",
         default=None,
-        help="path to an Instaloader session file for logged-in tests",
+        help="optional path to an Instaloader session file override for logged-in tests",
     )
     parser.addoption(
         "--username",
@@ -61,21 +65,37 @@ def pytest_addoption(parser: pytest.Parser) -> None:
 
 
 @pytest.hookimpl()
-def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Item]) -> None:
+def pytest_collection_modifyitems(
+    config: pytest.Config, items: list[pytest.Item]
+) -> None:
     max_importance = config.getoption("--max-importance")
     for item in items:
         requirement_marker = item.get_closest_marker("requirement_id")
         if requirement_marker:
             requirement_id = requirement_marker.args[0]
             if requirement_id not in REQUIREMENTS:
-                raise pytest.UsageError(f"Unknown requirement_id marker: {requirement_id}")
+                raise pytest.UsageError(
+                    f"Unknown requirement_id marker: {requirement_id}"
+                )
 
         importance_marker = item.get_closest_marker("importance")
-        if importance_marker and not is_importance_enabled(max_importance, importance_marker.args[0]):
-            item.add_marker(pytest.mark.skip(reason=f"requires --max-importance >= {importance_marker.args[0]}"))
+        if importance_marker and not is_importance_enabled(
+            max_importance, importance_marker.args[0]
+        ):
+            item.add_marker(
+                pytest.mark.skip(
+                    reason=f"requires --max-importance >= {importance_marker.args[0]}"
+                )
+            )
 
-        if item.get_closest_marker("integration") and not config.getoption("--run-instagram"):
-            item.add_marker(pytest.mark.skip(reason="pass --run-instagram to execute Instagram-backed tests"))
+        if item.get_closest_marker("integration") and not config.getoption(
+            "--run-instagram"
+        ):
+            item.add_marker(
+                pytest.mark.skip(
+                    reason="pass --run-instagram to execute Instagram-backed tests"
+                )
+            )
 
 
 @pytest.fixture(scope="session")
@@ -101,15 +121,25 @@ def output_dir(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     return tmp_path
 
 
-@pytest.fixture()
+@pytest.fixture(scope="session")
 def anonymous_instaloader() -> instaloader.Instaloader:
-    return instaloader.Instaloader(quiet=True, dirname_pattern="{target}", filename_pattern="{shortcode}")
+    return instaloader.Instaloader(
+        quiet=True, dirname_pattern="{target}", filename_pattern="{shortcode}"
+    )
 
 
-@pytest.fixture()
-def logged_in_instaloader(session_credentials: SessionCredentials | None) -> instaloader.Instaloader:
+@pytest.fixture(scope="session")
+def logged_in_instaloader(
+    session_credentials: SessionCredentials | None,
+) -> instaloader.Instaloader:
     if session_credentials is None:
-        pytest.skip("configure --username and --sessionfile for logged-in tests")
-    loader = instaloader.Instaloader(quiet=True, dirname_pattern="{target}", filename_pattern="{shortcode}")
-    loader.load_session_from_file(session_credentials.username, str(session_credentials.session_file))
+        pytest.skip("configure --username for logged-in tests")
+    if not session_credentials.session_file.exists():
+        pytest.skip(f"session file not found: {session_credentials.session_file}")
+    loader = instaloader.Instaloader(
+        quiet=True, dirname_pattern="{target}", filename_pattern="{shortcode}"
+    )
+    loader.load_session_from_file(
+        session_credentials.username, str(session_credentials.session_file)
+    )
     return loader

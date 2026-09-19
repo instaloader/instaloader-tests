@@ -14,7 +14,9 @@ def test_public_shortcode_caption_and_date_accessible(
     anonymous_instaloader: instaloader.Instaloader,
     integration_targets,
 ) -> None:
-    shortcode = require_target(integration_targets.public_shortcode, option_name="--target-public-shortcode")
+    shortcode = require_target(
+        integration_targets.public_shortcode, option_name="--target-public-shortcode"
+    )
 
     post = instaloader.Post.from_shortcode(anonymous_instaloader.context, shortcode)
     if not post.caption:

@@ -80,17 +80,18 @@ Instagram-backed integration scenarios.
 In particular, CI should be limited to things such as:
 
 - installing the project and test dependencies;
+- running local project-quality checks such as formatting and type validation;
 - validating that the test suite imports and collects correctly;
-- running formatting, linting, or similar project-quality checks if such checks are
-  added later.
+- running additional repository-quality checks that stay independent of live
+  Instagram access.
 
 The integration tests themselves must not run in CI. This is a hard constraint for
 this repository and should be reflected in the eventual test configuration, for
 example by keeping those tests behind explicit markers or explicit local-only
 commands that CI never enables.
 
-The current GitHub Actions workflow therefore installs the project and performs
-pytest collection only.
+The current GitHub Actions workflow therefore installs the project, runs Black
+and mypy, and performs pytest collection only.
 
 ## Integration Test Execution
 
@@ -115,20 +116,12 @@ This keeps the repository practical for real-world Instagram integration checks
 while avoiding any assumption that the tests are safe or stable enough for
 unattended CI execution.
 
-### Current critical tests
-
-The initial suite covers these critical anonymous requirements:
-
-- profile picture download for a public profile;
-- first-page profile post download for a public profile;
-- caption and date access for a public post shortcode.
-
 ### Running the suite locally
 
 Install the project and collect the test suite:
 
 ```bash
-python -m pip install -e .
+python -m pip install -e ".[dev]"
 python -m pytest --collect-only
 ```
 
@@ -148,6 +141,10 @@ Supported environment variables:
 - `INSTALOADER_PUBLIC_HASHTAG`
 - `INSTALOADER_USERNAME`
 - `INSTALOADER_SESSIONFILE`
+
+If `INSTALOADER_USERNAME` or `--username` is set, the suite uses Instaloader's
+default session-file path unless `INSTALOADER_SESSIONFILE` or `--sessionfile`
+overrides it.
 
 Use `--max-importance` to widen execution beyond critical tests as more coverage
 is added.
