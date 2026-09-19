@@ -52,6 +52,8 @@ instaloader --load-cookies BROWSER
 
 Instaloader shall be able to create a Session file with `Instaloader.interactive_login()` if no 2FA is configured.
 
+Instaloader shall be able to verify that a saved Session file is usable with `Instaloader.test_login()`.
+
 Note that this calls `Instaloader.login()`:
 
 ```python

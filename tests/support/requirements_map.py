@@ -29,6 +29,12 @@ class RequirementCase:
 
 
 REQUIREMENTS: dict[str, RequirementCase] = {
+    "login-session-file-usable-logged-in-high": RequirementCase(
+        section="Session Creation / Login",
+        statement="Instaloader shall be able to verify that a saved Session file is usable with `Instaloader.test_login()`.",
+        importance=Importance.HIGH,
+        authentication=Authentication.LOGGED_IN,
+    ),
     "profile-picture-anonymous-critical": RequirementCase(
         section="Download Targets / Profile / Profile Picture",
         statement="Instaloader shall be able to download the profile picture of a Profile.",
