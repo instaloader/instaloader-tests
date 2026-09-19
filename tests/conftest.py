@@ -103,13 +103,13 @@ def output_dir(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
 
 @pytest.fixture()
 def anonymous_instaloader() -> instaloader.Instaloader:
-    return instaloader.Instaloader(quiet=True)
+    return instaloader.Instaloader(quiet=True, dirname_pattern="{target}", filename_pattern="{shortcode}")
 
 
 @pytest.fixture()
 def logged_in_instaloader(session_credentials: SessionCredentials | None) -> instaloader.Instaloader:
     if session_credentials is None:
         pytest.skip("configure --username and --sessionfile for logged-in tests")
-    loader = instaloader.Instaloader(quiet=True)
+    loader = instaloader.Instaloader(quiet=True, dirname_pattern="{target}", filename_pattern="{shortcode}")
     loader.load_session_from_file(session_credentials.username, str(session_credentials.session_file))
     return loader

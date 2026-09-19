@@ -141,10 +141,11 @@ python -m pytest \
   --target-public-shortcode CxD6K_4M8QK
 ```
 
-The same target values can also be provided through environment variables:
+Supported environment variables:
 
 - `INSTALOADER_PUBLIC_PROFILE`
 - `INSTALOADER_PUBLIC_SHORTCODE`
+- `INSTALOADER_PUBLIC_HASHTAG`
 - `INSTALOADER_USERNAME`
 - `INSTALOADER_SESSIONFILE`
 

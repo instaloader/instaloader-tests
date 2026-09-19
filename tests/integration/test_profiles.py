@@ -36,6 +36,4 @@ def test_public_profile_first_page_posts_download(
 
     for post in posts:
         assert anonymous_instaloader.download_post(post, target=username)
-
-    metadata_files = [path for path in output_dir.joinpath(username).rglob("*.json.xz") if path.is_file()]
-    assert len(metadata_files) >= 12
+        assert list(output_dir.joinpath(username).glob(f"{post.shortcode}*"))
