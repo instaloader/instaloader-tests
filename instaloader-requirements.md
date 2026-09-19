@@ -268,6 +268,8 @@ Instaloader shall be able to access the geotag of a Post (if logged-in).
 
 ## Profile Metadata
 
+Profile access functions will later be extended to also test accessing private profiles.
+
 ### Followers
 
 | Importance               | logged-in |

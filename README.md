@@ -74,6 +74,8 @@ The suite should support:
 
 - anonymous-only execution;
 - logged-in execution;
+- future extension of profile access checks to include private-profile access
+  scenarios;
 - selection up to a configurable importance level;
 - running individual feature groups or narrower subsets while iterating on a
   specific requirement.
