@@ -156,3 +156,6 @@ is added.
 
 Use `--authentication` to restrict execution to `anonymous` or `logged_in`
 tests.
+
+At the end of each run, pytest prints a `results by criticality` summary that
+groups the observed outcomes by importance level.
