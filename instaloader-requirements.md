@@ -42,13 +42,13 @@ The integration suite shall maintain reusable targets for at least the following
 - another supported browser profile with valid Instagram cookies;
 - a login target account without two-factor authentication;
 - a login target account with two-factor authentication enabled;
-- a profile with at least 50 story items and at least 50 highlight containers;
+- a profile with at least 50 story items and at least 50 highlights;
 - a profile with at least 50 tagged posts, 50 reels, and 50 IGTV items when those surfaces exist;
 - a profile with at least 50 followers and at least 50 followees, and with those relationships visible to the authenticated session;
 - a profile fixture whose username can be changed between two download runs while preserving the same Instagram identity;
 - a hashtag with at least 50 posts;
 - a location with at least 50 posts;
-- a reusable public post fixture that is accessible in both anonymous and authenticated runs, exposes caption and date in its anonymous view, and in its authenticated view additionally exposes geotag, a liker list with at least 50 entries, and a comment list with at least 50 entries; the same fixture shall satisfy all post-metadata requirements in this document;
+- a reusable public post fixture that is accessible in both anonymous and authenticated runs, exposes caption, date, and a comment list with at least 50 entries in its anonymous view, and in its authenticated view additionally exposes geotag and a liker list with at least 50 entries; the same fixture shall satisfy all post-metadata requirements in this document;
 - a shortcode for a downloadable post with one or more media items;
 - an owner account with at least 50 saved posts, 50 feed items, and 50 visible story items.
 
@@ -124,8 +124,8 @@ followed private profiles.
 | DL-OWNER-2 | critical | owner | first 50 items | Instaloader shall be able to download the first 50 saved posts of the owner. |
 | DL-OWNER-3 | high | owner | first page | Instaloader shall be able to download the first page of the owner's feed. |
 | DL-OWNER-4 | medium | owner | first 50 items | Instaloader shall be able to download the first 50 feed posts of the owner. |
-| DL-OWNER-5 | high | owner | first page | Instaloader shall be able to download the first page of the owner's currently visible stories. |
-| DL-OWNER-6 | medium | owner | first 50 items | Instaloader shall be able to download the first 50 currently visible stories of the owner. |
+| DL-OWNER-5 | high | owner | first page | Instaloader shall be able to download the first page of the owner's currently visible story items. |
+| DL-OWNER-6 | medium | owner | first 50 items | Instaloader shall be able to download the first 50 currently visible story items of the owner. |
 
 ### Single-post targets
 
