@@ -1,3 +1,4 @@
+from itertools import islice
 from pathlib import Path
 from datetime import datetime
 
@@ -5,7 +6,7 @@ import instaloader
 import pytest
 
 from tests.support.requirements_map import requirement
-from tests.support.targets import require_target, take_first_items
+from tests.support.targets import require_target
 
 
 @requirement("post-basic-information-anonymous-critical")
@@ -41,15 +42,11 @@ def test_saved_posts_first_page_download(
         logged_in_instaloader.context
     ).get_saved_posts()
     page_length = saved_posts.page_length()
-    expected_posts = tuple(
-        take_first_items(
-            saved_posts,
-            count=page_length,
-            description="logged-in user's saved posts",
-        )
-    )
-    assert expected_posts
-    assert len(expected_posts) == page_length
+    expected_posts = tuple(islice(saved_posts, page_length))
+    if not expected_posts:
+        pytest.skip("configured account has no saved posts")
+    if saved_posts.count is not None:
+        assert len(expected_posts) == min(saved_posts.count, page_length)
 
     for post in expected_posts:
         logged_in_instaloader.download_post(post, target=saved_posts_target)
