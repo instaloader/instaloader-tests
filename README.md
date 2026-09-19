@@ -115,7 +115,7 @@ option is configured.
 | `--target-private-profile`  | Private Instagram username                               |
 | `--target-public-shortcode` | Public post shortcode                                    |
 | `--target-public-hashtag`   | Public hashtag name                                      |
-| `--max-items`               | Maximum number of items to iterate in list-based tests (`50` default) |
+| `--max-items`               | Maximum number of items to iterate in list-based tests (`50` default, must be `>= 1`) |
 
 At the end of each run, pytest prints a `results by criticality` summary that
 groups the observed outcomes by importance level.

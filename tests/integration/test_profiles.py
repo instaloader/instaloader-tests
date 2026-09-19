@@ -4,6 +4,7 @@ from pathlib import Path
 import instaloader
 import pytest
 
+from tests.support.pagination import FIRST_PAGE_ITEMS
 from tests.support.requirements_map import Authentication, requirement
 from tests.support.targets import IntegrationTargets, require_target
 
@@ -72,9 +73,12 @@ def test_public_profile_picture_download(
 def test_public_profile_first_page_posts_download(
     active_instaloader: instaloader.Instaloader,
     public_profile: instaloader.Profile,
+    max_items: int,
     output_dir: Path,
 ) -> None:
-    for post in itertools.islice(public_profile.get_posts(), 12):
+    for post in itertools.islice(
+        public_profile.get_posts(), min(FIRST_PAGE_ITEMS, max_items)
+    ):
         active_instaloader.download_post(post, target=public_profile.username)
 
 
@@ -91,7 +95,10 @@ def test_private_profile_picture_download(
 def test_private_profile_first_page_posts_download(
     active_instaloader: instaloader.Instaloader,
     private_profile: instaloader.Profile,
+    max_items: int,
     output_dir: Path,
 ) -> None:
-    for post in itertools.islice(private_profile.get_posts(), 12):
+    for post in itertools.islice(
+        private_profile.get_posts(), min(FIRST_PAGE_ITEMS, max_items)
+    ):
         active_instaloader.download_post(post, target=private_profile.username)

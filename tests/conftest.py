@@ -283,7 +283,10 @@ def session_credentials(pytestconfig: pytest.Config) -> SessionCredentials | Non
 
 @pytest.fixture(scope="session")
 def max_items(pytestconfig: pytest.Config) -> int:
-    return int(pytestconfig.getoption("--max-items"))
+    max_items_option = int(pytestconfig.getoption("--max-items"))
+    if max_items_option < 1:
+        raise pytest.UsageError("--max-items must be at least 1")
+    return max_items_option
 
 
 @pytest.fixture()
