@@ -37,9 +37,7 @@ REQUIREMENTS: dict[str, RequirementCase] = {
     "test-login-query-username-logged-in-critical": RequirementCase(
         section="Session Creation / Test login",
         statement="Instaloader shall be able to query Instagram for the username of the used Session.",
-        variants=(
-            RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
-        ),
+        variants=(RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),),
     ),
     "profile-picture-anonymous-critical": RequirementCase(
         section="Download Targets / Profile / Profile Picture",
