@@ -34,14 +34,13 @@ def public_profile_logged_in(
 
 @pytest.fixture()
 def public_profile(
+    request: pytest.FixtureRequest,
     active_authentication: str,
-    public_profile_anonymous: instaloader.Profile,
-    public_profile_logged_in: instaloader.Profile,
 ) -> instaloader.Profile:
     if active_authentication == "anonymous":
-        return public_profile_anonymous
+        return request.getfixturevalue("public_profile_anonymous")
     if active_authentication == "logged_in":
-        return public_profile_logged_in
+        return request.getfixturevalue("public_profile_logged_in")
     raise pytest.UsageError(f"Unknown authentication variant: {active_authentication}")
 
 
@@ -73,14 +72,13 @@ def public_profile_first_page_posts_logged_in(
 
 @pytest.fixture()
 def public_profile_first_page_posts(
+    request: pytest.FixtureRequest,
     active_authentication: str,
-    public_profile_first_page_posts_anonymous: tuple[instaloader.Post, ...],
-    public_profile_first_page_posts_logged_in: tuple[instaloader.Post, ...],
 ) -> tuple[instaloader.Post, ...]:
     if active_authentication == "anonymous":
-        return public_profile_first_page_posts_anonymous
+        return request.getfixturevalue("public_profile_first_page_posts_anonymous")
     if active_authentication == "logged_in":
-        return public_profile_first_page_posts_logged_in
+        return request.getfixturevalue("public_profile_first_page_posts_logged_in")
     raise pytest.UsageError(f"Unknown authentication variant: {active_authentication}")
 
 
