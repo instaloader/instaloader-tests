@@ -109,6 +109,7 @@ option is configured.
 |-----------------------------|----------------------------------------------------------|
 | `--authentication`          | `all` (default), `anonymous`, `logged_in`                |
 | `--max-importance`          | `critical` (default), `high`, `medium`, `low`, `verylow` |
+| `--post-checker`            | `download` (default), `fast`                             |
 | `--username`                | Instagram username                                       |
 | `--sessionfile`             | Filesystem path                                          |
 | `--target-public-profile`   | Public Instagram username                                |
@@ -119,6 +120,11 @@ option is configured.
 At the end of each run, pytest prints a `results by criticality` summary that
 groups the observed outcomes by importance level.
 
+`--post-checker=download` keeps the stronger default coverage by calling
+`download_post()` on exercised posts. `--post-checker=fast` switches to a
+lighter check that verifies the same caption/date access used by the single-post
+test.
+
 #### Example commands
 
 Anonymous smoke run against the currently implemented public-profile and single-
@@ -127,6 +133,7 @@ post coverage:
 ```bash
 poetry run pytest \
   --authentication=anonymous \
+  --post-checker=fast \
   --target-public-profile=nasa \
   --target-public-shortcode=CxD6K_4M8QK
 ```

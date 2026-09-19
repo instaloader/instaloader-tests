@@ -13,6 +13,7 @@ from tests.support.requirements_map import (
     Importance,
     is_importance_enabled,
 )
+from tests.support.post_checkers import POST_CHECKERS, PostChecker
 from tests.support.targets import (
     IntegrationTargets,
     TARGET_OPTIONS,
@@ -111,6 +112,13 @@ def pytest_addoption(parser: pytest.Parser) -> None:
         default="all",
         choices=["all", *[authentication.value for authentication in Authentication]],
         help="authentication scope to execute: all, anonymous, or logged_in only",
+    )
+    parser.addoption(
+        "--post-checker",
+        action="store",
+        default="download",
+        choices=sorted(POST_CHECKERS),
+        help="post validation mode to execute: download (default) or fast",
     )
 
 
@@ -316,3 +324,8 @@ def active_instaloader(
     if active_authentication is Authentication.LOGGED_IN:
         return logged_in_instaloader
     raise pytest.UsageError(f"Unknown authentication variant: {active_authentication}")
+
+
+@pytest.fixture(scope="session")
+def post_checker(pytestconfig: pytest.Config) -> PostChecker:
+    return POST_CHECKERS[pytestconfig.getoption("--post-checker")]

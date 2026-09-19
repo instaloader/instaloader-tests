@@ -4,6 +4,7 @@ from pathlib import Path
 import instaloader
 import pytest
 
+from tests.support.post_checkers import PostChecker
 from tests.support.requirements_map import Authentication, requirement
 from tests.support.targets import IntegrationTargets
 
@@ -69,9 +70,10 @@ def test_public_profile_first_page_posts_download(
     active_instaloader: instaloader.Instaloader,
     public_profile: instaloader.Profile,
     output_dir: Path,
+    post_checker: PostChecker,
 ) -> None:
     for post in itertools.islice(public_profile.get_posts(), 12):
-        active_instaloader.download_post(post, target=public_profile.username)
+        post_checker(active_instaloader, post, target=public_profile.username)
 
 
 @requirement("profile-picture-private-logged-in-critical")
@@ -88,6 +90,7 @@ def test_private_profile_first_page_posts_download(
     active_instaloader: instaloader.Instaloader,
     private_profile: instaloader.Profile,
     output_dir: Path,
+    post_checker: PostChecker,
 ) -> None:
     for post in itertools.islice(private_profile.get_posts(), 12):
-        active_instaloader.download_post(post, target=private_profile.username)
+        post_checker(active_instaloader, post, target=private_profile.username)
