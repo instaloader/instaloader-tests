@@ -24,45 +24,34 @@ class RequirementVariant:
     importance: Importance
 
 
-@dataclass(frozen=True)
-class RequirementCase:
-    variants: tuple[RequirementVariant, ...]
-
-
-REQUIREMENTS: dict[str, RequirementCase] = {
+REQUIREMENTS: dict[str, list[RequirementVariant]] = {
     # Session Creation / Test login
-    "test-login-query-username-logged-in-critical": RequirementCase(
-        variants=(RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),),
-    ),
+    "test-login-query-username-logged-in-critical": [
+        RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL)
+    ],
     # Download Targets / Profile / Profile Picture
-    "profile-picture-anonymous-critical": RequirementCase(
-        variants=(
-            RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
-            RequirementVariant(Authentication.ANONYMOUS, Importance.CRITICAL),
-        ),
-    ),
+    "profile-picture-anonymous-critical": [
+        RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
+        RequirementVariant(Authentication.ANONYMOUS, Importance.CRITICAL),
+    ],
     # Download Targets / Profile / Profile Posts
-    "profile-posts-first-page-anonymous-critical": RequirementCase(
-        variants=(
-            RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
-            RequirementVariant(Authentication.ANONYMOUS, Importance.HIGH),
-        ),
-    ),
+    "profile-posts-first-page-anonymous-critical": [
+        RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
+        RequirementVariant(Authentication.ANONYMOUS, Importance.HIGH),
+    ],
     # Post Metadata / Basic Information
-    "post-basic-information-anonymous-critical": RequirementCase(
-        variants=(
-            RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
-            RequirementVariant(Authentication.ANONYMOUS, Importance.CRITICAL),
-        ),
-    ),
+    "post-basic-information-anonymous-critical": [
+        RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
+        RequirementVariant(Authentication.ANONYMOUS, Importance.CRITICAL),
+    ],
     # Download Targets / Saved Posts
     **{
-        requirement_id: RequirementCase(
-            variants=(RequirementVariant(Authentication.LOGGED_IN, importance),),
-        )
+        requirement_id: [
+            RequirementVariant(Authentication.LOGGED_IN, importance),
+        ]
         for requirement_id, importance in {
-            "saved-posts-first-page-logged-in-critical": (Importance.CRITICAL,),
-            "saved-posts-first-50-logged-in-critical": (Importance.CRITICAL,),
+            "saved-posts-first-page-logged-in-critical": Importance.CRITICAL,
+            "saved-posts-first-50-logged-in-critical": Importance.CRITICAL,
         }.items()
     },
 }
@@ -90,7 +79,7 @@ def requirement(
 ) -> Callable[[Callable[..., object]], Callable[..., object]]:
     if requirement_id not in REQUIREMENTS:
         raise pytest.UsageError(f"Unknown requirement_id marker: {requirement_id}")
-    case = REQUIREMENTS[requirement_id]
+    variants = REQUIREMENTS[requirement_id]
     params = [
         pytest.param(
             variant.authentication.value,
@@ -100,7 +89,7 @@ def requirement(
             ),
             id=variant.authentication.value,
         )
-        for variant in case.variants
+        for variant in variants
     ]
 
     def decorator(test_function: Callable[..., object]) -> Callable[..., object]:
