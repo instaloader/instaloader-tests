@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Generator
 from collections import defaultdict
+from enum import StrEnum
 from pathlib import Path
 from typing import Any, cast
 
@@ -30,11 +31,17 @@ _SUMMARY_OUTCOME_PRECEDENCE = {
 }
 
 
-def _authentication_label(item: pytest.Item) -> str | None:
+class AuthenticationScope(StrEnum):
+    ALL = "all"
+    ANONYMOUS = "anonymous"
+    LOGGED_IN = "logged_in"
+
+
+def _authentication_label(item: pytest.Item) -> AuthenticationScope | None:
     if item.get_closest_marker("anonymous"):
-        return "anonymous"
+        return AuthenticationScope.ANONYMOUS
     if item.get_closest_marker("logged_in"):
-        return "logged_in"
+        return AuthenticationScope.LOGGED_IN
     return None
 
 
@@ -116,8 +123,8 @@ def pytest_addoption(parser: pytest.Parser) -> None:
     parser.addoption(
         "--authentication",
         action="store",
-        default="all",
-        choices=["all", "anonymous", "logged_in"],
+        default=AuthenticationScope.ALL,
+        choices=list(AuthenticationScope),
         help="authentication scope to execute: all, anonymous, or logged_in only",
     )
 
@@ -127,7 +134,7 @@ def pytest_collection_modifyitems(
     config: pytest.Config, items: list[pytest.Item]
 ) -> None:
     max_importance = config.getoption("--max-importance")
-    authentication_scope = config.getoption("--authentication")
+    authentication_scope = AuthenticationScope(config.getoption("--authentication"))
     for item_index, item in enumerate(items):
         setattr(item, "_instaloader_summary_key", f"{item_index}:{item.nodeid}")
         requirement_marker = item.get_closest_marker("requirement_id")
@@ -150,7 +157,7 @@ def pytest_collection_modifyitems(
 
         authentication_label = _authentication_label(item)
         if (
-            authentication_scope != "all"
+            authentication_scope != AuthenticationScope.ALL
             and authentication_label != authentication_scope
         ):
             if authentication_label is None:
@@ -294,18 +301,18 @@ def logged_in_instaloader(
 
 
 @pytest.fixture()
-def active_authentication(request: pytest.FixtureRequest) -> str:
-    return request.param
+def active_authentication(request: pytest.FixtureRequest) -> AuthenticationScope:
+    return AuthenticationScope(request.param)
 
 
 @pytest.fixture()
 def active_instaloader(
-    active_authentication: str,
+    active_authentication: AuthenticationScope,
     anonymous_instaloader: instaloader.Instaloader,
     logged_in_instaloader: instaloader.Instaloader,
 ) -> instaloader.Instaloader:
-    if active_authentication == "anonymous":
+    if active_authentication == AuthenticationScope.ANONYMOUS:
         return anonymous_instaloader
-    if active_authentication == "logged_in":
+    if active_authentication == AuthenticationScope.LOGGED_IN:
         return logged_in_instaloader
     raise pytest.UsageError(f"Unknown authentication variant: {active_authentication}")
