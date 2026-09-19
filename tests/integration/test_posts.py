@@ -1,12 +1,9 @@
+from datetime import datetime
 from pathlib import Path
 
 import instaloader
 
-from tests.support.post_checkers import (
-    PostChecker,
-    PostCheckerName,
-    check_post_basic_information,
-)
+from tests.support.post_checkers import PostChecker, PostCheckerName
 from tests.support.requirements_map import requirement
 
 
@@ -23,4 +20,6 @@ def test_public_shortcode_post_check(
     post = instaloader.Post.from_shortcode(active_instaloader.context, shortcode)
     post_checker(active_instaloader, post, shortcode)
     if post_checker_name == "download":
-        check_post_basic_information(active_instaloader, post, shortcode)
+        assert isinstance(post.caption, str)
+        assert post.caption.strip()
+        assert isinstance(post.date_utc, datetime)
