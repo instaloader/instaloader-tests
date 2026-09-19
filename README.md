@@ -154,4 +154,5 @@ unless `--sessionfile` overrides it.
 Use `--max-importance` to widen execution beyond critical tests as more coverage
 is added.
 
-Use `--authentication` to restrict execution to `anonymous` or `logged_in` tests.
+Use `--authentication` to restrict execution to `anonymous` or logged-in tests
+(`logged_in` and `logged-in` are both accepted).
