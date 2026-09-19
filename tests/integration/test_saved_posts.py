@@ -8,46 +8,27 @@ import pytest
 from tests.support.requirements_map import requirement
 
 
-@pytest.fixture(scope="module")
-def saved_posts_first_page(
-    logged_in_instaloader: instaloader.Instaloader,
-) -> Iterator[instaloader.Post]:
-    profile = instaloader.Profile.own_profile(logged_in_instaloader.context)
-    return itertools.islice(profile.get_saved_posts(), 12)
-
-
-@pytest.fixture(scope="module")
-def saved_posts_extended(
-    logged_in_instaloader: instaloader.Instaloader,
-) -> Iterator[instaloader.Post]:
-    profile = instaloader.Profile.own_profile(logged_in_instaloader.context)
-    extended_iterator = itertools.islice(profile.get_saved_posts(), 12, 50)
-    description = f"saved posts of {profile.username!r}"
-    first_extended = next(extended_iterator, None)
-    if first_extended is None:
-        pytest.skip(
-            f"configured target does not provide more than 12 items for {description}"
-        )
-    return itertools.chain((first_extended,), extended_iterator)
-
-
 @requirement("saved-posts-first-page-logged-in-critical")
 def test_saved_posts_first_page_download(
     logged_in_instaloader: instaloader.Instaloader,
-    saved_posts_first_page: Iterator[instaloader.Post],
     output_dir: Path,
 ) -> None:
     profile = instaloader.Profile.own_profile(logged_in_instaloader.context)
-    for post in saved_posts_first_page:
+    for post in itertools.islice(profile.get_saved_posts(), 12):
         logged_in_instaloader.download_post(post, target=f"{profile.username}-saved")
 
 
 @requirement("saved-posts-first-50-logged-in-critical")
 def test_saved_posts_extended_download(
     logged_in_instaloader: instaloader.Instaloader,
-    saved_posts_extended: Iterator[instaloader.Post],
     output_dir: Path,
 ) -> None:
     profile = instaloader.Profile.own_profile(logged_in_instaloader.context)
-    for post in saved_posts_extended:
+    further_posts = False
+    for post in itertools.islice(profile.get_saved_posts(), 12, 50):
         logged_in_instaloader.download_post(post, target=f"{profile.username}-saved")
+        further_posts = True
+    if not further_posts:
+        pytest.skip(
+            f"configured target does not provide more than 12 items for saved posts of {profile.username!r}"
+        )
