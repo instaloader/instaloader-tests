@@ -31,7 +31,12 @@ def test_public_shortcode_download(
     active_instaloader: instaloader.Instaloader,
     integration_targets,
     output_dir: Path,
+    post_checker_name: PostCheckerName,
+    post_checker: PostChecker,
 ) -> None:
     shortcode = integration_targets.require("public_shortcode")
     post = instaloader.Post.from_shortcode(active_instaloader.context, shortcode)
-    active_instaloader.download_post(post, target=shortcode)
+    post_checker(active_instaloader, post, shortcode)
+    if post_checker_name == "download":
+        downloaded_files = list(output_dir.joinpath(shortcode).glob(f"{shortcode}*"))
+        assert downloaded_files

@@ -76,7 +76,7 @@ def test_public_profile_first_page_posts_download(
         post_checker(active_instaloader, post, public_profile.username)
 
 
-@requirement("profile-posts-further-pages-anonymous")
+@requirement("profile-posts-further-pages")
 def test_public_profile_further_pages_posts_download(
     active_instaloader: instaloader.Instaloader,
     public_profile: instaloader.Profile,
@@ -85,7 +85,8 @@ def test_public_profile_further_pages_posts_download(
     post_checker: PostChecker,
 ) -> None:
     further_posts = False
-    for post in itertools.islice(public_profile.get_posts(), 12, max_items):
+    stop_index = max(13, max_items)
+    for post in itertools.islice(public_profile.get_posts(), 12, stop_index):
         post_checker(active_instaloader, post, public_profile.username)
         further_posts = True
     if not further_posts:

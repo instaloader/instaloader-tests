@@ -19,7 +19,7 @@ def public_hashtag(
     )
 
 
-@requirement("hashtag-posts-first-page-anonymous")
+@requirement("hashtag-posts-first-page")
 def test_public_hashtag_first_page_posts_download(
     active_instaloader: instaloader.Instaloader,
     public_hashtag: instaloader.Hashtag,
@@ -30,7 +30,7 @@ def test_public_hashtag_first_page_posts_download(
         post_checker(active_instaloader, post, f"#{public_hashtag.name}")
 
 
-@requirement("hashtag-posts-further-pages-anonymous")
+@requirement("hashtag-posts-further-pages")
 def test_public_hashtag_further_pages_posts_download(
     active_instaloader: instaloader.Instaloader,
     public_hashtag: instaloader.Hashtag,
@@ -39,7 +39,8 @@ def test_public_hashtag_further_pages_posts_download(
     post_checker: PostChecker,
 ) -> None:
     further_posts = False
-    for post in itertools.islice(public_hashtag.get_posts(), 12, max_items):
+    stop_index = max(13, max_items)
+    for post in itertools.islice(public_hashtag.get_posts(), 12, stop_index):
         post_checker(active_instaloader, post, f"#{public_hashtag.name}")
         further_posts = True
     if not further_posts:

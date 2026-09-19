@@ -42,7 +42,7 @@ REQUIREMENTS: dict[str, list[RequirementVariant]] = {
         RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
         RequirementVariant(Authentication.ANONYMOUS, Importance.HIGH),
     ],
-    "profile-posts-further-pages-anonymous": [
+    "profile-posts-further-pages": [
         RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
         RequirementVariant(Authentication.ANONYMOUS, Importance.MEDIUM),
     ],
@@ -50,11 +50,11 @@ REQUIREMENTS: dict[str, list[RequirementVariant]] = {
         RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL)
     ],
     # Download Targets / Hashtags / Hashtag Posts
-    "hashtag-posts-first-page-anonymous": [
+    "hashtag-posts-first-page": [
         RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
         RequirementVariant(Authentication.ANONYMOUS, Importance.HIGH),
     ],
-    "hashtag-posts-further-pages-anonymous": [
+    "hashtag-posts-further-pages": [
         RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
         RequirementVariant(Authentication.ANONYMOUS, Importance.MEDIUM),
     ],
