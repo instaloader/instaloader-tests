@@ -126,9 +126,10 @@ def requirement(
     ]
 
     def decorator(test_function: Callable[..., object]) -> Callable[..., object]:
+        marked = pytest.mark.usefixtures("active_authentication")(test_function)
         marked = pytest.mark.parametrize(
             "active_authentication", params, indirect=True
-        )(test_function)
+        )(marked)
         marked = pytest.mark.requirement_id(requirement_id)(marked)
         return pytest.mark.integration(marked)
 
