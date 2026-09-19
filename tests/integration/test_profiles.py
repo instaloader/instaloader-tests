@@ -9,7 +9,7 @@ from tests.support.targets import IntegrationTargets, require_target, take_first
 from tests.support.requirements_map import requirement
 
 
-@pytest.fixture()
+@pytest.fixture(scope="module")
 def public_profile(
     active_instaloader: instaloader.Instaloader,
     integration_targets: IntegrationTargets,
@@ -20,7 +20,7 @@ def public_profile(
     return instaloader.Profile.from_username(active_instaloader.context, username)
 
 
-@pytest.fixture()
+@pytest.fixture(scope="module")
 def public_profile_first_page_posts(
     public_profile: instaloader.Profile,
 ) -> tuple[instaloader.Post, ...]:
