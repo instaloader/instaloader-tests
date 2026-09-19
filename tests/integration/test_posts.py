@@ -1,8 +1,12 @@
-from datetime import datetime
+from pathlib import Path
 
 import instaloader
-import pytest
 
+from tests.support.post_checkers import (
+    PostChecker,
+    PostCheckerName,
+    assert_post_basic_information,
+)
 from tests.support.requirements_map import requirement
 
 
@@ -10,13 +14,13 @@ from tests.support.requirements_map import requirement
 def test_public_shortcode_caption_and_date_accessible(
     active_instaloader: instaloader.Instaloader,
     integration_targets,
+    output_dir: Path,
+    post_checker_name: PostCheckerName,
+    post_checker: PostChecker,
 ) -> None:
     shortcode = integration_targets.require("public_shortcode")
 
     post = instaloader.Post.from_shortcode(active_instaloader.context, shortcode)
-    if not post.caption:
-        pytest.skip("configured shortcode has no caption")
-
-    assert isinstance(post.caption, str)
-    assert post.caption.strip()
-    assert isinstance(post.date_utc, datetime)
+    post_checker(active_instaloader, post, shortcode)
+    if post_checker_name == "download":
+        assert_post_basic_information(post)
