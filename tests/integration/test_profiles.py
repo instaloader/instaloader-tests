@@ -55,7 +55,7 @@ def private_profile(
     )
 
 
-@requirement("profile-picture-anonymous-critical")
+@requirement("profile-picture-anonymous")
 def test_public_profile_picture_download(
     active_instaloader: instaloader.Instaloader,
     public_profile: instaloader.Profile,
@@ -64,7 +64,7 @@ def test_public_profile_picture_download(
     active_instaloader.download_profilepic(public_profile)
 
 
-@requirement("profile-posts-first-page-anonymous-critical")
+@requirement("profile-posts-first-page-anonymous")
 def test_public_profile_first_page_posts_download(
     active_instaloader: instaloader.Instaloader,
     public_profile: instaloader.Profile,
@@ -74,7 +74,7 @@ def test_public_profile_first_page_posts_download(
         active_instaloader.download_post(post, target=public_profile.username)
 
 
-@requirement("profile-picture-private-logged-in-critical")
+@requirement("profile-picture-private-logged-in")
 def test_private_profile_picture_download(
     active_instaloader: instaloader.Instaloader,
     private_profile: instaloader.Profile,
@@ -83,7 +83,7 @@ def test_private_profile_picture_download(
     active_instaloader.download_profilepic(private_profile)
 
 
-@requirement("profile-posts-first-page-private-logged-in-critical")
+@requirement("profile-posts-first-page-private-logged-in")
 def test_private_profile_first_page_posts_download(
     active_instaloader: instaloader.Instaloader,
     private_profile: instaloader.Profile,

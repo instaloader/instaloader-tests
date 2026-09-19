@@ -4,7 +4,7 @@ from tests.support.credentials import SessionCredentials
 from tests.support.requirements_map import requirement
 
 
-@requirement("test-login-query-username-logged-in-critical")
+@requirement("test-login-query-username-logged-in")
 def test_session_file_usable_with_test_login(
     active_instaloader: instaloader.Instaloader,
     session_credentials: SessionCredentials | None,
