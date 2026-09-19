@@ -105,16 +105,16 @@ option is configured.
 
 #### Invocation reference
 
-| Option | Accepted values / default | Purpose |
-| --- | --- | --- |
-| `--authentication` | `all` (default), `anonymous`, `logged_in` | Restrict execution to anonymous tests, logged-in tests, or both. |
-| `--max-importance` | `critical` (default), `high`, `medium`, `low`, `verylow` | Execute only tests whose required importance is at or below the selected level. |
-| `--username` | Instagram username | Enable logged-in tests for that account. |
-| `--sessionfile` | Filesystem path | Override the Instaloader session file used with `--username`. If omitted, Instaloader's default session-file path for the username is used. |
-| `--target-public-profile` | Public Instagram username | Target for public-profile tests and profile-post download tests. |
-| `--target-private-profile` | Private Instagram username | Target for logged-in private-profile tests. |
-| `--target-public-shortcode` | Public post shortcode | Target for single-post metadata checks. |
-| `--target-public-hashtag` | Public hashtag name | Reserved for hashtag-based integration tests; no currently implemented test requires it yet. |
+| Option                      | Accepted values / default                                |
+|-----------------------------|----------------------------------------------------------|
+| `--authentication`          | `all` (default), `anonymous`, `logged_in`                |
+| `--max-importance`          | `critical` (default), `high`, `medium`, `low`, `verylow` |
+| `--username`                | Instagram username                                       |
+| `--sessionfile`             | Filesystem path                                          |
+| `--target-public-profile`   | Public Instagram username                                |
+| `--target-private-profile`  | Private Instagram username                               |
+| `--target-public-shortcode` | Public post shortcode                                    |
+| `--target-public-hashtag`   | Public hashtag name                                      |
 
 At the end of each run, pytest prints a `results by criticality` summary that
 groups the observed outcomes by importance level.
