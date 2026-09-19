@@ -17,10 +17,8 @@ Instagram or to fetch Instagram data.
   - **authenticated**: a valid Instagram session is available;
   - **owner**: the authenticated session belongs to the account whose own data is accessed.
 - Quantitative scopes:
-  - **first page** means one page of items as returned by Instagram for the target;
+  - **first page** means one page of items as returned by Instagram for the target; for story-item surfaces this is the first 12 story items when at least 12 story items are available, and for highlights this is the first 12 highlights when at least 12 highlights are available;
   - **first 50 items** applies only when the target provides at least 50 items.
-  - For story-item surfaces, **first page** means the first 12 story items when at least 12 story items are available.
-  - For highlights, **first page** means the first 12 highlights when at least 12 highlights are available.
 - Logged-in profile download requirements shall be exercised against both a public profile
   and, where Instagram permissions allow it, a followed private profile.
 
