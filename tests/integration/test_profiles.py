@@ -4,7 +4,7 @@ from pathlib import Path
 import instaloader
 import pytest
 
-from tests.support.pagination import FIRST_PAGE_ITEMS
+from tests.support.pagination import first_page_limit
 from tests.support.requirements_map import Authentication, requirement
 from tests.support.targets import IntegrationTargets, require_target
 
@@ -77,7 +77,7 @@ def test_public_profile_first_page_posts_download(
     output_dir: Path,
 ) -> None:
     for post in itertools.islice(
-        public_profile.get_posts(), min(FIRST_PAGE_ITEMS, max_items)
+        public_profile.get_posts(), first_page_limit(max_items)
     ):
         active_instaloader.download_post(post, target=public_profile.username)
 
@@ -99,6 +99,6 @@ def test_private_profile_first_page_posts_download(
     output_dir: Path,
 ) -> None:
     for post in itertools.islice(
-        private_profile.get_posts(), min(FIRST_PAGE_ITEMS, max_items)
+        private_profile.get_posts(), first_page_limit(max_items)
     ):
         active_instaloader.download_post(post, target=private_profile.username)
