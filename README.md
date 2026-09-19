@@ -24,26 +24,6 @@ covered. The test suite should be organized around those requirements and make i
 easy to see which integration behavior is already covered and which still needs a
 test.
 
-## Project Structure
-
-The project uses a small pytest-based layout with clear separation between test
-cases and shared support code:
-
-```text
-tests/
-  conftest.py
-  integration/
-    test_profiles.py
-    test_posts.py
-  support/
-    credentials.py
-    targets.py
-    requirements_map.py
-```
-
-This structure is meant to replace the legacy monolithic test module with a suite
-that is easier to extend and discuss feature by feature.
-
 ## Relation to the Legacy Tests
 
 The previous tests that motivate this repository are:

@@ -63,6 +63,26 @@ REQUIREMENTS: dict[str, RequirementCase] = {
             RequirementVariant(Authentication.ANONYMOUS, Importance.CRITICAL),
         ),
     ),
+    **{
+        requirement_id: RequirementCase(
+            section=f"Download Targets / Saved Posts / {window}",
+            statement=(
+                "Instaloader shall be able to download the saved Posts of the logged-in user."
+            ),
+            importance=importance,
+            authentication=Authentication.LOGGED_IN,
+        )
+        for requirement_id, (window, importance) in {
+            "saved-posts-first-page-logged-in-critical": (
+                "First page (12 Posts)",
+                Importance.CRITICAL,
+            ),
+            "saved-posts-first-50-logged-in-critical": (
+                "First 50 Posts",
+                Importance.CRITICAL,
+            ),
+        }.items()
+    },
 }
 
 
