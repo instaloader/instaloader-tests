@@ -7,7 +7,6 @@ import instaloader
 import pytest
 
 from tests.support.credentials import SessionCredentials, load_session_credentials
-from tests.support.pagination import SAVED_POSTS_FURTHER_PAGES_START
 from tests.support.requirements_map import (
     Authentication,
     REQUIREMENTS,
@@ -126,14 +125,11 @@ def pytest_addoption(parser: pytest.Parser) -> None:
         help="authentication scope to execute: all, anonymous, or logged_in only",
     )
     parser.addoption(
-        "--saved-posts-further-pages-end",
+        "--max-items",
         action="store",
         type=int,
         default=50,
-        help=(
-            "exclusive islice end for saved-posts further-pages coverage "
-            f"(must be > {SAVED_POSTS_FURTHER_PAGES_START})"
-        ),
+        help="maximum number of items to iterate in list-based tests",
     )
 
 
@@ -286,18 +282,8 @@ def session_credentials(pytestconfig: pytest.Config) -> SessionCredentials | Non
 
 
 @pytest.fixture(scope="session")
-def saved_posts_further_pages_end(pytestconfig: pytest.Config) -> int:
-    further_pages_end = int(pytestconfig.getoption("--saved-posts-further-pages-end"))
-    return parse_saved_posts_further_pages_end(further_pages_end)
-
-
-def parse_saved_posts_further_pages_end(further_pages_end: int) -> int:
-    if further_pages_end <= SAVED_POSTS_FURTHER_PAGES_START:
-        raise pytest.UsageError(
-            "--saved-posts-further-pages-end must be greater than "
-            f"{SAVED_POSTS_FURTHER_PAGES_START}"
-        )
-    return further_pages_end
+def max_items(pytestconfig: pytest.Config) -> int:
+    return int(pytestconfig.getoption("--max-items"))
 
 
 @pytest.fixture()

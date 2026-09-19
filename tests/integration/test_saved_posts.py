@@ -21,7 +21,7 @@ def test_saved_posts_first_page_download(
 @requirement("saved-posts-further-pages-logged-in")
 def test_saved_posts_extended_download(
     logged_in_instaloader: instaloader.Instaloader,
-    saved_posts_further_pages_end: int,
+    max_items: int,
     output_dir: Path,
 ) -> None:
     profile = instaloader.Profile.own_profile(logged_in_instaloader.context)
@@ -29,7 +29,7 @@ def test_saved_posts_extended_download(
     for post in itertools.islice(
         profile.get_saved_posts(),
         SAVED_POSTS_FURTHER_PAGES_START,
-        saved_posts_further_pages_end,
+        max_items,
     ):
         logged_in_instaloader.download_post(post, target=f"{profile.username}-saved")
         further_posts = True
