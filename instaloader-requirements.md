@@ -13,6 +13,7 @@ Instagram or to fetch Instagram data.
 - Importance expresses how valuable a regression test is for routine execution.
 - Access modes:
   - **anonymous**: no authenticated Instagram session is available;
+  - **bootstrap**: credentials or browser cookies are available to establish an Instagram session;
   - **authenticated**: a valid Instagram session is available;
   - **owner**: the authenticated session belongs to the account whose own data is accessed.
 - Quantitative scopes:
@@ -31,7 +32,7 @@ The integration suite shall maintain reusable targets for at least the following
 - a profile with tagged posts, reels, and IGTV content when those surfaces exist;
 - a hashtag with posts;
 - a location with posts;
-- a post with caption, timestamp, comments, likes, and geotag;
+- a post with caption, timestamp, geotag, at least 50 comments, and at least 50 likes;
 - a shortcode for a downloadable post with one or more media items;
 - an owner account with saved posts, feed items, and visible stories.
 
@@ -39,10 +40,10 @@ The integration suite shall maintain reusable targets for at least the following
 
 | ID | Importance | Access | Requirement |
 |----|------------|--------|-------------|
-| SM-1 | critical | authenticated | Instaloader shall be able to create a reusable session by importing cookies from Firefox with `instaloader --load-cookies firefox`. |
-| SM-2 | high | authenticated | Instaloader shall be able to create a reusable session by importing cookies from another supported browser with `instaloader --load-cookies BROWSER`. |
-| SM-3 | high | authenticated | Instaloader shall be able to create a reusable session with `Instaloader.interactive_login()` when two-factor authentication is not required. |
-| SM-4 | medium | authenticated | Instaloader shall be able to create a reusable session with `Instaloader.interactive_login()` when two-factor authentication is required. |
+| SM-1 | critical | bootstrap | Instaloader shall be able to create a reusable session by importing cookies from Firefox with `instaloader --load-cookies firefox`. |
+| SM-2 | high | bootstrap | Instaloader shall be able to create a reusable session by importing cookies from another supported browser with `instaloader --load-cookies BROWSER`. |
+| SM-3 | high | bootstrap | Instaloader shall be able to create a reusable session with `Instaloader.interactive_login()` when two-factor authentication is not required. |
+| SM-4 | medium | bootstrap | Instaloader shall be able to create a reusable session with `Instaloader.interactive_login()` when two-factor authentication is required. |
 | SM-5 | high | authenticated | Instaloader shall be able to save a created session with `Instaloader.save_session_to_file()` and reload it with `Instaloader.load_session_from_file()`. |
 | SM-6 | critical | authenticated | Instaloader shall be able to reuse an existing valid session for a non-interactive authenticated download run. |
 
@@ -57,8 +58,8 @@ The integration suite shall maintain reusable targets for at least the following
 | DL-PROFILE-3 | high | anonymous | first page | Instaloader shall be able to download the first page of posts of a public profile. |
 | DL-PROFILE-4 | critical | authenticated | first 50 items | Instaloader shall be able to download the first 50 posts of a profile. |
 | DL-PROFILE-5 | medium | anonymous | first 50 items | Instaloader shall be able to download the first 50 posts of a public profile. |
-| DL-PROFILE-6 | high | authenticated | first page | Instaloader shall be able to download the first page of a profile's stories. |
-| DL-PROFILE-7 | medium | authenticated | first 50 items | Instaloader shall be able to download the first 50 story items of a profile's stories. |
+| DL-PROFILE-6 | high | authenticated | first page | Instaloader shall be able to download the first page of story items of a profile. |
+| DL-PROFILE-7 | medium | authenticated | first 50 items | Instaloader shall be able to download the first 50 story items of a profile. |
 | DL-PROFILE-8 | high | authenticated | single item | Instaloader shall be able to download the cover picture of a profile highlight. |
 | DL-PROFILE-9 | high | authenticated | first page | Instaloader shall be able to download the first page of highlights of a profile. |
 | DL-PROFILE-10 | medium | authenticated | first 50 items | Instaloader shall be able to download the first 50 highlights of a profile. |
