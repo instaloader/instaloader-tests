@@ -18,7 +18,7 @@ def test_saved_posts_first_page_download(
 
 
 @requirement("saved-posts-further-pages-logged-in")
-def test_saved_posts_extended_download(
+def test_saved_posts_further_pages_download(
     logged_in_instaloader: instaloader.Instaloader,
     max_items: int,
     output_dir: Path,

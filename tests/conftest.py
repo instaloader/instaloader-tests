@@ -129,7 +129,7 @@ def pytest_addoption(parser: pytest.Parser) -> None:
         action="store",
         type=int,
         default=50,
-        help="maximum number of items to iterate in list-based tests",
+        help="maximum list index for further-pages style list tests",
     )
 
 
