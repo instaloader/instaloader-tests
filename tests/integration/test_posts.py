@@ -37,16 +37,19 @@ def test_saved_posts_first_page_download(
     saved_posts_target = "saved-posts"
     assert Path.cwd() == output_dir
 
+    saved_posts = instaloader.Profile.own_profile(
+        logged_in_instaloader.context
+    ).get_saved_posts()
+    page_length = saved_posts.page_length()
     expected_posts = tuple(
         take_first_items(
-            instaloader.Profile.own_profile(
-                logged_in_instaloader.context
-            ).get_saved_posts(),
-            count=12,
+            saved_posts,
+            count=page_length,
             description="logged-in user's saved posts",
         )
     )
     assert expected_posts
+    assert len(expected_posts) == page_length
 
     for post in expected_posts:
         logged_in_instaloader.download_post(post, target=saved_posts_target)
