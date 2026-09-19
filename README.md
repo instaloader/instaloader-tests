@@ -34,6 +34,7 @@ tests/
   conftest.py
   integration/
     test_profiles.py
+    test_saved_posts.py
     test_posts.py
   support/
     credentials.py
