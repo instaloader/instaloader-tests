@@ -28,6 +28,19 @@ class RequirementCase:
     authentication: Authentication
 
 
+_SAVED_POSTS_SECTION = "Download Targets / Saved Posts"
+_SAVED_POSTS_STATEMENT = (
+    "Instaloader shall be able to download the saved Posts of the logged-in user."
+)
+_SAVED_POSTS_VARIANTS: dict[str, tuple[str, Importance]] = {
+    "saved-posts-first-page-logged-in-critical": (
+        "First page (12 Posts)",
+        Importance.CRITICAL,
+    ),
+    "saved-posts-first-50-logged-in-critical": ("First 50 Posts", Importance.CRITICAL),
+}
+
+
 REQUIREMENTS: dict[str, RequirementCase] = {
     "test-login-query-username-logged-in-critical": RequirementCase(
         section="Session Creation / Test login",
@@ -53,18 +66,15 @@ REQUIREMENTS: dict[str, RequirementCase] = {
         importance=Importance.CRITICAL,
         authentication=Authentication.ANONYMOUS,
     ),
-    "saved-posts-first-page-logged-in-critical": RequirementCase(
-        section="Download Targets / Saved Posts / First page (12 Posts)",
-        statement="Instaloader shall be able to download the saved Posts of the logged-in user.",
-        importance=Importance.CRITICAL,
-        authentication=Authentication.LOGGED_IN,
-    ),
-    "saved-posts-first-50-logged-in-critical": RequirementCase(
-        section="Download Targets / Saved Posts / First 50 Posts",
-        statement="Instaloader shall be able to download the saved Posts of the logged-in user.",
-        importance=Importance.CRITICAL,
-        authentication=Authentication.LOGGED_IN,
-    ),
+    **{
+        requirement_id: RequirementCase(
+            section=f"{_SAVED_POSTS_SECTION} / {window}",
+            statement=_SAVED_POSTS_STATEMENT,
+            importance=importance,
+            authentication=Authentication.LOGGED_IN,
+        )
+        for requirement_id, (window, importance) in _SAVED_POSTS_VARIANTS.items()
+    },
 }
 
 
