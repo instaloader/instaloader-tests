@@ -284,6 +284,10 @@ def session_credentials(pytestconfig: pytest.Config) -> SessionCredentials | Non
 @pytest.fixture(scope="session")
 def saved_posts_further_pages_end(pytestconfig: pytest.Config) -> int:
     further_pages_end = int(pytestconfig.getoption("--saved-posts-further-pages-end"))
+    return parse_saved_posts_further_pages_end(further_pages_end)
+
+
+def parse_saved_posts_further_pages_end(further_pages_end: int) -> int:
     if further_pages_end <= 12:
         raise pytest.UsageError("--saved-posts-further-pages-end must be greater than 12")
     return further_pages_end
