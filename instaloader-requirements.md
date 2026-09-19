@@ -17,7 +17,12 @@ Instagram or to fetch Instagram data.
   - **authenticated**: a valid Instagram session is available;
   - **owner**: the authenticated session belongs to the account whose own data is accessed.
 - Quantitative scopes:
-  - **first page** means one page of items as returned by Instagram for the target; for story-item surfaces this is the first 12 story items when at least 12 story items are available, and for highlights this is the first 12 highlights when at least 12 highlights are available;
+  - **first page** means one page of items as returned by Instagram for the target.
+  - For post-list surfaces, **first page** means the first 12 posts when at least 12 posts are available.
+  - For story-item surfaces, **first page** means the first 12 story items when at least 12 story items are available.
+  - For highlights, **first page** means the first 12 highlights when at least 12 highlights are available.
+  - For profile-list surfaces such as likers, followers, and followees, **first page** means the first 12 profiles when at least 12 profiles are available.
+  - For comment-list surfaces, **first page** means the first 12 comments when at least 12 comments are available.
   - **first 50 items** applies only when the target provides at least 50 items.
 - Additional coverage values:
   - **single item** means one directly addressed object is fetched successfully;
