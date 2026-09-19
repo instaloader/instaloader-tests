@@ -30,5 +30,5 @@ def test_saved_posts_further_pages_download(
         further_posts = True
     if not further_posts:
         pytest.skip(
-            "configured target does not provide more than 12 items for saved posts of {profile.username!r}"
+            f"configured target does not provide more than 12 items for saved posts of {profile.username!r}"
         )
