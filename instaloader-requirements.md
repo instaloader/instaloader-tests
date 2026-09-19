@@ -2,13 +2,15 @@
 
 ## Conventions
 
-Requirements that should be tested describe Instaloaders behavior with the modal verb *shall*.
+This file shall only describe requirements that need Instagram access and can be verified by integration tests.
+
+Requirements describe Instaloaders behavior with the modal verb *shall*.
 
 ## Session Creation
 
-Instaloader is able to create a session by logging in or by importing cookies.
+Instaloader shall be able to create a session by logging in or by importing cookies.
 
-Instaloader saves a created session (`Instaloader.save_session_to_file()`, and is able to reload the saved session 
+Instaloader shall be able to save a created session (`Instaloader.save_session_to_file()`) and reload the saved session 
 (`Instaloader.load_session_from_file()`).
 
 ### Import session from Firefox
@@ -17,17 +19,7 @@ Instaloader saves a created session (`Instaloader.save_session_to_file()`, and i
 |------------|
 | critical   |
 
-Instaloader will provide a single-command way to import Cookies from Firefox.
-
-This can be done by the command
-
-```
-instaloader --load-cookies firefox
-```
-
-As an alternative, the codesnippet [615_import_firefox_session.py](https://github.
-com/instaloader/instaloader/blob/master/docs/codesnippets/615_import_firefox_session.py) is provided. However, it is 
-preferred that this functionality is integrated into Instaloader.
+Instaloader shall provide a single-command way to import cookies from Firefox.
 
 ### Import session from other browsers
 
@@ -35,13 +27,7 @@ preferred that this functionality is integrated into Instaloader.
 |------------|
 | high       |
 
-Instaloader will provide a single-command way to import Cookies from a browser.
-
-This can be done by the command
-
-```
-instaloader --load-cookies BROWSER
-```
+Instaloader shall provide a single-command way to import cookies from browsers other than Firefox.
 
 ### Login
 
@@ -50,29 +36,6 @@ instaloader --load-cookies BROWSER
 | high       |
 
 Instaloader shall be able to create a Session file with `Instaloader.interactive_login()` if no 2FA is configured.
-
-Note that this calls `Instaloader.login()`:
-
-```python
-try:
-    password = None
-    while password is None:
-        password = getpass.getpass(prompt="Enter Instagram password for %s: " % username)
-        try:
-            self.login(username, password)
-        except BadCredentialsException as err:
-            print(err, file=sys.stderr)
-            password = None
-except TwoFactorAuthRequiredException:
-    while True:
-        try:
-            code = input("Enter 2FA verification code: ")
-            self.two_factor_login(code)
-            break
-        except BadCredentialsException as err:
-            print(err, file=sys.stderr)
-            pass
-```
 
 ### 2FA
 
