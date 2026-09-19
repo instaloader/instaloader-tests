@@ -107,6 +107,7 @@ poetry run pytest \
   --username=youraccount \
   --authentication=logged_in \
   --target-public-profile=nasa \
+  --target-private-profile=your-private-target \
   --target-public-shortcode=CxD6K_4M8QK
 ```
 
@@ -136,6 +137,9 @@ is added.
 
 Use `--authentication` to restrict execution to `anonymous` or `logged_in`
 tests.
+
+Use `--target-private-profile` to enable the logged-in profile tests that cover
+private accounts.
 
 At the end of each run, pytest prints a `results by criticality` summary that
 groups the observed outcomes by importance level.
