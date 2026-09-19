@@ -21,7 +21,7 @@ Instagram or to fetch Instagram data.
   - **first 12 items** applies when the target provides at least 12 items of the relevant surface type;
   - **first 50 items** applies only when the target provides at least 50 items.
 - Additional coverage values:
-  - **single item** means one directly addressed object is fetched successfully;
+  - **single item** means one directly addressed object is fetched successfully, including any metadata explicitly referenced by the corresponding requirement;
   - **media set** means all media items belonging to one addressed post are fetched successfully;
   - **update run** means a repeated download run is executed against an already-downloaded target and validates the expected incremental behavior.
 - Logged-in profile download requirements shall be exercised against both a public profile
@@ -44,7 +44,7 @@ The integration suite shall maintain reusable targets for at least the following
 - a hashtag with at least 50 posts;
 - a location with at least 50 posts;
 - a reusable public post fixture that is accessible in both anonymous and authenticated runs and exposes caption and date;
-- a reusable public post fixture that is accessible in both anonymous and authenticated runs, exposes a comment list with at least 50 entries, and preserves stable comment ordering and pagination across repeated runs;
+- a reusable public post fixture that is accessible in both anonymous and authenticated runs, exposes a comment list with at least 50 entries, and supports pagination without gaps or duplicates across the first 50 comments;
 - a reusable authenticated post fixture that exposes a geotag;
 - a reusable authenticated post fixture that exposes a liker list with at least 50 entries;
 - a shortcode for a downloadable post with one or more media items;
