@@ -58,17 +58,11 @@ REQUIREMENTS: dict[str, RequirementCase] = {
     # Download Targets / Saved Posts
     **{
         requirement_id: RequirementCase(
-            variants=(
-                RequirementVariant(Authentication.LOGGED_IN, importance),
-            ),
+            variants=(RequirementVariant(Authentication.LOGGED_IN, importance),),
         )
         for requirement_id, importance in {
-            "saved-posts-first-page-logged-in-critical": (
-                Importance.CRITICAL,
-            ),
-            "saved-posts-first-50-logged-in-critical": (
-                Importance.CRITICAL,
-            ),
+            "saved-posts-first-page-logged-in-critical": (Importance.CRITICAL,),
+            "saved-posts-first-50-logged-in-critical": (Importance.CRITICAL,),
         }.items()
     },
 }
