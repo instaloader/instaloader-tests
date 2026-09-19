@@ -1,12 +1,10 @@
-from __future__ import annotations
-
 import instaloader
 
 from tests.support.credentials import SessionCredentials
 from tests.support.requirements_map import requirement
 
 
-@requirement("login-session-file-usable-logged-in-high")
+@requirement("test-login-query-username-logged-in-critical")
 def test_session_file_usable_with_test_login(
     logged_in_instaloader: instaloader.Instaloader,
     session_credentials: SessionCredentials | None,

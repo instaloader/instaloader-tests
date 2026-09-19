@@ -29,10 +29,10 @@ class RequirementCase:
 
 
 REQUIREMENTS: dict[str, RequirementCase] = {
-    "login-session-file-usable-logged-in-high": RequirementCase(
-        section="Session Creation / Login",
-        statement="Instaloader shall be able to verify that a saved Session file is usable with `Instaloader.test_login()`.",
-        importance=Importance.HIGH,
+    "test-login-query-username-logged-in-critical": RequirementCase(
+        section="Session Creation / Test login",
+        statement="Instaloader shall be able to query Instagram for the username of the used Session with `Instaloader.test_login()`.",
+        importance=Importance.CRITICAL,
         authentication=Authentication.LOGGED_IN,
     ),
     "profile-picture-anonymous-critical": RequirementCase(
