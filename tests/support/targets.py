@@ -20,7 +20,7 @@ class TargetOption:
 TARGET_OPTIONS: dict[TargetKey, TargetOption] = {
     "public_profile": TargetOption(
         option_name="--target-public-profile",
-        help_text="public profile username for anonymous profile tests",
+        help_text="public profile username for profile tests",
     ),
     "private_profile": TargetOption(
         option_name="--target-private-profile",
@@ -28,7 +28,7 @@ TARGET_OPTIONS: dict[TargetKey, TargetOption] = {
     ),
     "public_shortcode": TargetOption(
         option_name="--target-public-shortcode",
-        help_text="public shortcode for anonymous single-post tests",
+        help_text="public shortcode for single-post tests",
     ),
     "hashtag": TargetOption(
         option_name="--target-hashtag",
