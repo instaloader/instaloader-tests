@@ -1,3 +1,4 @@
+from pathlib import Path
 from datetime import datetime
 
 import instaloader
@@ -34,6 +35,7 @@ def test_saved_posts_first_page_download(
     monkeypatch.setattr(logged_in_instaloader, "dirname_pattern", "{target}")
     monkeypatch.setattr(logged_in_instaloader, "filename_pattern", "{shortcode}")
     saved_posts_target = "saved-posts"
+    assert Path.cwd() == output_dir
 
     expected_posts = tuple(
         take_first_items(
@@ -49,7 +51,7 @@ def test_saved_posts_first_page_download(
     for post in expected_posts:
         logged_in_instaloader.download_post(post, target=saved_posts_target)
 
-    saved_dir = output_dir / saved_posts_target
+    saved_dir = Path.cwd() / saved_posts_target
     downloaded_filenames = tuple(
         path.name for path in saved_dir.iterdir() if path.is_file()
     )
