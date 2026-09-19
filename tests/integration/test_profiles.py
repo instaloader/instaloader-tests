@@ -11,13 +11,13 @@ from tests.support.requirements_map import requirement
 
 @pytest.fixture(scope="module")
 def public_profile(
-    anonymous_instaloader: instaloader.Instaloader,
+    active_instaloader: instaloader.Instaloader,
     integration_targets: IntegrationTargets,
 ) -> instaloader.Profile:
     username = require_target(
         integration_targets.public_profile, option_name="--target-public-profile"
     )
-    return instaloader.Profile.from_username(anonymous_instaloader.context, username)
+    return instaloader.Profile.from_username(active_instaloader.context, username)
 
 
 @pytest.fixture(scope="module")
@@ -35,19 +35,19 @@ def public_profile_first_page_posts(
 
 @requirement("profile-picture-anonymous-critical")
 def test_public_profile_picture_download(
-    anonymous_instaloader: instaloader.Instaloader,
+    active_instaloader: instaloader.Instaloader,
     public_profile: instaloader.Profile,
     _output_dir: Path,
 ) -> None:
-    anonymous_instaloader.download_profilepic(public_profile)
+    active_instaloader.download_profilepic(public_profile)
 
 
 @requirement("profile-posts-first-page-anonymous-critical")
 def test_public_profile_first_page_posts_download(
-    anonymous_instaloader: instaloader.Instaloader,
+    active_instaloader: instaloader.Instaloader,
     public_profile: instaloader.Profile,
     public_profile_first_page_posts: tuple[instaloader.Post, ...],
     _output_dir: Path,
 ) -> None:
     for post in public_profile_first_page_posts:
-        anonymous_instaloader.download_post(post, target=public_profile.username)
+        active_instaloader.download_post(post, target=public_profile.username)

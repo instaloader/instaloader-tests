@@ -21,37 +21,49 @@ class Authentication(StrEnum):
 
 
 @dataclass(frozen=True)
+class RequirementVariant:
+    authentication: Authentication
+    importance: Importance
+
+
+@dataclass(frozen=True)
 class RequirementCase:
     section: str
     statement: str
-    importance: Importance
-    authentication: Authentication
+    variants: tuple[RequirementVariant, ...]
 
 
 REQUIREMENTS: dict[str, RequirementCase] = {
     "test-login-query-username-logged-in-critical": RequirementCase(
         section="Session Creation / Test login",
         statement="Instaloader shall be able to query Instagram for the username of the used Session.",
-        importance=Importance.CRITICAL,
-        authentication=Authentication.LOGGED_IN,
+        variants=(
+            RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
+        ),
     ),
     "profile-picture-anonymous-critical": RequirementCase(
         section="Download Targets / Profile / Profile Picture",
         statement="Instaloader shall be able to download the profile picture of a Profile.",
-        importance=Importance.CRITICAL,
-        authentication=Authentication.ANONYMOUS,
+        variants=(
+            RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
+            RequirementVariant(Authentication.ANONYMOUS, Importance.CRITICAL),
+        ),
     ),
     "profile-posts-first-page-anonymous-critical": RequirementCase(
         section="Download Targets / Profile / Profile Posts",
         statement="Instaloader shall be able to download the Posts of a Profile (first page / 12 posts).",
-        importance=Importance.CRITICAL,
-        authentication=Authentication.ANONYMOUS,
+        variants=(
+            RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
+            RequirementVariant(Authentication.ANONYMOUS, Importance.HIGH),
+        ),
     ),
     "post-basic-information-anonymous-critical": RequirementCase(
         section="Post Metadata / Basic Information",
         statement="Instaloader shall be able to access the Caption and Date of a Post.",
-        importance=Importance.CRITICAL,
-        authentication=Authentication.ANONYMOUS,
+        variants=(
+            RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
+            RequirementVariant(Authentication.ANONYMOUS, Importance.CRITICAL),
+        ),
     ),
 }
 
@@ -79,11 +91,23 @@ def requirement(
     if requirement_id not in REQUIREMENTS:
         raise pytest.UsageError(f"Unknown requirement_id marker: {requirement_id}")
     case = REQUIREMENTS[requirement_id]
+    params = [
+        pytest.param(
+            variant.authentication.value,
+            marks=(
+                getattr(pytest.mark, variant.authentication.value),
+                pytest.mark.importance(variant.importance.name.lower()),
+            ),
+            id=variant.authentication.value,
+        )
+        for variant in case.variants
+    ]
 
     def decorator(test_function: Callable[..., object]) -> Callable[..., object]:
-        marked = pytest.mark.requirement_id(requirement_id)(test_function)
-        marked = pytest.mark.importance(case.importance.name.lower())(marked)
-        marked = getattr(pytest.mark, case.authentication.value)(marked)
+        marked = pytest.mark.parametrize(
+            "active_instaloader", params, indirect=True, scope="session"
+        )(test_function)
+        marked = pytest.mark.requirement_id(requirement_id)(marked)
         return pytest.mark.integration(marked)
 
     return decorator
