@@ -31,7 +31,7 @@ class RequirementCase:
 REQUIREMENTS: dict[str, RequirementCase] = {
     "test-login-query-username-logged-in-critical": RequirementCase(
         section="Session Creation / Test login",
-        statement="Instaloader shall be able to query Instagram for the username of the used Session with `Instaloader.test_login()`.",
+        statement="Instaloader shall be able to determine the username of the used Session with `Instaloader.test_login()`.",
         importance=Importance.CRITICAL,
         authentication=Authentication.LOGGED_IN,
     ),

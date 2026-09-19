@@ -81,7 +81,7 @@ except TwoFactorAuthRequiredException:
 |------------|
 | critical   |
 
-Instaloader shall be able to query Instagram for the username of the used Session with `Instaloader.test_login()`.
+Instaloader shall be able to determine the username of the used Session with `Instaloader.test_login()`.
 
 ### 2FA
 
