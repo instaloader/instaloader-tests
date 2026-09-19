@@ -1,11 +1,12 @@
 import itertools
-from pathlib import Path
 
 import instaloader
 import pytest
 
 from tests.support.targets import IntegrationTargets, require_target
 from tests.support.requirements_map import requirement
+
+pytestmark = pytest.mark.usefixtures("output_dir")
 
 
 @pytest.fixture(scope="session")
@@ -63,7 +64,6 @@ def private_profile(
 def test_public_profile_picture_download(
     active_instaloader: instaloader.Instaloader,
     public_profile: instaloader.Profile,
-    output_dir: Path,
 ) -> None:
     active_instaloader.download_profilepic(public_profile)
 
@@ -72,7 +72,6 @@ def test_public_profile_picture_download(
 def test_public_profile_first_page_posts_download(
     active_instaloader: instaloader.Instaloader,
     public_profile: instaloader.Profile,
-    output_dir: Path,
 ) -> None:
     for post in itertools.islice(public_profile.get_posts(), 12):
         active_instaloader.download_post(post, target=public_profile.username)
@@ -82,7 +81,6 @@ def test_public_profile_first_page_posts_download(
 def test_private_profile_picture_download(
     active_instaloader: instaloader.Instaloader,
     private_profile: instaloader.Profile,
-    output_dir: Path,
 ) -> None:
     active_instaloader.download_profilepic(private_profile)
 
@@ -91,7 +89,6 @@ def test_private_profile_picture_download(
 def test_private_profile_first_page_posts_download(
     active_instaloader: instaloader.Instaloader,
     private_profile: instaloader.Profile,
-    output_dir: Path,
 ) -> None:
     for post in itertools.islice(private_profile.get_posts(), 12):
         active_instaloader.download_post(post, target=private_profile.username)
