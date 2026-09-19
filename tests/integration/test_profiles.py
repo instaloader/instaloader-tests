@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Iterable, Iterator
 from pathlib import Path
 
 import instaloader
@@ -76,15 +77,12 @@ def _download_story_items(
         loader.download_storyitem(item, target=target)
 
 
-def _download_highlights(
-    loader: instaloader.Instaloader,
-    highlights: list[instaloader.Highlight] | tuple[instaloader.Highlight, ...],
-    *,
-    target: str,
-) -> None:
+def _highlight_items(
+    highlights: Iterable[instaloader.Highlight],
+) -> Iterator[instaloader.StoryItem]:
     for highlight in highlights:
         for item in highlight.get_items():
-            loader.download_storyitem(item, target=target)
+            yield item
 
 
 @pytest.fixture(scope="module")
@@ -527,13 +525,15 @@ def test_profile_highlights_first_page_download(
     _output_dir: Path,
 ) -> None:
     profile = _profile_from_username(logged_in_instaloader, highlight_profile_username)
-    highlights = take_first_items(
-        logged_in_instaloader.get_highlights(profile),
+    highlight_items = take_first_items(
+        _highlight_items(logged_in_instaloader.get_highlights(profile)),
         count=FIRST_PAGE_ITEM_COUNT,
-        description=f"highlights of profile {profile.username!r}",
+        description=f"highlight items of profile {profile.username!r}",
     )
-    _download_highlights(
-        logged_in_instaloader, highlights, target=f"{profile.username}:highlights"
+    _download_story_items(
+        logged_in_instaloader,
+        highlight_items,
+        target=f"{profile.username}:highlights",
     )
 
 
@@ -544,12 +544,14 @@ def test_profile_highlights_first_50_download(
     _output_dir: Path,
 ) -> None:
     profile = _profile_from_username(logged_in_instaloader, highlight_profile_username)
-    highlights = take_up_to_items(
-        logged_in_instaloader.get_highlights(profile),
+    highlight_items = take_up_to_items(
+        _highlight_items(logged_in_instaloader.get_highlights(profile)),
         minimum_count=FIRST_PAGE_ITEM_COUNT + 1,
         maximum_count=FIRST_50_ITEM_COUNT,
-        description=f"highlights of profile {profile.username!r}",
+        description=f"highlight items of profile {profile.username!r}",
     )
-    _download_highlights(
-        logged_in_instaloader, highlights, target=f"{profile.username}:highlights"
+    _download_story_items(
+        logged_in_instaloader,
+        highlight_items,
+        target=f"{profile.username}:highlights",
     )

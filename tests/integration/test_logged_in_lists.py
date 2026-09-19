@@ -1,9 +1,9 @@
 from __future__ import annotations
 
+from collections.abc import Iterable, Iterator
 from pathlib import Path
 
 import instaloader
-import pytest
 
 from tests.support.requirements_map import requirement
 from tests.support.targets import (
@@ -14,13 +14,23 @@ from tests.support.targets import (
 )
 
 
-def _download_stories(
-    logged_in_instaloader: instaloader.Instaloader,
-    stories: list[instaloader.Story] | tuple[instaloader.Story, ...],
-) -> None:
+def _story_items(
+    stories: Iterable[instaloader.Story],
+) -> Iterator[tuple[str, instaloader.StoryItem]]:
     for story in stories:
         for item in story.get_items():
-            logged_in_instaloader.download_storyitem(item, target=story.owner_username)
+            yield story.owner_username, item
+
+
+def _download_story_items(
+    logged_in_instaloader: instaloader.Instaloader,
+    story_items: (
+        list[tuple[str, instaloader.StoryItem]]
+        | tuple[tuple[str, instaloader.StoryItem], ...]
+    ),
+) -> None:
+    for target, item in story_items:
+        logged_in_instaloader.download_storyitem(item, target=target)
 
 
 def _saved_posts(
@@ -90,12 +100,12 @@ def test_visible_stories_first_page_download(
     logged_in_instaloader: instaloader.Instaloader,
     _output_dir: Path,
 ) -> None:
-    stories = take_first_items(
-        logged_in_instaloader.get_stories(),
+    story_items = take_first_items(
+        _story_items(logged_in_instaloader.get_stories()),
         count=FIRST_PAGE_ITEM_COUNT,
-        description="currently-visible stories",
+        description="currently-visible story items",
     )
-    _download_stories(logged_in_instaloader, stories)
+    _download_story_items(logged_in_instaloader, story_items)
 
 
 @requirement("stories-first-50-logged-in-medium")
@@ -103,10 +113,10 @@ def test_visible_stories_first_50_download(
     logged_in_instaloader: instaloader.Instaloader,
     _output_dir: Path,
 ) -> None:
-    stories = take_up_to_items(
-        logged_in_instaloader.get_stories(),
+    story_items = take_up_to_items(
+        _story_items(logged_in_instaloader.get_stories()),
         minimum_count=FIRST_PAGE_ITEM_COUNT + 1,
         maximum_count=FIRST_50_ITEM_COUNT,
-        description="currently-visible stories",
+        description="currently-visible story items",
     )
-    _download_stories(logged_in_instaloader, stories)
+    _download_story_items(logged_in_instaloader, story_items)
