@@ -29,7 +29,11 @@ def test_public_shortcode_caption_and_date_accessible(
 def test_saved_posts_first_page_download(
     logged_in_instaloader: instaloader.Instaloader,
     output_dir,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    monkeypatch.setattr(logged_in_instaloader, "dirname_pattern", "{target}")
+    monkeypatch.setattr(logged_in_instaloader, "filename_pattern", "{shortcode}")
+
     expected_posts = tuple(
         take_first_items(
             instaloader.Profile.own_profile(
@@ -43,9 +47,7 @@ def test_saved_posts_first_page_download(
 
     logged_in_instaloader.download_saved_posts(max_count=len(expected_posts))
 
-    saved_dir = output_dir / logged_in_instaloader.dirname_pattern.format(
-        target=":saved"
-    )
+    saved_dir = output_dir / ":saved"
     downloaded_filenames = tuple(
         path.name for path in saved_dir.iterdir() if path.is_file()
     )
