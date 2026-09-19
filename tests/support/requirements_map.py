@@ -58,6 +58,8 @@ def is_importance_enabled(maximum: str, required: str) -> bool:
 
 
 def requirement(requirement_id: str) -> Callable[[Callable[..., object]], Callable[..., object]]:
+    if requirement_id not in REQUIREMENTS:
+        raise pytest.UsageError(f"Unknown requirement_id marker: {requirement_id}")
     case = REQUIREMENTS[requirement_id]
 
     def decorator(test_function: Callable[..., object]) -> Callable[..., object]:
