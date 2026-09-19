@@ -62,6 +62,42 @@ def pytest_addoption(parser: pytest.Parser) -> None:
         default=None,
         help="public hashtag for anonymous hashtag tests",
     )
+    parser.addoption(
+        "--target-public-tagged-profile",
+        action="store",
+        default=None,
+        help="public profile username with tagged posts; falls back to --target-public-profile",
+    )
+    parser.addoption(
+        "--target-public-reels-profile",
+        action="store",
+        default=None,
+        help="public profile username with reels; falls back to --target-public-profile",
+    )
+    parser.addoption(
+        "--target-public-igtv-profile",
+        action="store",
+        default=None,
+        help="public profile username with IGTV posts; falls back to --target-public-profile",
+    )
+    parser.addoption(
+        "--target-story-profile",
+        action="store",
+        default=None,
+        help="profile username with visible stories for logged-in story-item tests",
+    )
+    parser.addoption(
+        "--target-highlight-profile",
+        action="store",
+        default=None,
+        help="profile username with highlights for logged-in highlight tests",
+    )
+    parser.addoption(
+        "--target-location",
+        action="store",
+        default=None,
+        help="Instagram location ID for logged-in location tests",
+    )
 
 
 @pytest.hookimpl()
@@ -104,6 +140,12 @@ def integration_targets(pytestconfig: pytest.Config) -> IntegrationTargets:
         public_profile=pytestconfig.getoption("--target-public-profile"),
         public_shortcode=pytestconfig.getoption("--target-public-shortcode"),
         public_hashtag=pytestconfig.getoption("--target-public-hashtag"),
+        public_tagged_profile=pytestconfig.getoption("--target-public-tagged-profile"),
+        public_reels_profile=pytestconfig.getoption("--target-public-reels-profile"),
+        public_igtv_profile=pytestconfig.getoption("--target-public-igtv-profile"),
+        story_profile=pytestconfig.getoption("--target-story-profile"),
+        highlight_profile=pytestconfig.getoption("--target-highlight-profile"),
+        location=pytestconfig.getoption("--target-location"),
     )
 
 
@@ -119,6 +161,11 @@ def session_credentials(pytestconfig: pytest.Config) -> SessionCredentials | Non
 def output_dir(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     monkeypatch.chdir(tmp_path)
     return tmp_path
+
+
+@pytest.fixture()
+def _output_dir(output_dir: Path) -> Path:
+    return output_dir
 
 
 @pytest.fixture(scope="session")

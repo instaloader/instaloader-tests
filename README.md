@@ -33,6 +33,9 @@ cases and shared support code:
 tests/
   conftest.py
   integration/
+    test_hashtags.py
+    test_locations.py
+    test_logged_in_lists.py
     test_profiles.py
     test_posts.py
   support/
@@ -143,6 +146,18 @@ poetry run pytest \
 
 If `--username` is set, the suite uses Instaloader's default session-file path
 unless `--sessionfile` overrides it.
+
+Additional list-target coverage can be configured with:
+
+- `--target-public-tagged-profile`
+- `--target-public-reels-profile`
+- `--target-public-igtv-profile`
+- `--target-story-profile`
+- `--target-highlight-profile`
+- `--target-location`
+
+The tagged / reels / IGTV profile options fall back to `--target-public-profile`
+when omitted.
 
 Use `--max-importance` to widen execution beyond critical tests as more coverage
 is added.
