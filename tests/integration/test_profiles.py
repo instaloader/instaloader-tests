@@ -44,22 +44,17 @@ def public_profile(
 
 
 @pytest.fixture()
-def private_profile_username(integration_targets: IntegrationTargets) -> str:
-    return require_target(
-        integration_targets.private_profile, option_name="--target-private-profile"
-    )
-
-
-@pytest.fixture()
-def logged_in_private_profile(
-    private_profile_username: str,
+def private_profile(
+    integration_targets: IntegrationTargets,
     logged_in_instaloader: instaloader.Instaloader,
     profile_cache: dict[tuple[str, str], instaloader.Profile],
-) -> tuple[instaloader.Instaloader, instaloader.Profile]:
-    return logged_in_instaloader, _profile_from_username(
+) -> instaloader.Profile:
+    return _profile_from_username(
         logged_in_instaloader.context,
         "logged_in",
-        private_profile_username,
+        require_target(
+            integration_targets.private_profile, option_name="--target-private-profile"
+        ),
         profile_cache,
     )
 
@@ -83,24 +78,20 @@ def test_public_profile_first_page_posts_download(
         active_instaloader.download_post(post, target=public_profile.username)
 
 
-@pytest.mark.integration
-@pytest.mark.logged_in
-@pytest.mark.importance("critical")
+@requirement("profile-picture-private-logged-in-critical")
 def test_private_profile_picture_download(
-    logged_in_private_profile: tuple[instaloader.Instaloader, instaloader.Profile],
+    active_instaloader: instaloader.Instaloader,
+    private_profile: instaloader.Profile,
     output_dir: Path,
 ) -> None:
-    logged_in_instaloader, private_profile = logged_in_private_profile
-    logged_in_instaloader.download_profilepic(private_profile)
+    active_instaloader.download_profilepic(private_profile)
 
 
-@pytest.mark.integration
-@pytest.mark.logged_in
-@pytest.mark.importance("critical")
+@requirement("profile-posts-first-page-private-logged-in-critical")
 def test_private_profile_first_page_posts_download(
-    logged_in_private_profile: tuple[instaloader.Instaloader, instaloader.Profile],
+    active_instaloader: instaloader.Instaloader,
+    private_profile: instaloader.Profile,
     output_dir: Path,
 ) -> None:
-    logged_in_instaloader, private_profile = logged_in_private_profile
     for post in itertools.islice(private_profile.get_posts(), 12):
-        logged_in_instaloader.download_post(post, target=private_profile.username)
+        active_instaloader.download_post(post, target=private_profile.username)

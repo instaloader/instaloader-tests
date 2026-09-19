@@ -34,10 +34,16 @@ REQUIREMENTS: dict[str, list[RequirementVariant]] = {
         RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
         RequirementVariant(Authentication.ANONYMOUS, Importance.CRITICAL),
     ],
+    "profile-picture-private-logged-in-critical": [
+        RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL)
+    ],
     # Download Targets / Profile / Profile Posts
     "profile-posts-first-page-anonymous-critical": [
         RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
         RequirementVariant(Authentication.ANONYMOUS, Importance.HIGH),
+    ],
+    "profile-posts-first-page-private-logged-in-critical": [
+        RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL)
     ],
     # Post Metadata / Basic Information
     "post-basic-information-anonymous-critical": [
