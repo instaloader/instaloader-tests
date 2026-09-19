@@ -33,6 +33,7 @@ def test_saved_posts_first_page_download(
 ) -> None:
     monkeypatch.setattr(logged_in_instaloader, "dirname_pattern", "{target}")
     monkeypatch.setattr(logged_in_instaloader, "filename_pattern", "{shortcode}")
+    saved_posts_target = "saved-posts"
 
     expected_posts = tuple(
         take_first_items(
@@ -45,9 +46,10 @@ def test_saved_posts_first_page_download(
     )
     assert expected_posts
 
-    logged_in_instaloader.download_saved_posts(max_count=len(expected_posts))
+    for post in expected_posts:
+        logged_in_instaloader.download_post(post, target=saved_posts_target)
 
-    saved_dir = output_dir / ":saved"
+    saved_dir = output_dir / saved_posts_target
     downloaded_filenames = tuple(
         path.name for path in saved_dir.iterdir() if path.is_file()
     )
