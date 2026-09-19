@@ -88,7 +88,7 @@ def requirement(
     variants = REQUIREMENTS[requirement_id]
     params = [
         pytest.param(
-            variant.authentication.value,
+            variant.authentication,
             marks=(
                 getattr(pytest.mark, variant.authentication.value),
                 pytest.mark.importance(variant.importance.name.lower()),
