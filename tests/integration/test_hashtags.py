@@ -10,7 +10,7 @@ from tests.support.targets import IntegrationTargets
 
 
 @pytest.fixture()
-def public_hashtag(
+def hashtag(
     active_instaloader: instaloader.Instaloader,
     integration_targets: IntegrationTargets,
 ) -> instaloader.Hashtag:
@@ -20,30 +20,29 @@ def public_hashtag(
 
 
 @requirement("hashtag-posts-first-page")
-def test_public_hashtag_first_page_posts_download(
+def test_hashtag_first_page_posts_download(
     active_instaloader: instaloader.Instaloader,
-    public_hashtag: instaloader.Hashtag,
+    hashtag: instaloader.Hashtag,
     output_dir: Path,
     post_checker: PostChecker,
 ) -> None:
-    for post in itertools.islice(public_hashtag.get_posts(), 12):
-        post_checker(active_instaloader, post, f"#{public_hashtag.name}")
+    for post in itertools.islice(hashtag.get_posts(), 12):
+        post_checker(active_instaloader, post, f"#{hashtag.name}")
 
 
 @requirement("hashtag-posts-further-pages")
-def test_public_hashtag_further_pages_posts_download(
+def test_hashtag_further_pages_posts_download(
     active_instaloader: instaloader.Instaloader,
-    public_hashtag: instaloader.Hashtag,
+    hashtag: instaloader.Hashtag,
     max_items: int,
     output_dir: Path,
     post_checker: PostChecker,
 ) -> None:
     further_posts = False
-    stop_index = max(13, max_items)
-    for post in itertools.islice(public_hashtag.get_posts(), 12, stop_index):
-        post_checker(active_instaloader, post, f"#{public_hashtag.name}")
+    for post in itertools.islice(hashtag.get_posts(), 12, max_items):
+        post_checker(active_instaloader, post, f"#{hashtag.name}")
         further_posts = True
     if not further_posts:
         pytest.skip(
-            f"configured target does not provide more than 12 items for hashtag {public_hashtag.name!r}"
+            f"configured target does not provide more than 12 items for hashtag {hashtag.name!r}"
         )
