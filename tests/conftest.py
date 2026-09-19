@@ -63,6 +63,13 @@ def pytest_addoption(parser: pytest.Parser) -> None:
         default=None,
         help="public hashtag for anonymous hashtag tests",
     )
+    parser.addoption(
+        "--authentication",
+        action="store",
+        default="all",
+        choices=["all", "anonymous", "logged_in"],
+        help="authentication scope to execute: all, anonymous, or logged_in only",
+    )
 
 
 @pytest.hookimpl()
@@ -70,6 +77,7 @@ def pytest_collection_modifyitems(
     config: pytest.Config, items: list[pytest.Item]
 ) -> None:
     max_importance = config.getoption("--max-importance")
+    authentication_scope = config.getoption("--authentication")
     for item in items:
         requirement_marker = item.get_closest_marker("requirement_id")
         if requirement_marker:
@@ -90,6 +98,18 @@ def pytest_collection_modifyitems(
             )
 
         authentication_label = _authentication_label(item)
+        if (
+            authentication_scope != "all"
+            and authentication_label != authentication_scope
+        ):
+            if authentication_label is None:
+                reason = (
+                    "missing authentication marker; skipped because "
+                    f"--authentication={authentication_scope} was requested"
+                )
+            else:
+                reason = f"requires --authentication={authentication_label}"
+            item.add_marker(pytest.mark.skip(reason=reason))
         if authentication_label and f"[{authentication_label}]" not in item.nodeid:
             item._nodeid = f"{item.nodeid}[{authentication_label}]"
 

@@ -125,6 +125,16 @@ Run logged-in tests with Instaloader's default session-file path:
 ```bash
 poetry run pytest \
   --username youraccount \
+  --authentication logged_in \
+  --target-public-profile nasa \
+  --target-public-shortcode CxD6K_4M8QK
+```
+
+Run only anonymous tests:
+
+```bash
+poetry run pytest \
+  --authentication anonymous \
   --target-public-profile nasa \
   --target-public-shortcode CxD6K_4M8QK
 ```
@@ -143,3 +153,6 @@ unless `--sessionfile` overrides it.
 
 Use `--max-importance` to widen execution beyond critical tests as more coverage
 is added.
+
+Use `--authentication` to restrict execution to `anonymous` or `logged_in`
+tests.
