@@ -161,7 +161,7 @@ def logged_in_instaloader(
     return loader
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def logged_in_profile(
     logged_in_instaloader: instaloader.Instaloader,
 ) -> instaloader.Profile:
