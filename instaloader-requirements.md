@@ -19,6 +19,10 @@ Instagram or to fetch Instagram data.
 - Quantitative scopes:
   - **first page** means one page of items as returned by Instagram for the target; for story-item surfaces this is the first 12 story items when at least 12 story items are available, and for highlights this is the first 12 highlights when at least 12 highlights are available;
   - **first 50 items** applies only when the target provides at least 50 items.
+- Additional coverage values:
+  - **single item** means one directly addressed object is fetched successfully;
+  - **media set** means all media items belonging to one addressed post are fetched successfully;
+  - **update run** means a repeated download run is executed against an already-downloaded target and validates the expected incremental behavior.
 - Logged-in profile download requirements shall be exercised against both a public profile
   and, where Instagram permissions allow it, a followed private profile.
 
@@ -28,6 +32,10 @@ The integration suite shall maintain reusable targets for at least the following
 
 - a public profile with at least 50 posts;
 - a followed private profile with at least 50 posts;
+- a Firefox browser profile with valid Instagram cookies;
+- another supported browser profile with valid Instagram cookies;
+- a login target account without two-factor authentication;
+- a login target account with two-factor authentication enabled;
 - a profile with at least 50 story items and at least 50 highlights;
 - a profile with at least 50 tagged posts, 50 reels, and 50 IGTV items when those surfaces exist;
 - a hashtag with at least 50 posts;
