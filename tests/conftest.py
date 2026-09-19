@@ -19,6 +19,7 @@ from tests.support.targets import IntegrationTargets, load_targets
 pytest_plugins: list[str] = []
 _SUMMARY_OUTCOME_ORDER = ("failed", "error", "passed", "skipped", "xfailed", "xpassed")
 _REPORT_IMPORTANCE_PROPERTY = "importance"
+_REPORT_SUMMARY_KEY_PROPERTY = "summary_key"
 _SUMMARY_OUTCOME_PRECEDENCE = {
     "failed": 0,
     "error": 1,
@@ -166,6 +167,9 @@ def pytest_runtest_makereport(
     if _report_outcome_category(report) is None:
         return
     report.user_properties.append(
+        (_REPORT_SUMMARY_KEY_PROPERTY, f"{item.nodeid}::{id(item)}")
+    )
+    report.user_properties.append(
         (_REPORT_IMPORTANCE_PROPERTY, _importance_label(item))
     )
 
@@ -192,14 +196,21 @@ def pytest_terminal_summary(terminalreporter: Any) -> None:
                 ),
                 "unmarked",
             )
-            nodeid = str(report.nodeid)
-            current = test_outcomes.get(nodeid)
+            summary_key = next(
+                (
+                    value
+                    for key, value in getattr(report, "user_properties", [])
+                    if key == _REPORT_SUMMARY_KEY_PROPERTY
+                ),
+                str(report.nodeid),
+            )
+            current = test_outcomes.get(str(summary_key))
             if (
                 current is None
                 or _SUMMARY_OUTCOME_PRECEDENCE[outcome]
                 < _SUMMARY_OUTCOME_PRECEDENCE[current[0]]
             ):
-                test_outcomes[nodeid] = (outcome, str(importance))
+                test_outcomes[str(summary_key)] = (outcome, str(importance))
 
     for outcome, importance in test_outcomes.values():
         grouped_counts[importance][outcome] += 1
