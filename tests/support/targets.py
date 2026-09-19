@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 from dataclasses import dataclass
-from typing import Callable, TypeVar
+from typing import TypeVar
 
 import pytest
 
@@ -45,44 +45,3 @@ def take_first_items(
         if len(selected) == count:
             return selected
     pytest.skip(f"configured target does not provide {count} items for {description}")
-
-
-def take_item_range(
-    items: Iterable[TargetItem],
-    *,
-    start: int,
-    end: int,
-    description: str,
-    prefix_error_handler: Callable[[Exception, int], None] | None = None,
-) -> list[TargetItem]:
-    if start < 1:
-        raise pytest.UsageError(f"start must be >= 1, got {start}")
-    if end < start:
-        raise pytest.UsageError(f"end must be >= start, got start={start}, end={end}")
-
-    iterator = iter(items)
-    for position in range(1, start):
-        try:
-            next(iterator)
-        except StopIteration:
-            pytest.skip(
-                f"configured target does not provide {position - 1} items for {description}"
-            )
-        except Exception as error:
-            if isinstance(error, (pytest.skip.Exception, pytest.xfail.Exception)):
-                raise
-            if prefix_error_handler is not None:
-                prefix_error_handler(error, position)
-                raise AssertionError("prefix_error_handler must not return")
-            raise
-
-    selected: list[TargetItem] = []
-    for position in range(start, end + 1):
-        try:
-            selected.append(next(iterator))
-        except StopIteration:
-            pytest.skip(
-                f"configured target does not provide {position} items for {description}"
-            )
-
-    return selected

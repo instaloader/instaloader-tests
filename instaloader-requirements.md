@@ -200,7 +200,7 @@ Instaloader shall be able to download the Posts of a Location (if logged-in).
 | Importance            | logged-in |
 |-----------------------|-----------|
 | First page (12 Posts) | critical  |
-| First 50 Posts        | high      |
+| First 50 Posts        | critical  |
 
 Instaloader shall be able to download the saved Posts of the logged-in user.
 

@@ -159,13 +159,3 @@ def logged_in_instaloader(
         session_credentials.username, str(session_credentials.session_file)
     )
     return loader
-
-
-@pytest.fixture(scope="module")
-def logged_in_profile(
-    logged_in_instaloader: instaloader.Instaloader,
-) -> instaloader.Profile:
-    username = logged_in_instaloader.test_login()
-    if username is None:
-        pytest.skip("unable to determine logged-in username from session")
-    return instaloader.Profile.from_username(logged_in_instaloader.context, username)
