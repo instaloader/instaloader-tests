@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+from collections import defaultdict
 from pathlib import Path
+from typing import Any
 
 import instaloader
 import pytest
@@ -14,6 +16,8 @@ from tests.support.requirements_map import (
 from tests.support.targets import IntegrationTargets, load_targets
 
 pytest_plugins: list[str] = []
+_SUMMARY_OUTCOME_ORDER = ("failed", "error", "passed", "skipped", "xfailed", "xpassed")
+_REPORT_IMPORTANCE_PROPERTY = "importance"
 
 
 def _authentication_label(item: pytest.Item) -> str | None:
@@ -21,6 +25,31 @@ def _authentication_label(item: pytest.Item) -> str | None:
         return "anonymous"
     if item.get_closest_marker("logged_in"):
         return "logged_in"
+    return None
+
+
+def _importance_label(item: pytest.Item) -> str:
+    importance_marker = item.get_closest_marker("importance")
+    if importance_marker:
+        return str(importance_marker.args[0]).lower()
+    return "unmarked"
+
+
+def _report_outcome_category(report: Any) -> str | None:
+    if getattr(report, "skipped", False):
+        return "skipped"
+    if getattr(report, "passed", False):
+        if report.when != "call":
+            return None
+        if getattr(report, "wasxfail", None):
+            return "xpassed"
+        return "passed"
+    if getattr(report, "failed", False):
+        if getattr(report, "wasxfail", None):
+            return "xfailed"
+        if report.when == "call":
+            return "failed"
+        return "error"
     return None
 
 
@@ -112,6 +141,54 @@ def pytest_collection_modifyitems(
             item.add_marker(pytest.mark.skip(reason=reason))
         if authentication_label and f"[{authentication_label}]" not in item.nodeid:
             item._nodeid = f"{item.nodeid}[{authentication_label}]"
+
+
+@pytest.hookimpl(hookwrapper=True)
+def pytest_runtest_makereport(item: pytest.Item, call: pytest.CallInfo[None]):
+    outcome = yield
+    report = outcome.get_result()
+    report.user_properties.append(
+        (_REPORT_IMPORTANCE_PROPERTY, _importance_label(item))
+    )
+
+
+@pytest.hookimpl()
+def pytest_terminal_summary(terminalreporter: Any) -> None:
+    grouped_counts: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
+    for reports in terminalreporter.stats.values():
+        for report in reports:
+            outcome = _report_outcome_category(report)
+            if outcome is None:
+                continue
+            importance = next(
+                (
+                    value
+                    for key, value in getattr(report, "user_properties", [])
+                    if key == _REPORT_IMPORTANCE_PROPERTY
+                ),
+                "unmarked",
+            )
+            grouped_counts[str(importance)][outcome] += 1
+
+    ordered_levels = [importance.name.lower() for importance in Importance]
+    summary_levels = [
+        level
+        for level in ordered_levels + ["unmarked"]
+        if sum(grouped_counts[level].values()) > 0
+    ]
+    if not summary_levels:
+        return
+
+    terminalreporter.section("results by criticality")
+    for level in summary_levels:
+        counts = grouped_counts[level]
+        parts = [
+            f"{outcome}={counts[outcome]}"
+            for outcome in _SUMMARY_OUTCOME_ORDER
+            if counts.get(outcome)
+        ]
+        total = sum(counts.values())
+        terminalreporter.write_line(f"{level}: total={total}, " + ", ".join(parts))
 
 
 @pytest.fixture(scope="session")
