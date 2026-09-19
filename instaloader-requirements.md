@@ -19,6 +19,7 @@ Instagram or to fetch Instagram data.
 - Quantitative scopes:
   - **first page** means one page of items as returned by Instagram for the target;
   - **first 50 items** applies only when the target provides at least 50 items.
+  - for story surfaces, **first page** means the first 12 story items when at least 12 story items are available.
 - Logged-in profile download requirements shall be exercised against both a public profile
   and, where Instagram permissions allow it, a followed private profile.
 
@@ -32,7 +33,7 @@ The integration suite shall maintain reusable targets for at least the following
 - a profile with tagged posts, reels, and IGTV content when those surfaces exist;
 - a hashtag with posts;
 - a location with posts;
-- a post with caption, timestamp, geotag, at least 50 comments, and at least 50 likes;
+- a post with caption, date, geotag, at least 50 comments, and at least 50 likes;
 - a shortcode for a downloadable post with one or more media items;
 - an owner account with saved posts, feed items, and visible stories.
 
@@ -118,10 +119,13 @@ The integration suite shall maintain reusable targets for at least the following
 
 ### Post metadata
 
+Authenticated comment retrieval remains a higher-priority regression target than
+anonymous comment retrieval.
+
 | ID | Importance | Access | Coverage | Requirement |
 |----|------------|--------|----------|-------------|
-| MD-POST-1 | critical | anonymous | single item | Instaloader shall be able to access the caption and timestamp of a post. |
-| MD-POST-2 | critical | authenticated | single item | Instaloader shall be able to access the caption and timestamp of a post. |
+| MD-POST-1 | critical | anonymous | single item | Instaloader shall be able to access the caption and date of a post. |
+| MD-POST-2 | critical | authenticated | single item | Instaloader shall be able to access the caption and date of a post. |
 | MD-POST-3 | high | authenticated | first page | Instaloader shall be able to list the first page of profiles that liked a post. |
 | MD-POST-4 | high | authenticated | first 50 items | Instaloader shall be able to list the first 50 profiles that liked a post. |
 | MD-POST-5 | medium | anonymous | first page | Instaloader shall be able to list the first page of comments of a post. |
