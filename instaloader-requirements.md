@@ -73,6 +73,7 @@ followed private profiles.
 | ID | Importance | Access | Coverage | Requirement |
 |----|------------|--------|----------|-------------|
 | DL-PROFILE-1 | critical | anonymous | single item | Instaloader shall be able to download the profile picture of a profile. |
+| DL-PROFILE-1A | critical | authenticated | single item | Instaloader shall be able to download the profile picture of a profile. |
 | DL-PROFILE-2 | critical | authenticated | first page | Instaloader shall be able to download the first page of posts of a profile. |
 | DL-PROFILE-3 | high | anonymous | first page | Instaloader shall be able to download the first page of posts of a public profile. |
 | DL-PROFILE-4 | critical | authenticated | first 50 items | Instaloader shall be able to download the first 50 posts of a profile. |
@@ -156,7 +157,7 @@ commenter profiles.
 
 | ID | Importance | Access | Coverage | Requirement |
 |----|------------|--------|----------|-------------|
-| MD-PROFILE-1 | high | authenticated | first page | Instaloader shall be able to list the first page of followers of a profile. |
-| MD-PROFILE-2 | medium | authenticated | first 50 items | Instaloader shall be able to list the first 50 followers of a profile. |
-| MD-PROFILE-3 | high | authenticated | first page | Instaloader shall be able to list the first page of followees of a profile. |
-| MD-PROFILE-4 | medium | authenticated | first 50 items | Instaloader shall be able to list the first 50 followees of a profile. |
+| MD-PROFILE-1 | high | authenticated | first page | Instaloader shall be able to list the first page of followers of a profile that the authenticated session is permitted to inspect. |
+| MD-PROFILE-2 | medium | authenticated | first 50 items | Instaloader shall be able to list the first 50 followers of a profile that the authenticated session is permitted to inspect. |
+| MD-PROFILE-3 | high | authenticated | first page | Instaloader shall be able to list the first page of followees of a profile that the authenticated session is permitted to inspect. |
+| MD-PROFILE-4 | medium | authenticated | first 50 items | Instaloader shall be able to list the first 50 followees of a profile that the authenticated session is permitted to inspect. |
