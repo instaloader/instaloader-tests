@@ -37,17 +37,18 @@ def _importance_label(item: pytest.Item) -> str:
 
 
 def _report_outcome_category(report: Any) -> str | None:
+    wasxfail = getattr(report, "wasxfail", None)
     if getattr(report, "skipped", False):
+        if wasxfail:
+            return "xfailed"
         return "skipped"
     if getattr(report, "passed", False):
         if report.when != "call":
             return None
-        if getattr(report, "wasxfail", None):
+        if wasxfail:
             return "xpassed"
         return "passed"
     if getattr(report, "failed", False):
-        if getattr(report, "wasxfail", None):
-            return "xfailed"
         if report.when == "call":
             return "failed"
         return "error"
