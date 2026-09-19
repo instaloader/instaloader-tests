@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from collections.abc import Generator
 from collections import defaultdict
 from pathlib import Path
