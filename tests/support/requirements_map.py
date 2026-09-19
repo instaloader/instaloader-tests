@@ -30,27 +30,32 @@ class RequirementCase:
 
 
 REQUIREMENTS: dict[str, RequirementCase] = {
+    # Session Creation / Test login
     "test-login-query-username-logged-in-critical": RequirementCase(
         variants=(RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),),
     ),
+    # Download Targets / Profile / Profile Picture
     "profile-picture-anonymous-critical": RequirementCase(
         variants=(
             RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
             RequirementVariant(Authentication.ANONYMOUS, Importance.CRITICAL),
         ),
     ),
+    # Download Targets / Profile / Profile Posts
     "profile-posts-first-page-anonymous-critical": RequirementCase(
         variants=(
             RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
             RequirementVariant(Authentication.ANONYMOUS, Importance.HIGH),
         ),
     ),
+    # Post Metadata / Basic Information
     "post-basic-information-anonymous-critical": RequirementCase(
         variants=(
             RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
             RequirementVariant(Authentication.ANONYMOUS, Importance.CRITICAL),
         ),
     ),
+    # Download Targets / Saved Posts
     **{
         requirement_id: RequirementCase(
             variants=(
