@@ -55,7 +55,7 @@ REQUIREMENTS: dict[str, RequirementCase] = {
     ),
     "saved-posts-first-page-logged-in-critical": RequirementCase(
         section="Download Targets / Saved Posts",
-        statement="Instaloader shall be able to download the saved Posts of the logged-in user.",
+        statement="Instaloader shall be able to download the saved posts of the logged-in user.",
         importance=Importance.CRITICAL,
         authentication=Authentication.LOGGED_IN,
     ),
