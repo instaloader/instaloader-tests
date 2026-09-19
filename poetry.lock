@@ -540,4 +540,4 @@ dev = ["black", "mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12"
-content-hash = "29662d168cb35c00fc975175cc6a38295f8aa3ec0e10755169d4dfefe0837117"
+content-hash = "f2bbc1cdf52ed0ac0d2ad2cfa906a1d1963a45aa095cc55129be1b76ffd6ebf0"
