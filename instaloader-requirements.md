@@ -75,6 +75,14 @@ except TwoFactorAuthRequiredException:
             pass
 ```
 
+### Test login
+
+| Importance |
+|------------|
+| critical   |
+
+Instaloader shall be able to query Instagram for the username of the used Session.
+
 ### 2FA
 
 | Importance |
