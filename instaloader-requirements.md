@@ -19,7 +19,7 @@ Instagram or to fetch Instagram data.
 - Quantitative scopes:
   - **first page** means one page of items as returned by Instagram for the target;
   - **first 50 items** applies only when the target provides at least 50 items.
-  - for story surfaces, **first page** means the first 12 story items when at least 12 story items are available.
+  - For story surfaces, **first page** means the first 12 story items when at least 12 story items are available.
 - Logged-in profile download requirements shall be exercised against both a public profile
   and, where Instagram permissions allow it, a followed private profile.
 
@@ -27,15 +27,15 @@ Instagram or to fetch Instagram data.
 
 The integration suite shall maintain reusable targets for at least the following cases:
 
-- a public profile with posts;
-- a followed private profile with posts;
-- a profile with stories and highlights;
-- a profile with tagged posts, reels, and IGTV content when those surfaces exist;
-- a hashtag with posts;
-- a location with posts;
+- a public profile with at least 50 posts;
+- a followed private profile with at least 50 posts;
+- a profile with at least 50 story items and at least 50 highlights;
+- a profile with at least 50 tagged posts, 50 reels, and 50 IGTV items when those surfaces exist;
+- a hashtag with at least 50 posts;
+- a location with at least 50 posts;
 - a post with caption, date, geotag, at least 50 comments, and at least 50 likes;
 - a shortcode for a downloadable post with one or more media items;
-- an owner account with saved posts, feed items, and visible stories.
+- an owner account with at least 50 saved posts, 50 feed items, and 50 visible story items.
 
 ## Session Management Requirements
 
