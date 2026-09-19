@@ -31,8 +31,8 @@ TARGET_OPTIONS: dict[TargetKey, TargetOption] = {
         help_text="public shortcode for anonymous single-post tests",
     ),
     "hashtag": TargetOption(
-        option_name="--target-public-hashtag",
-        help_text="public hashtag for anonymous hashtag tests",
+        option_name="--target-hashtag",
+        help_text="hashtag for hashtag tests",
     ),
 }
 
