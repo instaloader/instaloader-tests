@@ -161,15 +161,19 @@ def logged_in_instaloader(
     return loader
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture()
+def active_authentication(request: pytest.FixtureRequest) -> str:
+    return request.param
+
+
+@pytest.fixture()
 def active_instaloader(
-    request: pytest.FixtureRequest,
+    active_authentication: str,
     anonymous_instaloader: instaloader.Instaloader,
     logged_in_instaloader: instaloader.Instaloader,
 ) -> instaloader.Instaloader:
-    authentication = request.param
-    if authentication == "anonymous":
+    if active_authentication == "anonymous":
         return anonymous_instaloader
-    if authentication == "logged_in":
+    if active_authentication == "logged_in":
         return logged_in_instaloader
-    raise pytest.UsageError(f"Unknown authentication variant: {authentication}")
+    raise pytest.UsageError(f"Unknown authentication variant: {active_authentication}")

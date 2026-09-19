@@ -10,20 +10,21 @@ from tests.support.requirements_map import requirement
 
 
 @pytest.fixture(scope="session")
-def public_profile_cache() -> dict[tuple[int, str], instaloader.Profile]:
+def public_profile_cache() -> dict[tuple[str, str], instaloader.Profile]:
     return {}
 
 
 @pytest.fixture()
 def public_profile(
+    active_authentication: str,
     active_instaloader: instaloader.Instaloader,
     integration_targets: IntegrationTargets,
-    public_profile_cache: dict[tuple[int, str], instaloader.Profile],
+    public_profile_cache: dict[tuple[str, str], instaloader.Profile],
 ) -> instaloader.Profile:
     username = require_target(
         integration_targets.public_profile, option_name="--target-public-profile"
     )
-    cache_key = (id(active_instaloader), username)
+    cache_key = (active_authentication, username)
     if cache_key not in public_profile_cache:
         public_profile_cache[cache_key] = instaloader.Profile.from_username(
             active_instaloader.context, username
@@ -33,7 +34,7 @@ def public_profile(
 
 @pytest.fixture(scope="session")
 def public_profile_first_page_posts_cache() -> (
-    dict[tuple[int, str], tuple[instaloader.Post, ...]]
+    dict[tuple[str, str], tuple[instaloader.Post, ...]]
 ):
     return {}
 
@@ -41,12 +42,12 @@ def public_profile_first_page_posts_cache() -> (
 @pytest.fixture()
 def public_profile_first_page_posts(
     public_profile: instaloader.Profile,
-    active_instaloader: instaloader.Instaloader,
+    active_authentication: str,
     public_profile_first_page_posts_cache: dict[
-        tuple[int, str], tuple[instaloader.Post, ...]
+        tuple[str, str], tuple[instaloader.Post, ...]
     ],
 ) -> tuple[instaloader.Post, ...]:
-    cache_key = (id(active_instaloader), public_profile.username)
+    cache_key = (active_authentication, public_profile.username)
     if cache_key not in public_profile_first_page_posts_cache:
         public_profile_first_page_posts_cache[cache_key] = tuple(
             take_first_items(
