@@ -46,7 +46,7 @@ The integration suite shall maintain reusable targets for at least the following
 - a profile fixture whose username can be changed between two download runs while preserving the same Instagram identity;
 - a hashtag with at least 50 posts;
 - a location with at least 50 posts;
-- a post with caption, date, geotag, a liker list with at least 50 entries, and a comment list with at least 50 entries;
+- a public post that is accessible in both anonymous and authenticated runs, with caption, date, geotag, a liker list with at least 50 entries when authenticated, and an anonymously visible comment list with at least 50 entries;
 - a shortcode for a downloadable post with one or more media items;
 - an owner account with at least 50 saved posts, 50 feed items, and 50 visible story items.
 
