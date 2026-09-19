@@ -1,5 +1,4 @@
 import itertools
-from collections.abc import Iterator
 from pathlib import Path
 
 import instaloader
@@ -32,13 +31,6 @@ def public_profile(
     return public_profile_cache[cache_key]
 
 
-@pytest.fixture()
-def public_profile_first_page_posts(
-    public_profile: instaloader.Profile,
-) -> Iterator[instaloader.Post]:
-    return itertools.islice(public_profile.get_posts(), 12)
-
-
 @requirement("profile-picture-anonymous-critical")
 def test_public_profile_picture_download(
     active_instaloader: instaloader.Instaloader,
@@ -52,8 +44,7 @@ def test_public_profile_picture_download(
 def test_public_profile_first_page_posts_download(
     active_instaloader: instaloader.Instaloader,
     public_profile: instaloader.Profile,
-    public_profile_first_page_posts: Iterator[instaloader.Post],
     _output_dir: Path,
 ) -> None:
-    for post in public_profile_first_page_posts:
+    for post in itertools.islice(public_profile.get_posts(), 12):
         active_instaloader.download_post(post, target=public_profile.username)
