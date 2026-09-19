@@ -3,6 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import instaloader
+import pytest
 
 from tests.support.requirements_map import requirement
 from tests.support.targets import (
@@ -15,15 +16,25 @@ from tests.support.targets import (
 )
 
 
+def _require_location_id(integration_targets: IntegrationTargets) -> int:
+    location = require_target(
+        integration_targets.location, option_name="--target-location"
+    )
+    try:
+        return int(location)
+    except ValueError as error:
+        raise pytest.UsageError(
+            "--target-location must be an Instagram location ID"
+        ) from error
+
+
 @requirement("location-posts-first-page-logged-in-medium")
 def test_location_first_page_posts_download(
     logged_in_instaloader: instaloader.Instaloader,
     integration_targets: IntegrationTargets,
     _output_dir: Path,
 ) -> None:
-    location = require_target(
-        integration_targets.location, option_name="--target-location"
-    )
+    location = _require_location_id(integration_targets)
     take_first_items(
         logged_in_instaloader.get_location_posts(location),
         count=FIRST_PAGE_ITEM_COUNT,
@@ -38,9 +49,7 @@ def test_location_first_50_posts_download(
     integration_targets: IntegrationTargets,
     _output_dir: Path,
 ) -> None:
-    location = require_target(
-        integration_targets.location, option_name="--target-location"
-    )
+    location = _require_location_id(integration_targets)
     take_up_to_items(
         logged_in_instaloader.get_location_posts(location),
         minimum_count=FIRST_PAGE_ITEM_COUNT + 1,
