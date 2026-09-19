@@ -13,7 +13,6 @@ from tests.support.requirements_map import (
 )
 from tests.support.targets import IntegrationTargets, load_targets
 
-
 pytest_plugins: list[str] = []
 
 
