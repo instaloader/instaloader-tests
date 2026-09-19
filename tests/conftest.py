@@ -104,6 +104,12 @@ def pytest_addoption(parser: pytest.Parser) -> None:
         default=None,
         help="Instagram username that matches --sessionfile",
     )
+    parser.addoption(
+        "--password",
+        action="store",
+        default=None,
+        help="Instagram password used for login-creation integration tests",
+    )
     for target in TARGET_OPTIONS.values():
         parser.addoption(
             target.option_name,
@@ -286,6 +292,11 @@ def session_credentials(pytestconfig: pytest.Config) -> SessionCredentials | Non
         username=pytestconfig.getoption("--username"),
         sessionfile=pytestconfig.getoption("--sessionfile"),
     )
+
+
+@pytest.fixture(scope="session")
+def login_password(pytestconfig: pytest.Config) -> str | None:
+    return pytestconfig.getoption("--password")
 
 
 @pytest.fixture(scope="session")

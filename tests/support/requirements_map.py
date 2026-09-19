@@ -26,6 +26,9 @@ class RequirementVariant:
 
 REQUIREMENTS: dict[str, list[RequirementVariant]] = {
     # Session Creation / Test login
+    "login-create-session-no-2fa-logged-in": [
+        RequirementVariant(Authentication.LOGGED_IN, Importance.HIGH)
+    ],
     "test-login-query-username-logged-in": [
         RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL)
     ],
@@ -48,6 +51,19 @@ REQUIREMENTS: dict[str, list[RequirementVariant]] = {
     ],
     "profile-posts-first-page-private-logged-in": [
         RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL)
+    ],
+    "profile-stories-first-page-logged-in": [
+        RequirementVariant(Authentication.LOGGED_IN, Importance.HIGH)
+    ],
+    "profile-highlights-cover-picture-logged-in": [
+        RequirementVariant(Authentication.LOGGED_IN, Importance.HIGH)
+    ],
+    "profile-highlights-first-page-logged-in": [
+        RequirementVariant(Authentication.LOGGED_IN, Importance.HIGH)
+    ],
+    # Download Targets / Hashtags / Hashtag Profile Picture
+    "hashtag-profile-picture-logged-in": [
+        RequirementVariant(Authentication.LOGGED_IN, Importance.HIGH)
     ],
     # Download Targets / Hashtags / Hashtag Posts
     "hashtag-posts-first-page": [
@@ -74,6 +90,32 @@ REQUIREMENTS: dict[str, list[RequirementVariant]] = {
     ],
     "saved-posts-further-pages-logged-in": [
         RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
+    ],
+    # Download Targets / Feed
+    "feed-first-page-logged-in": [
+        RequirementVariant(Authentication.LOGGED_IN, Importance.HIGH),
+    ],
+    # Download Targets / Stories
+    "stories-first-page-logged-in": [
+        RequirementVariant(Authentication.LOGGED_IN, Importance.HIGH),
+    ],
+    # Post Metadata / Likes
+    "post-likes-first-page-logged-in": [
+        RequirementVariant(Authentication.LOGGED_IN, Importance.HIGH),
+    ],
+    "post-likes-further-pages-logged-in": [
+        RequirementVariant(Authentication.LOGGED_IN, Importance.HIGH),
+    ],
+    # Post Metadata / Comments
+    "post-comments-first-page-logged-in": [
+        RequirementVariant(Authentication.LOGGED_IN, Importance.HIGH),
+    ],
+    # Profile Metadata / Followers + Followees
+    "profile-followers-first-page-logged-in": [
+        RequirementVariant(Authentication.LOGGED_IN, Importance.HIGH),
+    ],
+    "profile-followees-first-page-logged-in": [
+        RequirementVariant(Authentication.LOGGED_IN, Importance.HIGH),
     ],
 }
 
