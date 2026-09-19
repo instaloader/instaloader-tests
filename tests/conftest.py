@@ -8,6 +8,7 @@ import pytest
 
 from tests.support.credentials import SessionCredentials, load_session_credentials
 from tests.support.requirements_map import (
+    Authentication,
     REQUIREMENTS,
     Importance,
     is_importance_enabled,
@@ -33,11 +34,10 @@ _SUMMARY_OUTCOME_PRECEDENCE = {
 }
 
 
-def _authentication_label(item: pytest.Item) -> str | None:
-    if item.get_closest_marker("anonymous"):
-        return "anonymous"
-    if item.get_closest_marker("logged_in"):
-        return "logged_in"
+def _authentication_label(item: pytest.Item) -> Authentication | None:
+    for authentication in Authentication:
+        if item.get_closest_marker(authentication.value):
+            return authentication
     return None
 
 
@@ -109,7 +109,7 @@ def pytest_addoption(parser: pytest.Parser) -> None:
         "--authentication",
         action="store",
         default="all",
-        choices=["all", "anonymous", "logged_in"],
+        choices=["all", *[authentication.value for authentication in Authentication]],
         help="authentication scope to execute: all, anonymous, or logged_in only",
     )
 
@@ -120,6 +120,9 @@ def pytest_collection_modifyitems(
 ) -> None:
     max_importance = config.getoption("--max-importance")
     authentication_scope = config.getoption("--authentication")
+    requested_authentication = (
+        None if authentication_scope == "all" else Authentication(authentication_scope)
+    )
     for item_index, item in enumerate(items):
         setattr(item, "_instaloader_summary_key", f"{item_index}:{item.nodeid}")
         requirement_marker = item.get_closest_marker("requirement_id")
@@ -142,8 +145,8 @@ def pytest_collection_modifyitems(
 
         authentication_label = _authentication_label(item)
         if (
-            authentication_scope != "all"
-            and authentication_label != authentication_scope
+            requested_authentication is not None
+            and authentication_label != requested_authentication
         ):
             if authentication_label is None:
                 reason = (
@@ -151,10 +154,13 @@ def pytest_collection_modifyitems(
                     f"--authentication={authentication_scope} was requested"
                 )
             else:
-                reason = f"requires --authentication={authentication_label}"
+                reason = f"requires --authentication={authentication_label.value}"
             item.add_marker(pytest.mark.skip(reason=reason))
-        if authentication_label and f"[{authentication_label}]" not in item.nodeid:
-            item._nodeid = f"{item.nodeid}[{authentication_label}]"
+        if (
+            authentication_label
+            and f"[{authentication_label.value}]" not in item.nodeid
+        ):
+            item._nodeid = f"{item.nodeid}[{authentication_label.value}]"
 
 
 @pytest.hookimpl(hookwrapper=True)
@@ -295,18 +301,18 @@ def logged_in_instaloader(
 
 
 @pytest.fixture()
-def active_authentication(request: pytest.FixtureRequest) -> str:
+def active_authentication(request: pytest.FixtureRequest) -> Authentication:
     return request.param
 
 
 @pytest.fixture()
 def active_instaloader(
-    active_authentication: str,
+    active_authentication: Authentication,
     anonymous_instaloader: instaloader.Instaloader,
     logged_in_instaloader: instaloader.Instaloader,
 ) -> instaloader.Instaloader:
-    if active_authentication == "anonymous":
+    if active_authentication is Authentication.ANONYMOUS:
         return anonymous_instaloader
-    if active_authentication == "logged_in":
+    if active_authentication is Authentication.LOGGED_IN:
         return logged_in_instaloader
     raise pytest.UsageError(f"Unknown authentication variant: {active_authentication}")

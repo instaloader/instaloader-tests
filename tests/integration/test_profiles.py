@@ -4,20 +4,20 @@ from pathlib import Path
 import instaloader
 import pytest
 
+from tests.support.requirements_map import Authentication, requirement
 from tests.support.targets import IntegrationTargets
-from tests.support.requirements_map import requirement
 
 
 @pytest.fixture(scope="session")
-def profile_cache() -> dict[tuple[str, str], instaloader.Profile]:
+def profile_cache() -> dict[tuple[Authentication, str], instaloader.Profile]:
     return {}
 
 
 def _profile_from_username(
     context: instaloader.InstaloaderContext,
-    authentication: str,
+    authentication: Authentication,
     username: str,
-    profile_cache: dict[tuple[str, str], instaloader.Profile],
+    profile_cache: dict[tuple[Authentication, str], instaloader.Profile],
 ) -> instaloader.Profile:
     cache_key = (authentication, username)
     if cache_key not in profile_cache:
@@ -27,10 +27,10 @@ def _profile_from_username(
 
 @pytest.fixture()
 def public_profile(
-    active_authentication: str,
+    active_authentication: Authentication,
     active_instaloader: instaloader.Instaloader,
     integration_targets: IntegrationTargets,
-    profile_cache: dict[tuple[str, str], instaloader.Profile],
+    profile_cache: dict[tuple[Authentication, str], instaloader.Profile],
 ) -> instaloader.Profile:
     username = integration_targets.require("public_profile")
     return _profile_from_username(
@@ -45,11 +45,11 @@ def public_profile(
 def private_profile(
     integration_targets: IntegrationTargets,
     logged_in_instaloader: instaloader.Instaloader,
-    profile_cache: dict[tuple[str, str], instaloader.Profile],
+    profile_cache: dict[tuple[Authentication, str], instaloader.Profile],
 ) -> instaloader.Profile:
     return _profile_from_username(
         logged_in_instaloader.context,
-        "logged_in",
+        Authentication.LOGGED_IN,
         integration_targets.require("private_profile"),
         profile_cache,
     )

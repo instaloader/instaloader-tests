@@ -92,26 +92,37 @@ poetry install --no-root --extras dev
 poetry run pytest --collect-only
 ```
 
-Run the currently implemented anonymous integration tests:
+The suite is driven entirely through pytest CLI options:
 
 ```bash
-poetry run pytest \
-  --target-public-profile=nasa \
-  --target-public-shortcode=CxD6K_4M8QK
+poetry run pytest [pytest selection options...] [instaloader test options...]
 ```
 
-Run logged-in tests with Instaloader's default session-file path:
+Tests that need data you did not provide are skipped with a short explanation.
+For example, logged-in tests are skipped unless `--username` is set, and
+target-specific tests are skipped unless their corresponding `--target-*`
+option is configured.
 
-```bash
-poetry run pytest \
-  --username=youraccount \
-  --authentication=logged_in \
-  --target-public-profile=nasa \
-  --target-private-profile=your-private-target \
-  --target-public-shortcode=CxD6K_4M8QK
-```
+#### Invocation reference
 
-Run only anonymous tests:
+| Option                      | Accepted values / default                                |
+|-----------------------------|----------------------------------------------------------|
+| `--authentication`          | `all` (default), `anonymous`, `logged_in`                |
+| `--max-importance`          | `critical` (default), `high`, `medium`, `low`, `verylow` |
+| `--username`                | Instagram username                                       |
+| `--sessionfile`             | Filesystem path                                          |
+| `--target-public-profile`   | Public Instagram username                                |
+| `--target-private-profile`  | Private Instagram username                               |
+| `--target-public-shortcode` | Public post shortcode                                    |
+| `--target-public-hashtag`   | Public hashtag name                                      |
+
+At the end of each run, pytest prints a `results by criticality` summary that
+groups the observed outcomes by importance level.
+
+#### Example commands
+
+Anonymous smoke run against the currently implemented public-profile and single-
+post coverage:
 
 ```bash
 poetry run pytest \
@@ -120,26 +131,48 @@ poetry run pytest \
   --target-public-shortcode=CxD6K_4M8QK
 ```
 
-Run a wider slice of the suite up to a higher importance level:
+Logged-in run that exercises public, private, and account-owned coverage using
+Instaloader's default session-file path:
 
 ```bash
 poetry run pytest \
+  --authentication=logged_in \
+  --username=youraccount \
+  --target-public-profile=nasa \
+  --target-private-profile=your-private-target \
+  --target-public-shortcode=CxD6K_4M8QK
+```
+
+Logged-in run with an explicit session file, focused on saved-post coverage
+while iterating on that feature area:
+
+```bash
+poetry run pytest \
+  tests/integration/test_saved_posts.py \
+  --authentication=logged_in \
+  --username=youraccount \
+  --sessionfile=/absolute/path/to/session-youraccount
+```
+
+Broader anonymous run that also enables tests marked above the default
+`critical` level:
+
+```bash
+poetry run pytest \
+  --authentication=anonymous \
   --max-importance=high \
   --target-public-profile=nasa \
   --target-public-shortcode=CxD6K_4M8QK
 ```
 
-If `--username` is set, the suite uses Instaloader's default session-file path
-unless `--sessionfile` overrides it.
+Dry-run collection for a planned logged-in execution, useful to confirm which
+cases would run before hitting Instagram:
 
-Use `--max-importance` to widen execution beyond critical tests as more coverage
-is added.
-
-Use `--authentication` to restrict execution to `anonymous` or `logged_in`
-tests.
-
-Use `--target-private-profile` to enable the logged-in profile tests that cover
-private accounts.
-
-At the end of each run, pytest prints a `results by criticality` summary that
-groups the observed outcomes by importance level.
+```bash
+poetry run pytest --collect-only \
+  --authentication=logged_in \
+  --username=youraccount \
+  --target-public-profile=nasa \
+  --target-private-profile=your-private-target \
+  --target-public-shortcode=CxD6K_4M8QK
+```
