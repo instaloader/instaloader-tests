@@ -124,6 +124,13 @@ def pytest_addoption(parser: pytest.Parser) -> None:
         choices=["all", *[authentication.value for authentication in Authentication]],
         help="authentication scope to execute: all, anonymous, or logged_in only",
     )
+    parser.addoption(
+        "--saved-posts-further-pages-end",
+        action="store",
+        type=int,
+        default=50,
+        help="exclusive islice end for saved-posts further-pages coverage (must be > 12)",
+    )
 
 
 @pytest.hookimpl()
@@ -272,6 +279,14 @@ def session_credentials(pytestconfig: pytest.Config) -> SessionCredentials | Non
         username=pytestconfig.getoption("--username"),
         sessionfile=pytestconfig.getoption("--sessionfile"),
     )
+
+
+@pytest.fixture(scope="session")
+def saved_posts_further_pages_end(pytestconfig: pytest.Config) -> int:
+    further_pages_end = int(pytestconfig.getoption("--saved-posts-further-pages-end"))
+    if further_pages_end <= 12:
+        raise pytest.UsageError("--saved-posts-further-pages-end must be greater than 12")
+    return further_pages_end
 
 
 @pytest.fixture()

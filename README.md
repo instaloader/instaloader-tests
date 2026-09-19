@@ -115,6 +115,7 @@ option is configured.
 | `--target-private-profile`  | Private Instagram username                               |
 | `--target-public-shortcode` | Public post shortcode                                    |
 | `--target-public-hashtag`   | Public hashtag name                                      |
+| `--saved-posts-further-pages-end` | Exclusive end index for saved-posts further-pages test (`50` default) |
 
 At the end of each run, pytest prints a `results by criticality` summary that
 groups the observed outcomes by importance level.

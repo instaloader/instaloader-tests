@@ -7,7 +7,7 @@ from tests.support.requirements_map import requirement
 from tests.support.targets import require_target
 
 
-@requirement("post-basic-information-anonymous-critical")
+@requirement("post-basic-information-anonymous")
 def test_public_shortcode_caption_and_date_accessible(
     active_instaloader: instaloader.Instaloader,
     integration_targets,
