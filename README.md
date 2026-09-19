@@ -108,7 +108,7 @@ option is configured.
 | Option                      | Accepted values / default                                |
 |-----------------------------|----------------------------------------------------------|
 | `--authentication`          | `all` (default), `anonymous`, `logged_in`                |
-| `--max-importance`          | `critical` (default), `high`, `medium`, `low`, `verylow` |
+| `--max-importance`          | `verylow` (default), `low`, `medium`, `high`, `critical` |
 | `--post-checker`            | `download` (default), `fast`                             |
 | `--username`                | Instagram username                                       |
 | `--sessionfile`             | Filesystem path                                          |
@@ -162,8 +162,7 @@ poetry run pytest \
   --sessionfile=/absolute/path/to/session-youraccount
 ```
 
-Broader anonymous run that also enables tests marked above the default
-`critical` level:
+Focused anonymous run that limits execution to higher-importance tests:
 
 ```bash
 poetry run pytest \
