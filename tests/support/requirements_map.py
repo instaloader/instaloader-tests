@@ -78,13 +78,13 @@ REQUIREMENTS: dict[str, RequirementCase] = {
         authentication=Authentication.LOGGED_IN,
     ),
     "profile-highlights-first-page-logged-in-high": RequirementCase(
-        section="Download Targets / Profile / Highlights / Highlights / First page (12 Highlights)",
+        section="Download Targets / Profile / Highlights / First page (12 Highlights)",
         statement="Instaloader shall be able to download the Highlights of a Profile (if logged-in).",
         importance=Importance.HIGH,
         authentication=Authentication.LOGGED_IN,
     ),
     "profile-highlights-first-50-logged-in-medium": RequirementCase(
-        section="Download Targets / Profile / Highlights / Highlights / First 50 Highlights",
+        section="Download Targets / Profile / Highlights / First 50 Highlights",
         statement="Instaloader shall be able to download the Highlights of a Profile (if logged-in).",
         importance=Importance.MEDIUM,
         authentication=Authentication.LOGGED_IN,
