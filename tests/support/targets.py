@@ -9,6 +9,7 @@ class IntegrationTargets:
     public_shortcode: str | None = None
     public_hashtag: str | None = None
 
+
 def load_targets(
     *,
     public_profile: str | None,

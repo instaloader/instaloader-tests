@@ -1,4 +1,5 @@
 import itertools
+from collections.abc import Iterator
 from pathlib import Path
 
 import instaloader
@@ -34,7 +35,7 @@ def public_profile(
 @pytest.fixture()
 def public_profile_first_page_posts(
     public_profile: instaloader.Profile,
-) -> itertools.islice[instaloader.Post]:
+) -> Iterator[instaloader.Post]:
     return itertools.islice(public_profile.get_posts(), 12)
 
 
@@ -51,7 +52,7 @@ def test_public_profile_picture_download(
 def test_public_profile_first_page_posts_download(
     active_instaloader: instaloader.Instaloader,
     public_profile: instaloader.Profile,
-    public_profile_first_page_posts: itertools.islice[instaloader.Post],
+    public_profile_first_page_posts: Iterator[instaloader.Post],
     _output_dir: Path,
 ) -> None:
     for post in public_profile_first_page_posts:
