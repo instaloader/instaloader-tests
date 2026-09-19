@@ -43,7 +43,7 @@ The integration suite shall maintain reusable targets for at least the following
 - a login target account without two-factor authentication;
 - a login target account with two-factor authentication enabled;
 - a profile with at least 50 story items and at least 50 highlights;
-- a profile with at least 50 tagged posts, 50 reels, and 50 IGTV items when those surfaces exist;
+- a profile with at least 50 tagged posts, 50 reels, and 50 IGTV items;
 - a profile with at least 50 followers and at least 50 followees, and with those relationships visible to the authenticated session;
 - a profile fixture whose username can be changed between two download runs while preserving the same Instagram identity;
 - a hashtag with at least 50 posts;
@@ -96,7 +96,7 @@ followed private profiles.
 | DL-PROFILE-20 | low | anonymous | first page | Instaloader shall be able to download the first page of IGTV videos of a public profile. |
 | DL-PROFILE-21 | low | authenticated | first 50 items | Instaloader shall be able to download the first 50 IGTV videos of a profile. |
 | DL-PROFILE-22 | very low | anonymous | first 50 items | Instaloader shall be able to download the first 50 IGTV videos of a public profile. |
-| DL-PROFILE-23 | medium | authenticated | update run | Instaloader shall detect a profile username change during a subsequent download run and continue the download under the renamed profile target. |
+| DL-PROFILE-23 | medium | authenticated | update run | Instaloader shall detect a profile username change during a subsequent download run and continue the download into the target named after the new username rather than the old username. |
 
 ### Hashtags
 
@@ -145,10 +145,10 @@ followed private profiles.
 | MD-POST-2 | critical | authenticated | single item | Instaloader shall be able to access the caption and date of a post. |
 | MD-POST-3 | high | authenticated | first page | Instaloader shall be able to list the first page of profiles that liked a post. |
 | MD-POST-4 | high | authenticated | first 50 items | Instaloader shall be able to list the first 50 profiles that liked a post. |
-| MD-POST-5 | high | authenticated | first page | Instaloader shall be able to retrieve the first page of comments of a post. |
-| MD-POST-6 | medium | anonymous | first page | Instaloader shall be able to retrieve the first page of comments of a public post. |
-| MD-POST-7 | medium | authenticated | first 50 items | Instaloader shall be able to retrieve the first 50 comments of a post. |
-| MD-POST-8 | low | anonymous | first 50 items | Instaloader shall be able to retrieve the first 50 comments of a public post. |
+| MD-POST-5 | high | authenticated | first page | Instaloader shall be able to retrieve the first page of comments of a post in Instagram-provided order. |
+| MD-POST-6 | medium | anonymous | first page | Instaloader shall be able to retrieve the first page of comments of a public post in Instagram-provided order. |
+| MD-POST-7 | medium | authenticated | first 50 items | Instaloader shall be able to retrieve the first 50 comments of a post without gaps or duplicates across pagination. |
+| MD-POST-8 | low | anonymous | first 50 items | Instaloader shall be able to retrieve the first 50 comments of a public post without gaps or duplicates across pagination. |
 | MD-POST-9 | low | authenticated | single item | Instaloader shall be able to access the geotag of a post. |
 
 ### Profile relationships
