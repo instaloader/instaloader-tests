@@ -11,6 +11,7 @@ Instagram or to fetch Instagram data.
 
 - Each requirement describes one externally observable behavior and uses *shall* wording.
 - Importance expresses how valuable a regression test is for routine execution.
+- Allowed importance values are **critical**, **high**, **medium**, **low**, and **very low**.
 - Access modes:
   - **anonymous**: no authenticated Instagram session is available;
   - **bootstrap**: credentials or browser cookies are available to establish an Instagram session;
@@ -137,9 +138,6 @@ followed private profiles.
 ## Metadata and Relationship Requirements
 
 ### Post metadata
-
-Comment pagination requirements are measured in comments rather than in
-commenter profiles.
 
 | ID | Importance | Access | Coverage | Requirement |
 |----|------------|--------|----------|-------------|
