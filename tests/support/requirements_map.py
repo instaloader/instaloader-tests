@@ -69,8 +69,12 @@ REQUIREMENTS: dict[str, RequirementCase] = {
             statement=(
                 "Instaloader shall be able to download the saved Posts of the logged-in user."
             ),
-            importance=importance,
-            authentication=Authentication.LOGGED_IN,
+            variants=(
+                RequirementVariant(
+                    importance=importance,
+                    authentication=Authentication.LOGGED_IN,
+                ),
+            ),
         )
         for requirement_id, (window, importance) in {
             "saved-posts-first-page-logged-in-critical": (
