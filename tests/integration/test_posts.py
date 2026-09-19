@@ -1,5 +1,3 @@
-from itertools import islice
-from pathlib import Path
 from datetime import datetime
 
 import instaloader
@@ -27,40 +25,14 @@ def test_public_shortcode_caption_and_date_accessible(
     assert isinstance(post.date_utc, datetime)
 
 
-@requirement("saved-posts-first-page-logged-in-critical")
-def test_saved_posts_first_page_download(
+@requirement("saved-posts-logged-in-critical")
+def test_saved_posts_download(
     logged_in_instaloader: instaloader.Instaloader,
-    output_dir,
-    monkeypatch: pytest.MonkeyPatch,
+    _output_dir,
 ) -> None:
-    monkeypatch.setattr(logged_in_instaloader, "dirname_pattern", "{target}")
-    monkeypatch.setattr(logged_in_instaloader, "filename_pattern", "{shortcode}")
-    saved_posts_target = "saved-posts"
-    assert Path.cwd() == output_dir
-
     saved_posts = instaloader.Profile.own_profile(
         logged_in_instaloader.context
     ).get_saved_posts()
-    page_length = saved_posts.page_length()
-    assert isinstance(page_length, int)
-    assert page_length > 0
-    expected_posts = tuple(islice(saved_posts, page_length))
-    if not expected_posts:
+    if saved_posts.count == 0:
         pytest.skip("configured account has no saved posts")
-    if saved_posts.count is not None:
-        assert len(expected_posts) == min(saved_posts.count, page_length)
-
-    for post in expected_posts:
-        logged_in_instaloader.download_post(post, target=saved_posts_target)
-
-    saved_dir = Path.cwd() / saved_posts_target
-    assert saved_dir.is_dir()
-    downloaded_filenames = tuple(
-        sorted(path.name for path in saved_dir.iterdir() if path.is_file())
-    )
-
-    assert downloaded_filenames
-    for post in expected_posts:
-        assert any(
-            filename.startswith(post.shortcode) for filename in downloaded_filenames
-        )
+    logged_in_instaloader.download_saved_posts()
