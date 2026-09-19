@@ -18,12 +18,7 @@ Instagram or to fetch Instagram data.
   - **authenticated**: a valid Instagram session is available;
   - **owner**: the authenticated session belongs to the account whose own data is accessed.
 - Quantitative scopes:
-  - **first page** means one page of items as returned by Instagram for the target.
-  - For post-list surfaces, **first page** means the first 12 posts when at least 12 posts are available.
-  - For story-item surfaces, **first page** means the first 12 story items when at least 12 story items are available.
-  - For highlights, **first page** means the first 12 highlights when at least 12 highlights are available.
-  - For profile-list surfaces such as likers, followers, and followees, **first page** means the first 12 profiles when at least 12 profiles are available.
-  - For comment-list surfaces, **first page** means the first 12 comments when at least 12 comments are available.
+  - **first 12 items** applies when the target provides at least 12 items of the relevant surface type;
   - **first 50 items** applies only when the target provides at least 50 items.
 - Additional coverage values:
   - **single item** means one directly addressed object is fetched successfully;
@@ -48,7 +43,10 @@ The integration suite shall maintain reusable targets for at least the following
 - a profile fixture whose username can be changed between two download runs while preserving the same Instagram identity;
 - a hashtag with at least 50 posts;
 - a location with at least 50 posts;
-- a reusable public post fixture that is accessible in both anonymous and authenticated runs, exposes caption, date, and a comment list with at least 50 entries in its anonymous view, preserves a stable comment ordering and pagination across repeated runs, and in its authenticated view additionally exposes geotag and a liker list with at least 50 entries; the same fixture shall satisfy all post-metadata requirements in this document;
+- a reusable public post fixture that is accessible in both anonymous and authenticated runs and exposes caption and date;
+- a reusable public post fixture that is accessible in both anonymous and authenticated runs, exposes a comment list with at least 50 entries, and preserves stable comment ordering and pagination across repeated runs;
+- a reusable authenticated post fixture that exposes a geotag;
+- a reusable authenticated post fixture that exposes a liker list with at least 50 entries;
 - a shortcode for a downloadable post with one or more media items;
 - an owner account with at least 50 saved posts, 50 feed items, and 50 visible story items.
 
@@ -75,25 +73,25 @@ followed private profiles.
 |----|------------|--------|----------|-------------|
 | DL-PROFILE-1 | critical | anonymous | single item | Instaloader shall be able to download the profile picture of a profile. |
 | DL-PROFILE-1A | critical | authenticated | single item | Instaloader shall be able to download the profile picture of a profile. |
-| DL-PROFILE-2 | critical | authenticated | first page | Instaloader shall be able to download the first page of posts of a profile. |
-| DL-PROFILE-3 | high | anonymous | first page | Instaloader shall be able to download the first page of posts of a public profile. |
+| DL-PROFILE-2 | critical | authenticated | first 12 items | Instaloader shall be able to download the first 12 posts of a profile. |
+| DL-PROFILE-3 | high | anonymous | first 12 items | Instaloader shall be able to download the first 12 posts of a public profile. |
 | DL-PROFILE-4 | critical | authenticated | first 50 items | Instaloader shall be able to download the first 50 posts of a profile. |
 | DL-PROFILE-5 | medium | anonymous | first 50 items | Instaloader shall be able to download the first 50 posts of a public profile. |
-| DL-PROFILE-6 | high | authenticated | first page | Instaloader shall be able to download the first page of story items of a profile. |
+| DL-PROFILE-6 | high | authenticated | first 12 items | Instaloader shall be able to download the first 12 story items of a profile. |
 | DL-PROFILE-7 | medium | authenticated | first 50 items | Instaloader shall be able to download the first 50 story items of a profile. |
 | DL-PROFILE-8 | high | authenticated | single item | Instaloader shall be able to download the cover picture of a profile highlight. |
-| DL-PROFILE-9 | high | authenticated | first page | Instaloader shall be able to download the first page of highlights of a profile. |
+| DL-PROFILE-9 | high | authenticated | first 12 items | Instaloader shall be able to download the first 12 highlights of a profile. |
 | DL-PROFILE-10 | medium | authenticated | first 50 items | Instaloader shall be able to download the first 50 highlights of a profile. |
-| DL-PROFILE-11 | medium | authenticated | first page | Instaloader shall be able to download the first page of posts in which a profile is tagged. |
-| DL-PROFILE-12 | low | anonymous | first page | Instaloader shall be able to download the first page of posts in which a public profile is tagged. |
+| DL-PROFILE-11 | medium | authenticated | first 12 items | Instaloader shall be able to download the first 12 posts in which a profile is tagged. |
+| DL-PROFILE-12 | low | anonymous | first 12 items | Instaloader shall be able to download the first 12 posts in which a public profile is tagged. |
 | DL-PROFILE-13 | low | authenticated | first 50 items | Instaloader shall be able to download the first 50 posts in which a profile is tagged. |
 | DL-PROFILE-14 | very low | anonymous | first 50 items | Instaloader shall be able to download the first 50 posts in which a public profile is tagged. |
-| DL-PROFILE-15 | medium | authenticated | first page | Instaloader shall be able to download the first page of reels of a profile. |
-| DL-PROFILE-16 | low | anonymous | first page | Instaloader shall be able to download the first page of reels of a public profile. |
+| DL-PROFILE-15 | medium | authenticated | first 12 items | Instaloader shall be able to download the first 12 reels of a profile. |
+| DL-PROFILE-16 | low | anonymous | first 12 items | Instaloader shall be able to download the first 12 reels of a public profile. |
 | DL-PROFILE-17 | low | authenticated | first 50 items | Instaloader shall be able to download the first 50 reels of a profile. |
 | DL-PROFILE-18 | very low | anonymous | first 50 items | Instaloader shall be able to download the first 50 reels of a public profile. |
-| DL-PROFILE-19 | medium | authenticated | first page | Instaloader shall be able to download the first page of IGTV videos of a profile. |
-| DL-PROFILE-20 | low | anonymous | first page | Instaloader shall be able to download the first page of IGTV videos of a public profile. |
+| DL-PROFILE-19 | medium | authenticated | first 12 items | Instaloader shall be able to download the first 12 IGTV videos of a profile. |
+| DL-PROFILE-20 | low | anonymous | first 12 items | Instaloader shall be able to download the first 12 IGTV videos of a public profile. |
 | DL-PROFILE-21 | low | authenticated | first 50 items | Instaloader shall be able to download the first 50 IGTV videos of a profile. |
 | DL-PROFILE-22 | very low | anonymous | first 50 items | Instaloader shall be able to download the first 50 IGTV videos of a public profile. |
 | DL-PROFILE-23 | medium | authenticated | update run | Instaloader shall detect a profile username change during a subsequent download run, continue the download into the target named after the new username, and avoid writing newly downloaded data into the target named after the old username. |
@@ -104,8 +102,8 @@ followed private profiles.
 |----|------------|--------|----------|-------------|
 | DL-HASHTAG-1 | high | authenticated | single item | Instaloader shall be able to download the profile picture of a hashtag in an authenticated run. |
 | DL-HASHTAG-2 | medium | anonymous | single item | Instaloader shall be able to download the profile picture of a hashtag in an anonymous run. |
-| DL-HASHTAG-3 | critical | authenticated | first page | Instaloader shall be able to download the first page of posts of a hashtag. |
-| DL-HASHTAG-4 | high | anonymous | first page | Instaloader shall be able to download the first page of posts of a hashtag. |
+| DL-HASHTAG-3 | critical | authenticated | first 12 items | Instaloader shall be able to download the first 12 posts of a hashtag. |
+| DL-HASHTAG-4 | high | anonymous | first 12 items | Instaloader shall be able to download the first 12 posts of a hashtag. |
 | DL-HASHTAG-5 | critical | authenticated | first 50 items | Instaloader shall be able to download the first 50 posts of a hashtag. |
 | DL-HASHTAG-6 | medium | anonymous | first 50 items | Instaloader shall be able to download the first 50 posts of a hashtag. |
 
@@ -113,18 +111,18 @@ followed private profiles.
 
 | ID | Importance | Access | Coverage | Requirement |
 |----|------------|--------|----------|-------------|
-| DL-LOCATION-1 | medium | authenticated | first page | Instaloader shall be able to download the first page of posts of a location. |
+| DL-LOCATION-1 | medium | authenticated | first 12 items | Instaloader shall be able to download the first 12 posts of a location. |
 | DL-LOCATION-2 | low | authenticated | first 50 items | Instaloader shall be able to download the first 50 posts of a location. |
 
 ### Owner-only surfaces
 
 | ID | Importance | Access | Coverage | Requirement |
 |----|------------|--------|----------|-------------|
-| DL-OWNER-1 | critical | owner | first page | Instaloader shall be able to download the first page of the owner's saved posts. |
+| DL-OWNER-1 | critical | owner | first 12 items | Instaloader shall be able to download the first 12 saved posts of the owner. |
 | DL-OWNER-2 | critical | owner | first 50 items | Instaloader shall be able to download the first 50 saved posts of the owner. |
-| DL-OWNER-3 | high | owner | first page | Instaloader shall be able to download the first page of the owner's feed. |
+| DL-OWNER-3 | high | owner | first 12 items | Instaloader shall be able to download the first 12 feed posts of the owner. |
 | DL-OWNER-4 | medium | owner | first 50 items | Instaloader shall be able to download the first 50 feed posts of the owner. |
-| DL-OWNER-5 | high | owner | first page | Instaloader shall be able to download the first page of the owner's currently visible story items. |
+| DL-OWNER-5 | high | owner | first 12 items | Instaloader shall be able to download the first 12 currently visible story items of the owner. |
 | DL-OWNER-6 | medium | owner | first 50 items | Instaloader shall be able to download the first 50 currently visible story items of the owner. |
 
 ### Single-post targets
@@ -143,10 +141,10 @@ followed private profiles.
 |----|------------|--------|----------|-------------|
 | MD-POST-1 | critical | anonymous | single item | Instaloader shall be able to access the caption and date of a post. |
 | MD-POST-2 | critical | authenticated | single item | Instaloader shall be able to access the caption and date of a post. |
-| MD-POST-3 | high | authenticated | first page | Instaloader shall be able to list the first page of profiles that liked a post. |
+| MD-POST-3 | high | authenticated | first 12 items | Instaloader shall be able to list the first 12 profiles that liked a post. |
 | MD-POST-4 | high | authenticated | first 50 items | Instaloader shall be able to list the first 50 profiles that liked a post. |
-| MD-POST-5 | high | authenticated | first page | Instaloader shall be able to retrieve the first page of comments of a post in Instagram-provided order. |
-| MD-POST-6 | medium | anonymous | first page | Instaloader shall be able to retrieve the first page of comments of a public post in Instagram-provided order. |
+| MD-POST-5 | high | authenticated | first 12 items | Instaloader shall be able to retrieve the first 12 comments of a post in Instagram-provided order. |
+| MD-POST-6 | medium | anonymous | first 12 items | Instaloader shall be able to retrieve the first 12 comments of a public post in Instagram-provided order. |
 | MD-POST-7 | medium | authenticated | first 50 items | Instaloader shall be able to retrieve the first 50 comments of a post without gaps or duplicates across pagination. |
 | MD-POST-8 | low | anonymous | first 50 items | Instaloader shall be able to retrieve the first 50 comments of a public post without gaps or duplicates across pagination. |
 | MD-POST-9 | low | authenticated | single item | Instaloader shall be able to access the geotag of a post. |
@@ -155,7 +153,7 @@ followed private profiles.
 
 | ID | Importance | Access | Coverage | Requirement |
 |----|------------|--------|----------|-------------|
-| MD-PROFILE-1 | high | authenticated | first page | Instaloader shall be able to list the first page of followers of a profile that the authenticated session is permitted to inspect. |
+| MD-PROFILE-1 | high | authenticated | first 12 items | Instaloader shall be able to list the first 12 followers of a profile that the authenticated session is permitted to inspect. |
 | MD-PROFILE-2 | medium | authenticated | first 50 items | Instaloader shall be able to list the first 50 followers of a profile that the authenticated session is permitted to inspect. |
-| MD-PROFILE-3 | high | authenticated | first page | Instaloader shall be able to list the first page of followees of a profile that the authenticated session is permitted to inspect. |
+| MD-PROFILE-3 | high | authenticated | first 12 items | Instaloader shall be able to list the first 12 followees of a profile that the authenticated session is permitted to inspect. |
 | MD-PROFILE-4 | medium | authenticated | first 50 items | Instaloader shall be able to list the first 50 followees of a profile that the authenticated session is permitted to inspect. |
