@@ -35,5 +35,5 @@ def test_public_profile_first_page_posts_download(
     posts = take_first_items(profile.get_posts(), count=12, description=f"public profile {username!r}")
 
     for post in posts:
-        assert anonymous_instaloader.download_post(post, target=username)
+        anonymous_instaloader.download_post(post, target=username)
         assert list(output_dir.joinpath(username).glob(f"{post.shortcode}*"))

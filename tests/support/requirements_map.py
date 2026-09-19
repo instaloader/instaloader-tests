@@ -49,6 +49,10 @@ _IMPORTANCE_ORDER = {
 
 
 def is_importance_enabled(maximum: str, required: str) -> bool:
+    if maximum not in _IMPORTANCE_ORDER:
+        raise pytest.UsageError(f"Unknown maximum importance level: {maximum}")
+    if required not in _IMPORTANCE_ORDER:
+        raise pytest.UsageError(f"Unknown required importance level: {required}")
     return _IMPORTANCE_ORDER[required] <= _IMPORTANCE_ORDER[maximum]
 
 
