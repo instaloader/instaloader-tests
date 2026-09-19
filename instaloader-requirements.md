@@ -48,7 +48,7 @@ The integration suite shall maintain reusable targets for at least the following
 - a profile fixture whose username can be changed between two download runs while preserving the same Instagram identity;
 - a hashtag with at least 50 posts;
 - a location with at least 50 posts;
-- a reusable public post fixture that is accessible in both anonymous and authenticated runs, exposes caption, date, and a comment list with at least 50 entries in its anonymous view, and in its authenticated view additionally exposes geotag and a liker list with at least 50 entries; the same fixture shall satisfy all post-metadata requirements in this document;
+- a reusable public post fixture that is accessible in both anonymous and authenticated runs, exposes caption, date, and a comment list with at least 50 entries in its anonymous view, preserves a stable comment ordering and pagination across repeated runs, and in its authenticated view additionally exposes geotag and a liker list with at least 50 entries; the same fixture shall satisfy all post-metadata requirements in this document;
 - a shortcode for a downloadable post with one or more media items;
 - an owner account with at least 50 saved posts, 50 feed items, and 50 visible story items.
 
@@ -96,7 +96,7 @@ followed private profiles.
 | DL-PROFILE-20 | low | anonymous | first page | Instaloader shall be able to download the first page of IGTV videos of a public profile. |
 | DL-PROFILE-21 | low | authenticated | first 50 items | Instaloader shall be able to download the first 50 IGTV videos of a profile. |
 | DL-PROFILE-22 | very low | anonymous | first 50 items | Instaloader shall be able to download the first 50 IGTV videos of a public profile. |
-| DL-PROFILE-23 | medium | authenticated | update run | Instaloader shall detect a profile username change during a subsequent download run and continue the download into the target named after the new username rather than the old username. |
+| DL-PROFILE-23 | medium | authenticated | update run | Instaloader shall detect a profile username change during a subsequent download run, continue the download into the target named after the new username, and avoid writing newly downloaded data into the target named after the old username. |
 
 ### Hashtags
 
