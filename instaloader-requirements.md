@@ -44,7 +44,7 @@ The integration suite shall maintain reusable targets for at least the following
 - a login target account with two-factor authentication enabled;
 - a profile with at least 50 story items and at least 50 highlight containers;
 - a profile with at least 50 tagged posts, 50 reels, and 50 IGTV items when those surfaces exist;
-- a profile with at least 50 followers and at least 50 followees;
+- a profile with at least 50 followers and at least 50 followees, and with those relationships visible to the authenticated session;
 - a profile fixture whose username can be changed between two download runs while preserving the same Instagram identity;
 - a hashtag with at least 50 posts;
 - a location with at least 50 posts;
@@ -146,9 +146,9 @@ followed private profiles.
 | MD-POST-3 | high | authenticated | first page | Instaloader shall be able to list the first page of profiles that liked a post. |
 | MD-POST-4 | high | authenticated | first 50 items | Instaloader shall be able to list the first 50 profiles that liked a post. |
 | MD-POST-5 | high | authenticated | first page | Instaloader shall be able to list the first page of comments of a post. |
-| MD-POST-6 | medium | anonymous | first page | Instaloader shall be able to list the first page of comments of a post. |
+| MD-POST-6 | medium | anonymous | first page | Instaloader shall be able to list the first page of comments of a public post. |
 | MD-POST-7 | medium | authenticated | first 50 items | Instaloader shall be able to list the first 50 comments of a post. |
-| MD-POST-8 | low | anonymous | first 50 items | Instaloader shall be able to list the first 50 comments of a post. |
+| MD-POST-8 | low | anonymous | first 50 items | Instaloader shall be able to list the first 50 comments of a public post. |
 | MD-POST-9 | low | authenticated | single item | Instaloader shall be able to access the geotag of a post. |
 
 ### Profile relationships
