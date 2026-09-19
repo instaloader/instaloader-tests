@@ -1,15 +1,18 @@
 # Instaloader Integration Requirements
 
+Requirements in this document cover Instagram-access-related integration behavior only.
+
 ## Conventions
 
-Requirements that should be tested describe Instaloaders behavior with the modal verb *shall*.
+Requirements that should be tested describe Instaloader's behavior with the modal verb *shall*.
+Statements with *will* describe intended direction or convenience behavior and are not necessarily separate test requirements.
+Importance indicates recommended regression-test priority.
 
 ## Session Creation
 
 Instaloader is able to create a session by logging in or by importing cookies.
 
-Instaloader saves a created session (`Instaloader.save_session_to_file()`, and is able to reload the saved session 
-(`Instaloader.load_session_from_file()`).
+Instaloader saves a created session (`Instaloader.save_session_to_file()`) and is able to reload the saved session (`Instaloader.load_session_from_file()`).
 
 ### Import session from Firefox
 
@@ -25,9 +28,7 @@ This can be done by the command
 instaloader --load-cookies firefox
 ```
 
-As an alternative, the codesnippet [615_import_firefox_session.py](https://github.
-com/instaloader/instaloader/blob/master/docs/codesnippets/615_import_firefox_session.py) is provided. However, it is 
-preferred that this functionality is integrated into Instaloader.
+As an alternative, the codesnippet [615_import_firefox_session.py](https://github.com/instaloader/instaloader/blob/master/docs/codesnippets/615_import_firefox_session.py) is provided. However, it is preferred that this functionality is integrated into Instaloader.
 
 ### Import session from other browsers
 
@@ -244,8 +245,8 @@ Instaloader shall be able to list the Profiles that have liked a Post (if logged
 
 | Importance               | logged-in | anonymous |
 |--------------------------|-----------|-----------|
-| First page (12 Profiles) | high      | medium    |
-| First 50 Profiles        | medium    | low       |
+| First page (12 Comments) | high      | medium    |
+| First 50 Comments        | medium    | low       |
 
 Instaloader shall be able to list the comments of a Post.
 
@@ -266,7 +267,7 @@ Instaloader shall be able to access the geotag of a Post (if logged-in).
 | First page (12 Profiles) | high      |
 | First 50 Profiles        | medium    |
 
-Instaloader shall be able to list the followers of a Profile (if logged-in). 
+Instaloader shall be able to list the followers of a Profile (if logged-in).
 
 ### Followees
 
@@ -275,4 +276,4 @@ Instaloader shall be able to list the followers of a Profile (if logged-in).
 | First page (12 Profiles) | high      |
 | First 50 Profiles        | medium    |
 
-Instaloader shall be able to list the followees of a Profile (if logged-in). 
+Instaloader shall be able to list the followees of a Profile (if logged-in).
