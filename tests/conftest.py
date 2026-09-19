@@ -40,6 +40,10 @@ def _authentication_label(item: pytest.Item) -> str | None:
 def _importance_label(item: pytest.Item) -> str:
     importance_marker = item.get_closest_marker("importance")
     if importance_marker:
+        if not importance_marker.args:
+            raise pytest.UsageError(
+                f"importance marker on {item.nodeid} requires a level argument"
+            )
         return str(importance_marker.args[0]).lower()
     return "unmarked"
 
@@ -128,11 +132,11 @@ def pytest_collection_modifyitems(
 
         importance_marker = item.get_closest_marker("importance")
         if importance_marker and not is_importance_enabled(
-            max_importance, importance_marker.args[0]
+            max_importance, _importance_label(item)
         ):
             item.add_marker(
                 pytest.mark.skip(
-                    reason=f"requires --max-importance >= {importance_marker.args[0]}"
+                    reason=f"requires --max-importance >= {_importance_label(item)}"
                 )
             )
 
@@ -190,9 +194,11 @@ def pytest_terminal_summary(terminalreporter: Any) -> None:
             )
             nodeid = str(report.nodeid)
             current = test_outcomes.get(nodeid)
-            if current is None or _SUMMARY_OUTCOME_PRECEDENCE[
-                outcome
-            ] < _SUMMARY_OUTCOME_PRECEDENCE[current[0]]:
+            if (
+                current is None
+                or _SUMMARY_OUTCOME_PRECEDENCE[outcome]
+                < _SUMMARY_OUTCOME_PRECEDENCE[current[0]]
+            ):
                 test_outcomes[nodeid] = (outcome, str(importance))
 
     for outcome, importance in test_outcomes.values():
