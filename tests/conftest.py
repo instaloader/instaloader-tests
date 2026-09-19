@@ -17,6 +17,14 @@ from tests.support.targets import IntegrationTargets, load_targets
 pytest_plugins: list[str] = []
 
 
+def _authentication_label(item: pytest.Item) -> str | None:
+    if item.get_closest_marker("anonymous"):
+        return "anonymous"
+    if item.get_closest_marker("logged_in"):
+        return "logged_in"
+    return None
+
+
 @pytest.hookimpl()
 def pytest_addoption(parser: pytest.Parser) -> None:
     parser.addoption(
@@ -96,6 +104,10 @@ def pytest_collection_modifyitems(
                     reason="pass --run-instagram to execute Instagram-backed tests"
                 )
             )
+
+        authentication_label = _authentication_label(item)
+        if authentication_label and f"[{authentication_label}]" not in item.nodeid:
+            item._nodeid = f"{item.nodeid}[{authentication_label}]"
 
 
 @pytest.fixture(scope="session")
