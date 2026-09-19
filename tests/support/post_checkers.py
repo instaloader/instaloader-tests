@@ -22,6 +22,10 @@ def check_post_basic_information(
     if not post.caption:
         pytest.skip("checked post has no caption")
 
+    assert_post_basic_information(post)
+
+
+def assert_post_basic_information(post: instaloader.Post) -> None:
     assert isinstance(post.caption, str)
     assert post.caption.strip()
     assert isinstance(post.date_utc, datetime)

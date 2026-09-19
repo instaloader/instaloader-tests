@@ -4,7 +4,11 @@ from pathlib import Path
 import instaloader
 import pytest
 
-from tests.support.post_checkers import PostChecker, PostCheckerName
+from tests.support.post_checkers import (
+    PostChecker,
+    PostCheckerName,
+    assert_post_basic_information,
+)
 from tests.support.requirements_map import requirement
 
 
@@ -23,6 +27,4 @@ def test_public_shortcode_post_check(
     if post_checker_name == "download":
         if not post.caption:
             pytest.skip("configured shortcode has no caption")
-        assert isinstance(post.caption, str)
-        assert post.caption.strip()
-        assert isinstance(post.date_utc, datetime)
+        assert_post_basic_information(post)
