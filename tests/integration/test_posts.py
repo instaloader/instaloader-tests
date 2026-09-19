@@ -39,6 +39,7 @@ def test_saved_posts_first_page_download(
             description="logged-in user's saved posts",
         )
     )
+    assert expected_posts
 
     logged_in_instaloader.download_saved_posts(max_count=len(expected_posts))
 
