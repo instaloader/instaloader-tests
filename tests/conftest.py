@@ -67,8 +67,8 @@ def pytest_addoption(parser: pytest.Parser) -> None:
         "--authentication",
         action="store",
         default="all",
-        choices=["all", "anonymous", "logged_in", "logged-in"],
-        help="authentication scope to execute: all, anonymous, or logged-in only",
+        choices=["all", "anonymous", "logged_in"],
+        help="authentication scope to execute: all, anonymous, or logged_in only",
     )
 
 
@@ -77,7 +77,7 @@ def pytest_collection_modifyitems(
     config: pytest.Config, items: list[pytest.Item]
 ) -> None:
     max_importance = config.getoption("--max-importance")
-    authentication_scope = config.getoption("--authentication").replace("-", "_")
+    authentication_scope = config.getoption("--authentication")
     for item in items:
         requirement_marker = item.get_closest_marker("requirement_id")
         if requirement_marker:
