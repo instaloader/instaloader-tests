@@ -15,7 +15,7 @@ def hashtag(
     integration_targets: IntegrationTargets,
 ) -> instaloader.Hashtag:
     return instaloader.Hashtag.from_name(
-        active_instaloader.context, integration_targets.require("public_hashtag")
+        active_instaloader.context, integration_targets.require("hashtag")
     )
 
 

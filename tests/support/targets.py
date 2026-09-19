@@ -7,7 +7,7 @@ TargetKey = Literal[
     "public_profile",
     "private_profile",
     "public_shortcode",
-    "public_hashtag",
+    "hashtag",
 ]
 
 
@@ -30,7 +30,7 @@ TARGET_OPTIONS: dict[TargetKey, TargetOption] = {
         option_name="--target-public-shortcode",
         help_text="public shortcode for anonymous single-post tests",
     ),
-    "public_hashtag": TargetOption(
+    "hashtag": TargetOption(
         option_name="--target-public-hashtag",
         help_text="public hashtag for anonymous hashtag tests",
     ),
@@ -46,7 +46,7 @@ class IntegrationTargets:
     public_profile: str | None = None
     private_profile: str | None = None
     public_shortcode: str | None = None
-    public_hashtag: str | None = None
+    hashtag: str | None = None
 
     def require(self, target_key: TargetKey) -> str:
         return require_target(getattr(self, target_key), target_key=target_key)
@@ -57,13 +57,13 @@ def load_targets(
     public_profile: str | None,
     private_profile: str | None,
     public_shortcode: str | None,
-    public_hashtag: str | None,
+    hashtag: str | None,
 ) -> IntegrationTargets:
     return IntegrationTargets(
         public_profile=public_profile,
         private_profile=private_profile,
         public_shortcode=public_shortcode,
-        public_hashtag=public_hashtag,
+        hashtag=hashtag,
     )
 
 
