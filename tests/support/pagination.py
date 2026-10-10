@@ -1,5 +1,6 @@
 import itertools
-from collections.abc import Iterable, Iterator
+from typing import Any
+from collections.abc import Callable, Iterable, Iterator
 
 import pytest
 
@@ -28,3 +29,6 @@ def further_pages[T](items: Iterable[T], max_items: int, what: str) -> Iterator[
         itertools.islice(items, FIRST_PAGE_SIZE, max_items),
         f"{what} has no items beyond the first page",
     )
+
+
+Pager = Callable[[Iterable[Any], str], Iterator[Any]]

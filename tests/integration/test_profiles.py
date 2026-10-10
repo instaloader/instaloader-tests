@@ -5,8 +5,12 @@ import instaloader
 import pytest
 
 from tests.support.post_checkers import PostChecker
-from tests.support.pagination import first_page, further_pages
-from tests.support.requirements_map import Authentication, requirement
+from tests.support.pagination import Pager
+from tests.support.requirements_map import (
+    Authentication,
+    paged_requirement,
+    requirement,
+)
 from tests.support.targets import IntegrationTargets
 
 
@@ -66,31 +70,19 @@ def test_public_profile_picture_download(
     active_instaloader.download_profilepic(public_profile)
 
 
-@requirement("profile-posts-first-page-public")
-def test_public_profile_first_page_posts_download(
+@paged_requirement(
+    "profile-posts-first-page-public",
+    "profile-posts-further-pages",
+)
+def test_public_profile_paged_posts_download(
+    paginate: Pager,
     active_instaloader: instaloader.Instaloader,
     public_profile: instaloader.Profile,
     output_dir: Path,
     post_checker: PostChecker,
 ) -> None:
-    for post in first_page(
+    for post in paginate(
         public_profile.get_posts(), f"profile {public_profile.username!r}"
-    ):
-        post_checker(active_instaloader, post, public_profile.username)
-
-
-@requirement("profile-posts-further-pages")
-def test_public_profile_further_pages_posts_download(
-    active_instaloader: instaloader.Instaloader,
-    public_profile: instaloader.Profile,
-    max_items: int,
-    output_dir: Path,
-    post_checker: PostChecker,
-) -> None:
-    for post in further_pages(
-        public_profile.get_posts(),
-        max_items,
-        f"profile {public_profile.username!r}",
     ):
         post_checker(active_instaloader, post, public_profile.username)
 
@@ -104,124 +96,80 @@ def test_private_profile_picture_download(
     active_instaloader.download_profilepic(private_profile)
 
 
-@requirement("profile-posts-first-page-private-logged-in")
-def test_private_profile_first_page_posts_download(
+@paged_requirement(
+    "profile-posts-first-page-private-logged-in",
+    "profile-posts-further-pages-private-logged-in",
+)
+def test_private_profile_paged_posts_download(
+    paginate: Pager,
     active_instaloader: instaloader.Instaloader,
     private_profile: instaloader.Profile,
     output_dir: Path,
     post_checker: PostChecker,
 ) -> None:
-    for post in first_page(
+    for post in paginate(
         private_profile.get_posts(), f"profile {private_profile.username!r}"
     ):
         post_checker(active_instaloader, post, private_profile.username)
 
 
-@requirement("profile-posts-further-pages-private-logged-in")
-def test_private_profile_further_pages_posts_download(
-    active_instaloader: instaloader.Instaloader,
-    private_profile: instaloader.Profile,
-    max_items: int,
-    output_dir: Path,
-    post_checker: PostChecker,
-) -> None:
-    for post in further_pages(
-        private_profile.get_posts(),
-        max_items,
-        f"private profile {private_profile.username!r}",
-    ):
-        post_checker(active_instaloader, post, private_profile.username)
-
-
-@requirement("profile-tagged-posts-first-page")
-def test_profile_tagged_posts_first_page_download(
+@paged_requirement(
+    "profile-tagged-posts-first-page",
+    "profile-tagged-posts-further-pages",
+)
+def test_profile_tagged_posts_paged_download(
+    paginate: Pager,
     active_instaloader: instaloader.Instaloader,
     public_profile: instaloader.Profile,
     output_dir: Path,
     post_checker: PostChecker,
 ) -> None:
-    for post in first_page(
+    for post in paginate(
         public_profile.get_tagged_posts(), f"profile {public_profile.username!r}"
     ):
         post_checker(active_instaloader, post, f"{public_profile.username}-tagged")
 
 
-@requirement("profile-tagged-posts-further-pages")
-def test_profile_tagged_posts_further_pages_download(
-    active_instaloader: instaloader.Instaloader,
-    public_profile: instaloader.Profile,
-    max_items: int,
-    output_dir: Path,
-    post_checker: PostChecker,
-) -> None:
-    for post in further_pages(
-        public_profile.get_tagged_posts(),
-        max_items,
-        f"tagged posts of profile {public_profile.username!r}",
-    ):
-        post_checker(active_instaloader, post, f"{public_profile.username}-tagged")
-
-
-@requirement("profile-reels-first-page")
-def test_profile_reels_first_page_download(
+@paged_requirement(
+    "profile-reels-first-page",
+    "profile-reels-further-pages",
+)
+def test_profile_reels_paged_download(
+    paginate: Pager,
     active_instaloader: instaloader.Instaloader,
     public_profile: instaloader.Profile,
     output_dir: Path,
     post_checker: PostChecker,
 ) -> None:
-    for post in first_page(
+    for post in paginate(
         public_profile.get_reels(), f"profile {public_profile.username!r}"
     ):
         post_checker(active_instaloader, post, f"{public_profile.username}-reels")
 
 
-@requirement("profile-reels-further-pages")
-def test_profile_reels_further_pages_download(
-    active_instaloader: instaloader.Instaloader,
-    public_profile: instaloader.Profile,
-    max_items: int,
-    output_dir: Path,
-    post_checker: PostChecker,
-) -> None:
-    for post in further_pages(
-        public_profile.get_reels(),
-        max_items,
-        f"reels of profile {public_profile.username!r}",
-    ):
-        post_checker(active_instaloader, post, f"{public_profile.username}-reels")
-
-
-@requirement("profile-igtv-first-page")
-def test_profile_igtv_first_page_download(
+@paged_requirement(
+    "profile-igtv-first-page",
+    "profile-igtv-further-pages",
+)
+def test_profile_igtv_paged_download(
+    paginate: Pager,
     active_instaloader: instaloader.Instaloader,
     public_profile: instaloader.Profile,
     output_dir: Path,
     post_checker: PostChecker,
 ) -> None:
-    for post in first_page(
+    for post in paginate(
         public_profile.get_igtv_posts(), f"profile {public_profile.username!r}"
     ):
         post_checker(active_instaloader, post, f"{public_profile.username}-igtv")
 
 
-@requirement("profile-igtv-further-pages")
-def test_profile_igtv_further_pages_download(
-    active_instaloader: instaloader.Instaloader,
-    public_profile: instaloader.Profile,
-    max_items: int,
-    output_dir: Path,
-    post_checker: PostChecker,
-) -> None:
-    for post in further_pages(
-        public_profile.get_igtv_posts(),
-        max_items,
-        f"IGTV posts of profile {public_profile.username!r}",
-    ):
-        post_checker(active_instaloader, post, f"{public_profile.username}-igtv")
-
-
-@requirement("profile-stories-first-page-logged-in")
-def test_profile_stories_first_page_download(
+@paged_requirement(
+    "profile-stories-first-page-logged-in",
+    "profile-stories-further-pages-logged-in",
+)
+def test_profile_stories_paged_download(
+    paginate: Pager,
     active_instaloader: instaloader.Instaloader,
     public_profile: instaloader.Profile,
     output_dir: Path,
@@ -231,30 +179,8 @@ def test_profile_stories_first_page_download(
     )
     if not stories:
         pytest.skip(f"profile {public_profile.username!r} has no visible stories")
-    for story_item in first_page(
+    for story_item in paginate(
         stories[0].get_items(), f"stories of profile {public_profile.username!r}"
-    ):
-        active_instaloader.download_storyitem(
-            story_item, f"{public_profile.username}-stories"
-        )
-
-
-@requirement("profile-stories-further-pages-logged-in")
-def test_profile_stories_further_pages_download(
-    active_instaloader: instaloader.Instaloader,
-    public_profile: instaloader.Profile,
-    max_items: int,
-    output_dir: Path,
-) -> None:
-    stories = list(
-        itertools.islice(active_instaloader.get_stories([public_profile.userid]), 1)
-    )
-    if not stories:
-        pytest.skip(f"profile {public_profile.username!r} has no visible stories")
-    for story_item in further_pages(
-        stories[0].get_items(),
-        max_items,
-        f"stories of profile {public_profile.username!r}",
     ):
         active_instaloader.download_storyitem(
             story_item, f"{public_profile.username}-stories"
@@ -278,13 +204,17 @@ def test_profile_highlight_cover_picture_download(
     )
 
 
-@requirement("profile-highlights-first-page-logged-in")
-def test_profile_highlights_first_page_download(
+@paged_requirement(
+    "profile-highlights-first-page-logged-in",
+    "profile-highlights-further-pages-logged-in",
+)
+def test_profile_highlights_paged_download(
+    paginate: Pager,
     active_instaloader: instaloader.Instaloader,
     public_profile: instaloader.Profile,
     output_dir: Path,
 ) -> None:
-    for highlight in first_page(
+    for highlight in paginate(
         active_instaloader.get_highlights(public_profile),
         f"highlights of profile {public_profile.username!r}",
     ):
@@ -295,68 +225,31 @@ def test_profile_highlights_first_page_download(
             )
 
 
-@requirement("profile-highlights-further-pages-logged-in")
-def test_profile_highlights_further_pages_download(
-    active_instaloader: instaloader.Instaloader,
-    public_profile: instaloader.Profile,
-    max_items: int,
-    output_dir: Path,
-) -> None:
-    for highlight in further_pages(
-        active_instaloader.get_highlights(public_profile),
-        max_items,
-        f"highlights of profile {public_profile.username!r}",
-    ):
-        first_item = next(iter(highlight.get_items()), None)
-        if first_item is not None:
-            active_instaloader.download_storyitem(
-                first_item, f"{public_profile.username}-{highlight.title}"
-            )
-
-
-@requirement("profile-followers-first-page-logged-in")
-def test_profile_followers_first_page_listable(
+@paged_requirement(
+    "profile-followers-first-page-logged-in",
+    "profile-followers-further-pages-logged-in",
+)
+def test_profile_followers_paged_listable(
+    paginate: Pager,
     public_profile: instaloader.Profile,
 ) -> None:
-    for follower in first_page(
+    for follower in paginate(
         public_profile.get_followers(),
         f"followers of profile {public_profile.username!r}",
     ):
         assert follower.username
 
 
-@requirement("profile-followers-further-pages-logged-in")
-def test_profile_followers_further_pages_listable(
-    public_profile: instaloader.Profile,
-    max_items: int,
-) -> None:
-    for follower in further_pages(
-        public_profile.get_followers(),
-        max_items,
-        f"followers of profile {public_profile.username!r}",
-    ):
-        assert follower.username
-
-
-@requirement("profile-followees-first-page-logged-in")
-def test_profile_followees_first_page_listable(
+@paged_requirement(
+    "profile-followees-first-page-logged-in",
+    "profile-followees-further-pages-logged-in",
+)
+def test_profile_followees_paged_listable(
+    paginate: Pager,
     public_profile: instaloader.Profile,
 ) -> None:
-    for followee in first_page(
+    for followee in paginate(
         public_profile.get_followees(),
-        f"followees of profile {public_profile.username!r}",
-    ):
-        assert followee.username
-
-
-@requirement("profile-followees-further-pages-logged-in")
-def test_profile_followees_further_pages_listable(
-    public_profile: instaloader.Profile,
-    max_items: int,
-) -> None:
-    for followee in further_pages(
-        public_profile.get_followees(),
-        max_items,
         f"followees of profile {public_profile.username!r}",
     ):
         assert followee.username

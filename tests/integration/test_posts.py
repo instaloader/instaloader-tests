@@ -8,8 +8,8 @@ from tests.support.post_checkers import (
     PostCheckerName,
     assert_post_basic_information,
 )
-from tests.support.pagination import first_page, further_pages
-from tests.support.requirements_map import requirement
+from tests.support.pagination import Pager
+from tests.support.requirements_map import paged_requirement, requirement
 
 
 @pytest.fixture()
@@ -49,48 +49,30 @@ def test_public_shortcode_download(
         assert downloaded_files
 
 
-@requirement("post-likes-first-page-logged-in")
-def test_shortcode_post_likes_first_page_listable(
+@paged_requirement(
+    "post-likes-first-page-logged-in",
+    "post-likes-further-pages-logged-in",
+)
+def test_shortcode_post_likes_paged_listable(
+    paginate: Pager,
     shortcode_post: instaloader.Post,
 ) -> None:
-    for profile in first_page(
+    for profile in paginate(
         shortcode_post.get_likes(), f"likes of post {shortcode_post.shortcode!r}"
     ):
         assert profile.username
 
 
-@requirement("post-likes-further-pages-logged-in")
-def test_shortcode_post_likes_further_pages_listable(
-    shortcode_post: instaloader.Post,
-    max_items: int,
-) -> None:
-    for profile in further_pages(
-        shortcode_post.get_likes(),
-        max_items,
-        f"likes of post {shortcode_post.shortcode!r}",
-    ):
-        assert profile.username
-
-
-@requirement("post-comments-first-page")
-def test_shortcode_post_comments_first_page_listable(
+@paged_requirement(
+    "post-comments-first-page",
+    "post-comments-further-pages",
+)
+def test_shortcode_post_comments_paged_listable(
+    paginate: Pager,
     shortcode_post: instaloader.Post,
 ) -> None:
-    for comment in first_page(
+    for comment in paginate(
         shortcode_post.get_comments(),
-        f"comments of post {shortcode_post.shortcode!r}",
-    ):
-        assert comment.owner.username
-
-
-@requirement("post-comments-further-pages")
-def test_shortcode_post_comments_further_pages_listable(
-    shortcode_post: instaloader.Post,
-    max_items: int,
-) -> None:
-    for comment in further_pages(
-        shortcode_post.get_comments(),
-        max_items,
         f"comments of post {shortcode_post.shortcode!r}",
     ):
         assert comment.owner.username

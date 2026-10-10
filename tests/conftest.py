@@ -6,6 +6,7 @@ from typing import Any, cast
 import instaloader
 import pytest
 
+from tests.support.pagination import Pager, first_page, further_pages
 from tests.support.credentials import SessionCredentials, load_session_credentials
 from tests.support.requirements_map import (
     Authentication,
@@ -331,6 +332,13 @@ def max_items(pytestconfig: pytest.Config) -> int:
     if max_items_option <= 12:
         raise pytest.UsageError("--max-items must be greater than 12")
     return max_items_option
+
+
+@pytest.fixture()
+def paginate(page: str, max_items: int) -> Pager:
+    if page == "first":
+        return first_page
+    return lambda items, what: further_pages(items, max_items, what)
 
 
 @pytest.fixture()

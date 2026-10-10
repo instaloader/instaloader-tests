@@ -19,6 +19,7 @@ from enum import IntEnum, StrEnum
 from typing import Callable
 
 import pytest
+from _pytest.mark import ParameterSet
 
 
 class Importance(IntEnum):
@@ -318,30 +319,62 @@ def is_importance_enabled(
     return required_importance <= maximum_importance
 
 
-def requirement(
-    requirement_id: str,
-) -> Callable[[Callable[..., object]], Callable[..., object]]:
+def _variant_params(requirement_id: str, page: str | None = None) -> list[ParameterSet]:
     if requirement_id not in REQUIREMENTS:
         raise pytest.UsageError(f"Unknown requirement_id marker: {requirement_id}")
-    variants = REQUIREMENTS[requirement_id]
-    params = [
+    return [
         pytest.param(
-            variant.authentication,
+            *(
+                (variant.authentication,)
+                if page is None
+                else (variant.authentication, page)
+            ),
             marks=(
                 getattr(pytest.mark, variant.authentication.value),
                 pytest.mark.importance(variant.importance.name.lower()),
+                pytest.mark.requirement_id(requirement_id),
             ),
-            id=variant.authentication.value,
+            id=(
+                variant.authentication.value
+                if page is None
+                else f"{variant.authentication.value}-{page}"
+            ),
         )
-        for variant in variants
+        for variant in REQUIREMENTS[requirement_id]
     ]
+
+
+def requirement(
+    requirement_id: str,
+) -> Callable[[Callable[..., object]], Callable[..., object]]:
+    params = _variant_params(requirement_id)
 
     def decorator(test_function: Callable[..., object]) -> Callable[..., object]:
         marked = pytest.mark.usefixtures("active_authentication")(test_function)
         marked = pytest.mark.parametrize(
             "active_authentication", params, indirect=True
         )(marked)
-        marked = pytest.mark.requirement_id(requirement_id)(marked)
+        return pytest.mark.integration(marked)
+
+    return decorator
+
+
+def paged_requirement(
+    first_page_id: str, further_pages_id: str
+) -> Callable[[Callable[..., object]], Callable[..., object]]:
+    """Like `requirement`, but one test covers a first-page and a further-pages
+    requirement; the test receives the `paginate` fixture to select the page."""
+    params = _variant_params(first_page_id, "first") + _variant_params(
+        further_pages_id, "further"
+    )
+
+    def decorator(test_function: Callable[..., object]) -> Callable[..., object]:
+        marked = pytest.mark.usefixtures("active_authentication")(test_function)
+        marked = pytest.mark.parametrize(
+            "active_authentication, page",
+            params,
+            indirect=["active_authentication"],
+        )(marked)
         return pytest.mark.integration(marked)
 
     return decorator
