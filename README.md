@@ -159,6 +159,15 @@ Verify which copy is used with
 (with `PYTHONPATH`, prefix the command accordingly). Re-running `poetry install` may
 replace an editable install with the released package.
 
+#### Detailed error output
+
+Tracebacks are shortened by default (`--tb=line`). For full details on failures and
+setup errors, pass pytest's own options, which override the defaults:
+
+```bash
+poetry run pytest --tb=long --showlocals --log-level=DEBUG [options...]
+```
+
 #### Example commands
 
 Anonymous smoke run against the currently implemented public-profile and single-
