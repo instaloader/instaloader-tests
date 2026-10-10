@@ -5,7 +5,7 @@
 - Treat `tests/support/requirements_map.py` as the source of truth for coverage. Requirements should describe observable behavior, not implementation details.
 - Keep requirement IDs, authentication variants, importance levels, and tests aligned. Cover further-page behavior whenever a requirement calls for it; do not stop at first-page coverage.
 - State public and private profile behavior explicitly. Private-profile tests assume the logged-in account follows the target profile.
-- Keep tests focused on Instagram-facing behavior. Do not add password CLI options or local session-file round-trip checks as substitutes for integration coverage. Use the existing credential and target configuration.
+- Keep tests focused on Instagram-facing behavior. Do not add password CLI options or local session-file round-trip checks as substitutes for integration coverage. Use the existing credential and target configuration, which is provided only through pytest CLI options; do not read `INSTALOADER_*` environment variables.
 - Prefer existing fixtures and shared helpers. Avoid redundant checks when configuration already enforces an invariant, unnecessary intermediate values, and abstractions that do not simplify the tests. Search for all references after renaming.
 - Prefer the simplest solution that fully addresses the request; avoid speculative generalization and unnecessary complexity.
 - Target Python 3.14 or newer. Use modern typing without `from __future__ import annotations`; follow Black and mypy.
