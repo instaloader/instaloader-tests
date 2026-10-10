@@ -16,6 +16,11 @@ It is expected to support:
 - parametrized test targets (e.g., public/private profiles, posts with comments);
 - coverage of features regardless of how `Post` and `Profile` instances are created.
 
+## AI usage
+
+This project was developed with substantial assistance from AI coding agents
+(GitHub Copilot). All changes are reviewed by the maintainer.
+
 ## Concept
 
 This repository is intended to hold only integration tests that access Instagram.
