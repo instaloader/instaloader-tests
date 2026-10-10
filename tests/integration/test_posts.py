@@ -76,7 +76,7 @@ def test_shortcode_post_likes_further_pages_listable(
         )
 
 
-@requirement("post-comments-first-page-logged-in")
+@requirement("post-comments-first-page")
 def test_shortcode_post_comments_first_page_listable(
     shortcode_post: instaloader.Post,
 ) -> None:
@@ -88,7 +88,7 @@ def test_shortcode_post_comments_first_page_listable(
         pytest.skip(f"post {shortcode_post.shortcode!r} has no comments")
 
 
-@requirement("post-comments-further-pages-logged-in")
+@requirement("post-comments-further-pages")
 def test_shortcode_post_comments_further_pages_listable(
     shortcode_post: instaloader.Post,
     max_items: int,
@@ -101,3 +101,12 @@ def test_shortcode_post_comments_further_pages_listable(
         pytest.skip(
             f"post {shortcode_post.shortcode!r} has no comments beyond the first page"
         )
+
+
+@requirement("post-geotag-logged-in")
+def test_shortcode_post_geotag_accessible(shortcode_post: instaloader.Post) -> None:
+    location = shortcode_post.location
+    if location is None:
+        pytest.skip(f"post {shortcode_post.shortcode!r} has no geotag")
+    assert location.id
+    assert location.name

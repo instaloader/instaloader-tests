@@ -30,7 +30,7 @@ def test_hashtag_first_page_posts_download(
         post_checker(active_instaloader, post, f"#{hashtag.name}")
 
 
-@requirement("hashtag-profile-picture-logged-in")
+@requirement("hashtag-profile-picture")
 def test_hashtag_profile_picture_download(
     active_instaloader: instaloader.Instaloader,
     hashtag: instaloader.Hashtag,
