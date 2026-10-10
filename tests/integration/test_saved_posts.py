@@ -1,10 +1,8 @@
-import itertools
 from pathlib import Path
 
 import instaloader
-import pytest
-
 from tests.support.post_checkers import PostChecker
+from tests.support.pagination import first_page, further_pages
 from tests.support.requirements_map import requirement
 
 
@@ -15,7 +13,9 @@ def test_saved_posts_first_page_download(
     post_checker: PostChecker,
 ) -> None:
     profile = instaloader.Profile.own_profile(logged_in_instaloader.context)
-    for post in itertools.islice(profile.get_saved_posts(), 12):
+    for post in first_page(
+        profile.get_saved_posts(), f"saved posts of {profile.username!r}"
+    ):
         post_checker(logged_in_instaloader, post, f"{profile.username}-saved")
 
 
@@ -27,11 +27,7 @@ def test_saved_posts_further_pages_download(
     post_checker: PostChecker,
 ) -> None:
     profile = instaloader.Profile.own_profile(logged_in_instaloader.context)
-    further_posts = False
-    for post in itertools.islice(profile.get_saved_posts(), 12, max_items):
+    for post in further_pages(
+        profile.get_saved_posts(), max_items, f"saved posts of {profile.username!r}"
+    ):
         post_checker(logged_in_instaloader, post, f"{profile.username}-saved")
-        further_posts = True
-    if not further_posts:
-        pytest.skip(
-            f"configured target does not provide more than 12 items for saved posts of {profile.username!r}"
-        )

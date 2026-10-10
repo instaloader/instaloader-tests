@@ -1,10 +1,10 @@
-import itertools
 from pathlib import Path
 
 import instaloader
 import pytest
 
 from tests.support.post_checkers import PostChecker
+from tests.support.pagination import first_page, further_pages
 from tests.support.requirements_map import requirement
 from tests.support.targets import IntegrationTargets
 
@@ -26,7 +26,7 @@ def test_hashtag_first_page_posts_download(
     output_dir: Path,
     post_checker: PostChecker,
 ) -> None:
-    for post in itertools.islice(hashtag.get_posts(), 12):
+    for post in first_page(hashtag.get_posts(), f"hashtag {hashtag.name!r}"):
         post_checker(active_instaloader, post, f"#{hashtag.name}")
 
 
@@ -52,11 +52,7 @@ def test_hashtag_further_pages_posts_download(
     output_dir: Path,
     post_checker: PostChecker,
 ) -> None:
-    further_posts = False
-    for post in itertools.islice(hashtag.get_posts(), 12, max_items):
+    for post in further_pages(
+        hashtag.get_posts(), max_items, f"hashtag {hashtag.name!r}"
+    ):
         post_checker(active_instaloader, post, f"#{hashtag.name}")
-        further_posts = True
-    if not further_posts:
-        pytest.skip(
-            f"configured target does not provide more than 12 items for hashtag {hashtag.name!r}"
-        )

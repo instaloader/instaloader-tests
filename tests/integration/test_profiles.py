@@ -5,6 +5,7 @@ import instaloader
 import pytest
 
 from tests.support.post_checkers import PostChecker
+from tests.support.pagination import first_page, further_pages
 from tests.support.requirements_map import Authentication, requirement
 from tests.support.targets import IntegrationTargets
 
@@ -72,7 +73,9 @@ def test_public_profile_first_page_posts_download(
     output_dir: Path,
     post_checker: PostChecker,
 ) -> None:
-    for post in itertools.islice(public_profile.get_posts(), 12):
+    for post in first_page(
+        public_profile.get_posts(), f"profile {public_profile.username!r}"
+    ):
         post_checker(active_instaloader, post, public_profile.username)
 
 
@@ -84,15 +87,12 @@ def test_public_profile_further_pages_posts_download(
     output_dir: Path,
     post_checker: PostChecker,
 ) -> None:
-    further_posts = False
-    stop_index = max(13, max_items)
-    for post in itertools.islice(public_profile.get_posts(), 12, stop_index):
+    for post in further_pages(
+        public_profile.get_posts(),
+        max_items,
+        f"profile {public_profile.username!r}",
+    ):
         post_checker(active_instaloader, post, public_profile.username)
-        further_posts = True
-    if not further_posts:
-        pytest.skip(
-            f"configured target does not provide more than 12 items for profile {public_profile.username!r}"
-        )
 
 
 @requirement("profile-picture-private-logged-in")
@@ -111,7 +111,9 @@ def test_private_profile_first_page_posts_download(
     output_dir: Path,
     post_checker: PostChecker,
 ) -> None:
-    for post in itertools.islice(private_profile.get_posts(), 12):
+    for post in first_page(
+        private_profile.get_posts(), f"profile {private_profile.username!r}"
+    ):
         post_checker(active_instaloader, post, private_profile.username)
 
 
@@ -231,15 +233,11 @@ def test_profile_stories_first_page_download(
     )
     if not stories:
         pytest.skip(f"profile {public_profile.username!r} has no visible stories")
-    story_items_found = False
-    for story_item in itertools.islice(stories[0].get_items(), 12):
+    for story_item in first_page(
+        stories[0].get_items(), f"stories of profile {public_profile.username!r}"
+    ):
         active_instaloader.download_storyitem(
             story_item, f"{public_profile.username}-stories"
-        )
-        story_items_found = True
-    if not story_items_found:
-        pytest.skip(
-            f"profile {public_profile.username!r} stories contain no downloadable items"
         )
 
 
@@ -255,15 +253,13 @@ def test_profile_stories_further_pages_download(
     )
     if not stories:
         pytest.skip(f"profile {public_profile.username!r} has no visible stories")
-    story_items_found = False
-    for story_item in itertools.islice(stories[0].get_items(), 12, max_items):
+    for story_item in further_pages(
+        stories[0].get_items(),
+        max_items,
+        f"stories of profile {public_profile.username!r}",
+    ):
         active_instaloader.download_storyitem(
             story_item, f"{public_profile.username}-stories"
-        )
-        story_items_found = True
-    if not story_items_found:
-        pytest.skip(
-            f"profile {public_profile.username!r} stories contain no downloadable items beyond the first page"
         )
 
 
@@ -290,21 +286,15 @@ def test_profile_highlights_first_page_download(
     public_profile: instaloader.Profile,
     output_dir: Path,
 ) -> None:
-    highlights_found = False
-    for highlight in itertools.islice(
-        active_instaloader.get_highlights(public_profile), 12
+    for highlight in first_page(
+        active_instaloader.get_highlights(public_profile),
+        f"highlights of profile {public_profile.username!r}",
     ):
         first_item = next(iter(highlight.get_items()), None)
-        if first_item is None:
-            continue
-        active_instaloader.download_storyitem(
-            first_item, f"{public_profile.username}-{highlight.title}"
-        )
-        highlights_found = True
-    if not highlights_found:
-        pytest.skip(
-            f"profile {public_profile.username!r} has no downloadable highlight items"
-        )
+        if first_item is not None:
+            active_instaloader.download_storyitem(
+                first_item, f"{public_profile.username}-{highlight.title}"
+            )
 
 
 @requirement("profile-highlights-further-pages-logged-in")
@@ -314,33 +304,27 @@ def test_profile_highlights_further_pages_download(
     max_items: int,
     output_dir: Path,
 ) -> None:
-    highlights_found = False
-    for highlight in itertools.islice(
-        active_instaloader.get_highlights(public_profile), 12, max_items
+    for highlight in further_pages(
+        active_instaloader.get_highlights(public_profile),
+        max_items,
+        f"highlights of profile {public_profile.username!r}",
     ):
         first_item = next(iter(highlight.get_items()), None)
-        if first_item is None:
-            continue
-        active_instaloader.download_storyitem(
-            first_item, f"{public_profile.username}-{highlight.title}"
-        )
-        highlights_found = True
-    if not highlights_found:
-        pytest.skip(
-            f"profile {public_profile.username!r} has no downloadable highlight items beyond the first page"
-        )
+        if first_item is not None:
+            active_instaloader.download_storyitem(
+                first_item, f"{public_profile.username}-{highlight.title}"
+            )
 
 
 @requirement("profile-followers-first-page-logged-in")
 def test_profile_followers_first_page_listable(
     public_profile: instaloader.Profile,
 ) -> None:
-    followers_found = False
-    for follower in itertools.islice(public_profile.get_followers(), 12):
+    for follower in first_page(
+        public_profile.get_followers(),
+        f"followers of profile {public_profile.username!r}",
+    ):
         assert follower.username
-        followers_found = True
-    if not followers_found:
-        pytest.skip(f"profile {public_profile.username!r} has no followers to list")
 
 
 @requirement("profile-followers-further-pages-logged-in")
@@ -348,26 +332,23 @@ def test_profile_followers_further_pages_listable(
     public_profile: instaloader.Profile,
     max_items: int,
 ) -> None:
-    followers_found = False
-    for follower in itertools.islice(public_profile.get_followers(), 12, max_items):
+    for follower in further_pages(
+        public_profile.get_followers(),
+        max_items,
+        f"followers of profile {public_profile.username!r}",
+    ):
         assert follower.username
-        followers_found = True
-    if not followers_found:
-        pytest.skip(
-            f"profile {public_profile.username!r} has no followers beyond the first page"
-        )
 
 
 @requirement("profile-followees-first-page-logged-in")
 def test_profile_followees_first_page_listable(
     public_profile: instaloader.Profile,
 ) -> None:
-    followees_found = False
-    for followee in itertools.islice(public_profile.get_followees(), 12):
+    for followee in first_page(
+        public_profile.get_followees(),
+        f"followees of profile {public_profile.username!r}",
+    ):
         assert followee.username
-        followees_found = True
-    if not followees_found:
-        pytest.skip(f"profile {public_profile.username!r} has no followees to list")
 
 
 @requirement("profile-followees-further-pages-logged-in")
@@ -375,11 +356,9 @@ def test_profile_followees_further_pages_listable(
     public_profile: instaloader.Profile,
     max_items: int,
 ) -> None:
-    followees_found = False
-    for followee in itertools.islice(public_profile.get_followees(), 12, max_items):
+    for followee in further_pages(
+        public_profile.get_followees(),
+        max_items,
+        f"followees of profile {public_profile.username!r}",
+    ):
         assert followee.username
-        followees_found = True
-    if not followees_found:
-        pytest.skip(
-            f"profile {public_profile.username!r} has no followees beyond the first page"
-        )
