@@ -189,6 +189,9 @@ def pytest_runtest_makereport(
 ) -> Generator[None, None, None]:
     outcome = yield
     report = cast(Any, outcome).get_result()
+    if report.skipped and isinstance(report.longrepr, tuple):
+        path, lineno, reason = report.longrepr
+        report.longrepr = (path, lineno, f"{item.nodeid}: {reason}")
     if _report_outcome_category(report) is None:
         return
     report.user_properties.append(
