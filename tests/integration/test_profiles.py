@@ -57,7 +57,7 @@ def private_profile(
     )
 
 
-@requirement("profile-picture-anonymous")
+@requirement("profile-picture-public")
 def test_public_profile_picture_download(
     active_instaloader: instaloader.Instaloader,
     public_profile: instaloader.Profile,
@@ -66,7 +66,7 @@ def test_public_profile_picture_download(
     active_instaloader.download_profilepic(public_profile)
 
 
-@requirement("profile-posts-first-page-anonymous")
+@requirement("profile-posts-first-page-public")
 def test_public_profile_first_page_posts_download(
     active_instaloader: instaloader.Instaloader,
     public_profile: instaloader.Profile,

@@ -136,7 +136,7 @@ Note: Private-profile requirements assume that the logged-in account follows the
 | Importance                 | logged-in |
 |----------------------------|-----------|
 | First page (12 StoryItems) | high      |
-| First 50 posts             | medium    |
+| First 50 StoryItems        | medium    |
 
 Instaloader shall be able to download the Stories of a Profile (if logged-in).
 

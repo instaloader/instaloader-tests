@@ -21,7 +21,7 @@ def shortcode_post(
     return instaloader.Post.from_shortcode(active_instaloader.context, shortcode)
 
 
-@requirement("post-basic-information-anonymous")
+@requirement("post-basic-information")
 def test_public_shortcode_caption_and_date_accessible(
     active_instaloader: instaloader.Instaloader,
     shortcode_post: instaloader.Post,
@@ -34,7 +34,7 @@ def test_public_shortcode_caption_and_date_accessible(
         assert_post_basic_information(shortcode_post)
 
 
-@requirement("single-post-shortcode-anonymous")
+@requirement("single-post-shortcode")
 def test_public_shortcode_download(
     active_instaloader: instaloader.Instaloader,
     shortcode_post: instaloader.Post,
