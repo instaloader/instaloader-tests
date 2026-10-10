@@ -26,9 +26,7 @@ def test_hashtag_first_page_posts_download(
     output_dir: Path,
     post_checker: PostChecker,
 ) -> None:
-    for post in first_page(
-        hashtag.get_posts_resumable(), f"hashtag {hashtag.name!r}"
-    ):
+    for post in first_page(hashtag.get_posts_resumable(), f"hashtag {hashtag.name!r}"):
         post_checker(active_instaloader, post, f"#{hashtag.name}")
 
 
