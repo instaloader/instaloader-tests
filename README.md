@@ -4,7 +4,7 @@ Integration tests for Instaloader features that require Instagram access.
 
 This repository aims to provide mostly automated regression tests for Instaloader's
 integration behavior. The integration requirements are documented in
-`instaloader-requirements.md` and focus only on Instagram-access-related behavior.
+`tests/support/requirements_map.py` and focus only on Instagram-access-related behavior.
 
 The test suite is intended to be user-friendly, modern Python style compliant
 (typing, Black formatting), and practical without unnecessary over-engineering.
@@ -19,7 +19,7 @@ It is expected to support:
 This repository is intended to hold only integration tests that access Instagram.
 It does not aim to provide offline or purely local tests.
 
-`instaloader-requirements.md` is the source of truth for what behavior shall be
+`tests/support/requirements_map.py` is the source of truth for what behavior shall be
 covered. The test suite should be organized around those requirements and make it
 easy to see which integration behavior is already covered and which still needs a
 test.
