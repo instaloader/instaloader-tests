@@ -125,14 +125,12 @@ def test_private_profile_further_pages_posts_download(
     output_dir: Path,
     post_checker: PostChecker,
 ) -> None:
-    further_posts = False
-    for post in itertools.islice(private_profile.get_posts(), 12, max_items):
+    for post in further_pages(
+        private_profile.get_posts(),
+        max_items,
+        f"private profile {private_profile.username!r}",
+    ):
         post_checker(active_instaloader, post, private_profile.username)
-        further_posts = True
-    if not further_posts:
-        pytest.skip(
-            f"configured target does not provide more than 12 items for private profile {private_profile.username!r}"
-        )
 
 
 @requirement("profile-tagged-posts-first-page")
@@ -142,7 +140,9 @@ def test_profile_tagged_posts_first_page_download(
     output_dir: Path,
     post_checker: PostChecker,
 ) -> None:
-    for post in itertools.islice(public_profile.get_tagged_posts(), 12):
+    for post in first_page(
+        public_profile.get_tagged_posts(), f"profile {public_profile.username!r}"
+    ):
         post_checker(active_instaloader, post, f"{public_profile.username}-tagged")
 
 
@@ -154,14 +154,12 @@ def test_profile_tagged_posts_further_pages_download(
     output_dir: Path,
     post_checker: PostChecker,
 ) -> None:
-    further_posts = False
-    for post in itertools.islice(public_profile.get_tagged_posts(), 12, max_items):
+    for post in further_pages(
+        public_profile.get_tagged_posts(),
+        max_items,
+        f"tagged posts of profile {public_profile.username!r}",
+    ):
         post_checker(active_instaloader, post, f"{public_profile.username}-tagged")
-        further_posts = True
-    if not further_posts:
-        pytest.skip(
-            f"profile {public_profile.username!r} has no tagged posts beyond the first page"
-        )
 
 
 @requirement("profile-reels-first-page")
@@ -171,7 +169,9 @@ def test_profile_reels_first_page_download(
     output_dir: Path,
     post_checker: PostChecker,
 ) -> None:
-    for post in itertools.islice(public_profile.get_reels(), 12):
+    for post in first_page(
+        public_profile.get_reels(), f"profile {public_profile.username!r}"
+    ):
         post_checker(active_instaloader, post, f"{public_profile.username}-reels")
 
 
@@ -183,14 +183,12 @@ def test_profile_reels_further_pages_download(
     output_dir: Path,
     post_checker: PostChecker,
 ) -> None:
-    further_posts = False
-    for post in itertools.islice(public_profile.get_reels(), 12, max_items):
+    for post in further_pages(
+        public_profile.get_reels(),
+        max_items,
+        f"reels of profile {public_profile.username!r}",
+    ):
         post_checker(active_instaloader, post, f"{public_profile.username}-reels")
-        further_posts = True
-    if not further_posts:
-        pytest.skip(
-            f"profile {public_profile.username!r} has no reels beyond the first page"
-        )
 
 
 @requirement("profile-igtv-first-page")
@@ -200,7 +198,9 @@ def test_profile_igtv_first_page_download(
     output_dir: Path,
     post_checker: PostChecker,
 ) -> None:
-    for post in itertools.islice(public_profile.get_igtv_posts(), 12):
+    for post in first_page(
+        public_profile.get_igtv_posts(), f"profile {public_profile.username!r}"
+    ):
         post_checker(active_instaloader, post, f"{public_profile.username}-igtv")
 
 
@@ -212,14 +212,12 @@ def test_profile_igtv_further_pages_download(
     output_dir: Path,
     post_checker: PostChecker,
 ) -> None:
-    further_posts = False
-    for post in itertools.islice(public_profile.get_igtv_posts(), 12, max_items):
+    for post in further_pages(
+        public_profile.get_igtv_posts(),
+        max_items,
+        f"IGTV posts of profile {public_profile.username!r}",
+    ):
         post_checker(active_instaloader, post, f"{public_profile.username}-igtv")
-        further_posts = True
-    if not further_posts:
-        pytest.skip(
-            f"profile {public_profile.username!r} has no IGTV posts beyond the first page"
-        )
 
 
 @requirement("profile-stories-first-page-logged-in")
