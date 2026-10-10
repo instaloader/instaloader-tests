@@ -30,7 +30,7 @@ REQUIREMENTS: dict[str, list[RequirementVariant]] = {
         RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL)
     ],
     # Download Targets / Profile / Profile Picture
-    "profile-picture-anonymous": [
+    "profile-picture-public": [
         RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
         RequirementVariant(Authentication.ANONYMOUS, Importance.CRITICAL),
     ],
@@ -38,7 +38,7 @@ REQUIREMENTS: dict[str, list[RequirementVariant]] = {
         RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL)
     ],
     # Download Targets / Profile / Profile Posts
-    "profile-posts-first-page-anonymous": [
+    "profile-posts-first-page-public": [
         RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
         RequirementVariant(Authentication.ANONYMOUS, Importance.HIGH),
     ],
@@ -116,12 +116,12 @@ REQUIREMENTS: dict[str, list[RequirementVariant]] = {
         RequirementVariant(Authentication.LOGGED_IN, Importance.LOW)
     ],
     # Download Targets / Single Post (shortcode)
-    "single-post-shortcode-anonymous": [
+    "single-post-shortcode": [
         RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
         RequirementVariant(Authentication.ANONYMOUS, Importance.CRITICAL),
     ],
     # Post Metadata / Basic Information
-    "post-basic-information-anonymous": [
+    "post-basic-information": [
         RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
         RequirementVariant(Authentication.ANONYMOUS, Importance.CRITICAL),
     ],
@@ -137,7 +137,7 @@ REQUIREMENTS: dict[str, list[RequirementVariant]] = {
         RequirementVariant(Authentication.LOGGED_IN, Importance.HIGH),
     ],
     "feed-further-pages-logged-in": [
-        RequirementVariant(Authentication.LOGGED_IN, Importance.LOW),
+        RequirementVariant(Authentication.LOGGED_IN, Importance.MEDIUM),
     ],
     # Download Targets / Stories
     "stories-first-page-logged-in": [
