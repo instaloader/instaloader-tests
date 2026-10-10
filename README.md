@@ -3,8 +3,10 @@
 Integration tests for Instaloader features that require Instagram access.
 
 This repository aims to provide mostly automated regression tests for Instaloader's
-integration behavior. The integration requirements are documented in
-`tests/support/requirements_map.py` and focus only on Instagram-access-related behavior.
+integration behavior. Some behaviors, particularly interactive session creation,
+are not practical to cover with automated tests and may require manual validation.
+The integration requirements are documented in `tests/support/requirements_map.py`
+and focus only on Instagram-access-related behavior.
 
 The test suite is intended to be user-friendly, modern Python style compliant
 (typing, Black formatting), and practical without unnecessary over-engineering.
@@ -19,10 +21,11 @@ It is expected to support:
 This repository is intended to hold only integration tests that access Instagram.
 It does not aim to provide offline or purely local tests.
 
-`tests/support/requirements_map.py` is the source of truth for what behavior shall be
-covered. The test suite should be organized around those requirements and make it
-easy to see which integration behavior is already covered and which still needs a
-test.
+`tests/support/requirements_map.py` is the source of truth for the integration
+behaviors in scope; it does not imply that every behavior must have an automated
+test. The test suite maps automated coverage to those requirements, while some
+requirements may remain uncovered because they need manual validation or are not
+practical to automate.
 
 ## Relation to the Legacy Tests
 
@@ -120,8 +123,9 @@ option is configured.
 | `--max-items`               | Stop index for iterators (default 50)                    |
 
 At the end of each run, pytest lists requirements without any collected test
-in an `uncovered requirements` section, and prints a `results by criticality` summary that
-groups the observed outcomes by importance level.
+in an `uncovered requirements` section. This is coverage information, not an
+assertion that every listed requirement should be automated. Pytest also prints a
+`results by criticality` summary that groups the observed outcomes by importance level.
 
 `--post-checker=download` keeps the stronger default coverage by calling
 `download_post()` on exercised posts. `--post-checker=fast` switches to a
