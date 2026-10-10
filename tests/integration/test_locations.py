@@ -1,9 +1,8 @@
-import itertools
 from pathlib import Path
 
 import instaloader
-import pytest
 
+from tests.support.pagination import first_page, further_pages
 from tests.support.post_checkers import PostChecker
 from tests.support.requirements_map import requirement
 from tests.support.targets import IntegrationTargets
@@ -17,8 +16,8 @@ def test_location_first_page_posts_download(
     post_checker: PostChecker,
 ) -> None:
     location_id = integration_targets.require("location_id")
-    for post in itertools.islice(
-        active_instaloader.get_location_posts(location_id), 12
+    for post in first_page(
+        active_instaloader.get_location_posts(location_id), f"location {location_id!r}"
     ):
         post_checker(active_instaloader, post, f"%{location_id}")
 
@@ -32,11 +31,9 @@ def test_location_further_pages_posts_download(
     post_checker: PostChecker,
 ) -> None:
     location_id = integration_targets.require("location_id")
-    further_posts = False
-    for post in itertools.islice(
-        active_instaloader.get_location_posts(location_id), 12, max_items
+    for post in further_pages(
+        active_instaloader.get_location_posts(location_id),
+        max_items,
+        f"location {location_id!r}",
     ):
         post_checker(active_instaloader, post, f"%{location_id}")
-        further_posts = True
-    if not further_posts:
-        pytest.skip(f"location {location_id!r} has no posts beyond the first page")
