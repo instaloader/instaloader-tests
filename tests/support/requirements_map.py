@@ -49,6 +49,9 @@ REQUIREMENTS: dict[str, list[RequirementVariant]] = {
     "profile-posts-first-page-private-logged-in": [
         RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL)
     ],
+    "profile-posts-further-pages-private-logged-in": [
+        RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL)
+    ],
     "profile-stories-first-page-logged-in": [
         RequirementVariant(Authentication.LOGGED_IN, Importance.HIGH)
     ],
@@ -64,9 +67,37 @@ REQUIREMENTS: dict[str, list[RequirementVariant]] = {
     "profile-highlights-further-pages-logged-in": [
         RequirementVariant(Authentication.LOGGED_IN, Importance.MEDIUM)
     ],
+    # Download Targets / Profile / Tagged
+    "profile-tagged-posts-first-page": [
+        RequirementVariant(Authentication.LOGGED_IN, Importance.MEDIUM),
+        RequirementVariant(Authentication.ANONYMOUS, Importance.LOW),
+    ],
+    "profile-tagged-posts-further-pages": [
+        RequirementVariant(Authentication.LOGGED_IN, Importance.LOW),
+        RequirementVariant(Authentication.ANONYMOUS, Importance.VERYLOW),
+    ],
+    # Download Targets / Profile / Reels
+    "profile-reels-first-page": [
+        RequirementVariant(Authentication.LOGGED_IN, Importance.MEDIUM),
+        RequirementVariant(Authentication.ANONYMOUS, Importance.LOW),
+    ],
+    "profile-reels-further-pages": [
+        RequirementVariant(Authentication.LOGGED_IN, Importance.LOW),
+        RequirementVariant(Authentication.ANONYMOUS, Importance.VERYLOW),
+    ],
+    # Download Targets / Profile / IGTV
+    "profile-igtv-first-page": [
+        RequirementVariant(Authentication.LOGGED_IN, Importance.MEDIUM),
+        RequirementVariant(Authentication.ANONYMOUS, Importance.LOW),
+    ],
+    "profile-igtv-further-pages": [
+        RequirementVariant(Authentication.LOGGED_IN, Importance.LOW),
+        RequirementVariant(Authentication.ANONYMOUS, Importance.VERYLOW),
+    ],
     # Download Targets / Hashtags / Hashtag Profile Picture
-    "hashtag-profile-picture-logged-in": [
-        RequirementVariant(Authentication.LOGGED_IN, Importance.HIGH)
+    "hashtag-profile-picture": [
+        RequirementVariant(Authentication.LOGGED_IN, Importance.HIGH),
+        RequirementVariant(Authentication.ANONYMOUS, Importance.MEDIUM),
     ],
     # Download Targets / Hashtags / Hashtag Posts
     "hashtag-posts-first-page": [
@@ -76,6 +107,13 @@ REQUIREMENTS: dict[str, list[RequirementVariant]] = {
     "hashtag-posts-further-pages": [
         RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
         RequirementVariant(Authentication.ANONYMOUS, Importance.MEDIUM),
+    ],
+    # Download Targets / Locations
+    "location-posts-first-page-logged-in": [
+        RequirementVariant(Authentication.LOGGED_IN, Importance.MEDIUM)
+    ],
+    "location-posts-further-pages-logged-in": [
+        RequirementVariant(Authentication.LOGGED_IN, Importance.LOW)
     ],
     # Download Targets / Single Post (shortcode)
     "single-post-shortcode-anonymous": [
@@ -116,11 +154,16 @@ REQUIREMENTS: dict[str, list[RequirementVariant]] = {
         RequirementVariant(Authentication.LOGGED_IN, Importance.HIGH),
     ],
     # Post Metadata / Comments
-    "post-comments-first-page-logged-in": [
+    "post-comments-first-page": [
         RequirementVariant(Authentication.LOGGED_IN, Importance.HIGH),
+        RequirementVariant(Authentication.ANONYMOUS, Importance.MEDIUM),
     ],
-    "post-comments-further-pages-logged-in": [
+    "post-comments-further-pages": [
         RequirementVariant(Authentication.LOGGED_IN, Importance.MEDIUM),
+        RequirementVariant(Authentication.ANONYMOUS, Importance.LOW),
+    ],
+    "post-geotag-logged-in": [
+        RequirementVariant(Authentication.LOGGED_IN, Importance.LOW),
     ],
     # Profile Metadata / Followers + Followees
     "profile-followers-first-page-logged-in": [
