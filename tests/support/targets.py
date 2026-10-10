@@ -8,6 +8,7 @@ TargetKey = Literal[
     "private_profile",
     "public_shortcode",
     "hashtag",
+    "location_id",
 ]
 
 
@@ -34,6 +35,10 @@ TARGET_OPTIONS: dict[TargetKey, TargetOption] = {
         option_name="--target-hashtag",
         help_text="hashtag for hashtag tests",
     ),
+    "location_id": TargetOption(
+        option_name="--target-location-id",
+        help_text="Instagram location ID for location tests",
+    ),
 }
 
 
@@ -47,6 +52,7 @@ class IntegrationTargets:
     private_profile: str | None = None
     public_shortcode: str | None = None
     hashtag: str | None = None
+    location_id: str | None = None
 
     def require(self, target_key: TargetKey) -> str:
         return require_target(getattr(self, target_key), target_key=target_key)
@@ -58,12 +64,14 @@ def load_targets(
     private_profile: str | None,
     public_shortcode: str | None,
     hashtag: str | None,
+    location_id: str | None,
 ) -> IntegrationTargets:
     return IntegrationTargets(
         public_profile=public_profile,
         private_profile=private_profile,
         public_shortcode=public_shortcode,
         hashtag=hashtag,
+        location_id=location_id,
     )
 
 

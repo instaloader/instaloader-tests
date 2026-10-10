@@ -277,6 +277,7 @@ def integration_targets(pytestconfig: pytest.Config) -> IntegrationTargets:
             target_option("public_shortcode").option_name
         ),
         hashtag=pytestconfig.getoption(target_option("hashtag").option_name),
+        location_id=pytestconfig.getoption(target_option("location_id").option_name),
     )
 
 
