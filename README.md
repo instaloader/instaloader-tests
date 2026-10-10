@@ -119,7 +119,8 @@ option is configured.
 | `--target-location-id`      | Instagram location ID                                    |
 | `--max-items`               | Stop index for iterators (default 50)                    |
 
-At the end of each run, pytest prints a `results by criticality` summary that
+At the end of each run, pytest lists requirements without any collected test
+in an `uncovered requirements` section, and prints a `results by criticality` summary that
 groups the observed outcomes by importance level.
 
 `--post-checker=download` keeps the stronger default coverage by calling
