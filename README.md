@@ -127,6 +127,28 @@ groups the observed outcomes by importance level.
 lighter check that verifies the same caption/date access used by the single-post
 test.
 
+#### Testing a local Instaloader checkout
+
+By default the suite imports the installed `instaloader` package. To test a local
+checkout instead, make that checkout the imported copy, either by installing it
+editable into the project environment:
+
+```bash
+poetry run pip install -e /path/to/instaloader
+```
+
+or by putting it on `PYTHONPATH` (the checkout root, containing the `instaloader/`
+directory):
+
+```bash
+PYTHONPATH=/path/to/instaloader poetry run pytest [options...]
+```
+
+Verify which copy is used with
+`poetry run python -c "import instaloader; print(instaloader.__file__)"`
+(with `PYTHONPATH`, prefix the command accordingly). Re-running `poetry install` may
+replace an editable install with the released package.
+
 #### Example commands
 
 Anonymous smoke run against the currently implemented public-profile and single-
