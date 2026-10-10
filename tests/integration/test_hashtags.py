@@ -26,7 +26,7 @@ def test_hashtag_first_page_posts_download(
     output_dir: Path,
     post_checker: PostChecker,
 ) -> None:
-    for post in first_page(hashtag.get_posts(), f"hashtag {hashtag.name!r}"):
+    for post in first_page(hashtag.get_posts_resumable(), f"hashtag {hashtag.name!r}"):
         post_checker(active_instaloader, post, f"#{hashtag.name}")
 
 
@@ -53,6 +53,6 @@ def test_hashtag_further_pages_posts_download(
     post_checker: PostChecker,
 ) -> None:
     for post in further_pages(
-        hashtag.get_posts(), max_items, f"hashtag {hashtag.name!r}"
+        hashtag.get_posts_resumable(), max_items, f"hashtag {hashtag.name!r}"
     ):
         post_checker(active_instaloader, post, f"#{hashtag.name}")
