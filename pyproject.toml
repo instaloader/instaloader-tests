@@ -41,7 +41,7 @@ testpaths = ["tests"]
 markers = [
   "integration: test requires live Instagram access",
   "importance(level): run only when the configured maximum importance includes this level",
-  "requirement_id(id): trace a test to an entry in instaloader-requirements.md",
+  "requirement_id(id): trace a test to an requirement in tests/support/requirements_map.py",
   "anonymous: test covers anonymous Instagram access",
   "logged_in: test covers logged-in Instagram access",
 ]

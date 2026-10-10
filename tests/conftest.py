@@ -202,8 +202,44 @@ def pytest_runtest_makereport(
     )
 
 
+def pytest_collection_finish(session: pytest.Session) -> None:
+    covered = {
+        marker.args[0]
+        for item in session.items
+        for marker in item.iter_markers("requirement_id")
+    }
+    setattr(
+        session.config,
+        "_instaloader_uncovered_requirements",
+        [
+            requirement_id
+            for requirement_id in REQUIREMENTS
+            if requirement_id not in covered
+        ],
+    )
+
+
+def _report_uncovered_requirements(terminalreporter: Any) -> None:
+    uncovered: list[str] = getattr(
+        terminalreporter.config, "_instaloader_uncovered_requirements", []
+    )
+    if not uncovered:
+        return
+    terminalreporter.section("uncovered requirements", yellow=True)
+    terminalreporter.write_line(
+        f"{len(uncovered)} of {len(REQUIREMENTS)} requirements have no collected test:"
+    )
+    for requirement_id in uncovered:
+        importance = min(variant.importance for variant in REQUIREMENTS[requirement_id])
+        terminalreporter.write_line(
+            f"  {requirement_id} (highest importance: {importance.name.lower()})",
+            yellow=True,
+        )
+
+
 @pytest.hookimpl()
 def pytest_terminal_summary(terminalreporter: Any) -> None:
+    _report_uncovered_requirements(terminalreporter)
     grouped_counts: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
     seen_reports: set[int] = set()
     test_outcomes: dict[str, tuple[str, str]] = {}
