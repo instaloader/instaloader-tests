@@ -37,10 +37,6 @@ TARGET_OPTIONS: dict[TargetKey, TargetOption] = {
 }
 
 
-def target_option(target_key: TargetKey) -> TargetOption:
-    return TARGET_OPTIONS[target_key]
-
-
 @dataclass(frozen=True)
 class IntegrationTargets:
     public_profile: str | None = None
@@ -52,22 +48,7 @@ class IntegrationTargets:
         return require_target(getattr(self, target_key), target_key=target_key)
 
 
-def load_targets(
-    *,
-    public_profile: str | None,
-    private_profile: str | None,
-    public_shortcode: str | None,
-    hashtag: str | None,
-) -> IntegrationTargets:
-    return IntegrationTargets(
-        public_profile=public_profile,
-        private_profile=private_profile,
-        public_shortcode=public_shortcode,
-        hashtag=hashtag,
-    )
-
-
 def require_target(value: str | None, *, target_key: TargetKey) -> str:
     if value:
         return value
-    pytest.skip(f"configure {target_option(target_key).option_name}")
+    pytest.skip(f"configure {TARGET_OPTIONS[target_key].option_name}")

@@ -17,13 +17,10 @@ from tests.support.post_checkers import (
     POST_CHECKERS,
     PostChecker,
     PostCheckerName,
-    load_post_checker,
 )
 from tests.support.targets import (
     IntegrationTargets,
     TARGET_OPTIONS,
-    load_targets,
-    target_option,
 )
 
 pytest_plugins: list[str] = []
@@ -266,17 +263,11 @@ def pytest_terminal_summary(terminalreporter: Any) -> None:
 
 @pytest.fixture(scope="session")
 def integration_targets(pytestconfig: pytest.Config) -> IntegrationTargets:
-    return load_targets(
-        public_profile=pytestconfig.getoption(
-            target_option("public_profile").option_name
-        ),
-        private_profile=pytestconfig.getoption(
-            target_option("private_profile").option_name
-        ),
-        public_shortcode=pytestconfig.getoption(
-            target_option("public_shortcode").option_name
-        ),
-        hashtag=pytestconfig.getoption(target_option("hashtag").option_name),
+    return IntegrationTargets(
+        **{
+            key: pytestconfig.getoption(option.option_name)
+            for key, option in TARGET_OPTIONS.items()
+        }
     )
 
 
@@ -350,4 +341,4 @@ def post_checker_name(pytestconfig: pytest.Config) -> PostCheckerName:
 
 @pytest.fixture(scope="session")
 def post_checker(post_checker_name: PostCheckerName) -> PostChecker:
-    return load_post_checker(post_checker_name)
+    return POST_CHECKERS[post_checker_name]
