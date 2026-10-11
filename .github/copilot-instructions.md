@@ -8,5 +8,5 @@
 - Keep tests focused on Instagram-facing behavior. Do not add password CLI options or local session-file round-trip checks as substitutes for integration coverage. Use the existing credential and target configuration, which is provided only through pytest CLI options; do not read `INSTALOADER_*` environment variables.
 - Prefer existing fixtures and shared helpers. Avoid redundant checks when configuration already enforces an invariant, unnecessary intermediate values, and abstractions that do not simplify the tests. Search for all references after renaming.
 - Prefer the simplest solution that fully addresses the request; avoid speculative generalization and unnecessary complexity.
-- Target Python 3.14 or newer. Use modern typing without `from __future__ import annotations`; follow Black and mypy.
+- Target Python 3.13 or newer. Use modern typing without `from __future__ import annotations`; follow Black and mypy.
 - Validate changes with the existing project checks and `pytest --collect-only`. Do not run live tests without explicit configuration.
