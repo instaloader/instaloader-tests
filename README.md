@@ -111,6 +111,10 @@ For example, logged-in tests are skipped unless `--username` is set, and
 target-specific tests are skipped unless their corresponding `--target-*`
 option is configured.
 
+The short test summary lists skipped tests individually, with the test file,
+test name (including its authentication variant), and skip reason, matching the
+format used for failures rather than grouping skips by their source location.
+
 #### Invocation reference
 
 | Option                      | Accepted values / default                                |
