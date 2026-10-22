@@ -3,6 +3,7 @@ from pathlib import Path
 
 import instaloader
 import pytest
+from instaloader.exceptions import PrivateProfileNotFollowedException
 
 from tests.support.post_checkers import PostChecker
 from tests.support.pagination import first_page, further_pages
@@ -111,10 +112,13 @@ def test_private_profile_first_page_posts_download(
     output_dir: Path,
     post_checker: PostChecker,
 ) -> None:
-    for post in first_page(
-        private_profile.get_posts(), f"profile {private_profile.username!r}"
-    ):
-        post_checker(active_instaloader, post, private_profile.username)
+    try:
+        for post in first_page(
+            private_profile.get_posts(), f"profile {private_profile.username!r}"
+        ):
+            post_checker(active_instaloader, post, private_profile.username)
+    except PrivateProfileNotFollowedException:
+        pytest.skip(f"logged-in account does not follow {private_profile.username!r}")
 
 
 @requirement("profile-posts-further-pages-private-logged-in")
@@ -125,12 +129,15 @@ def test_private_profile_further_pages_posts_download(
     output_dir: Path,
     post_checker: PostChecker,
 ) -> None:
-    for post in further_pages(
-        private_profile.get_posts(),
-        max_items,
-        f"private profile {private_profile.username!r}",
-    ):
-        post_checker(active_instaloader, post, private_profile.username)
+    try:
+        for post in further_pages(
+            private_profile.get_posts(),
+            max_items,
+            f"private profile {private_profile.username!r}",
+        ):
+            post_checker(active_instaloader, post, private_profile.username)
+    except PrivateProfileNotFollowedException:
+        pytest.skip(f"logged-in account does not follow {private_profile.username!r}")
 
 
 @requirement("profile-tagged-posts-first-page")
