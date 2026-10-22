@@ -117,8 +117,8 @@ def test_private_profile_first_page_posts_download(
             private_profile.get_posts(), f"profile {private_profile.username!r}"
         ):
             post_checker(active_instaloader, post, private_profile.username)
-    except PrivateProfileNotFollowedException:
-        pytest.skip(f"logged-in account does not follow {private_profile.username!r}")
+    except PrivateProfileNotFollowedException as error:
+        pytest.skip(str(error))
 
 
 @requirement("profile-posts-further-pages-private-logged-in")
@@ -136,8 +136,8 @@ def test_private_profile_further_pages_posts_download(
             f"private profile {private_profile.username!r}",
         ):
             post_checker(active_instaloader, post, private_profile.username)
-    except PrivateProfileNotFollowedException:
-        pytest.skip(f"logged-in account does not follow {private_profile.username!r}")
+    except PrivateProfileNotFollowedException as error:
+        pytest.skip(str(error))
 
 
 @requirement("profile-tagged-posts-first-page")
