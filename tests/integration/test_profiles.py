@@ -75,7 +75,9 @@ def test_public_profile_first_page_posts_download(
     post_checker: PostChecker,
 ) -> None:
     for post in first_page(
-        public_profile.get_posts(), f"profile {public_profile.username!r}"
+        public_profile.get_posts(),
+        f"profile {public_profile.username!r}",
+        expected_count=public_profile.mediacount,
     ):
         post_checker(active_instaloader, post, public_profile.username)
 
@@ -92,6 +94,7 @@ def test_public_profile_further_pages_posts_download(
         public_profile.get_posts(),
         max_items,
         f"profile {public_profile.username!r}",
+        expected_count=public_profile.mediacount,
     ):
         post_checker(active_instaloader, post, public_profile.username)
 
@@ -114,7 +117,9 @@ def test_private_profile_first_page_posts_download(
 ) -> None:
     try:
         for post in first_page(
-            private_profile.get_posts(), f"profile {private_profile.username!r}"
+            private_profile.get_posts(),
+            f"profile {private_profile.username!r}",
+            expected_count=private_profile.mediacount,
         ):
             post_checker(active_instaloader, post, private_profile.username)
     except PrivateProfileNotFollowedException as error:
@@ -134,6 +139,7 @@ def test_private_profile_further_pages_posts_download(
             private_profile.get_posts(),
             max_items,
             f"private profile {private_profile.username!r}",
+            expected_count=private_profile.mediacount,
         ):
             post_checker(active_instaloader, post, private_profile.username)
     except PrivateProfileNotFollowedException as error:
@@ -206,7 +212,9 @@ def test_profile_igtv_first_page_download(
     post_checker: PostChecker,
 ) -> None:
     for post in first_page(
-        public_profile.get_igtv_posts(), f"profile {public_profile.username!r}"
+        public_profile.get_igtv_posts(),
+        f"profile {public_profile.username!r}",
+        expected_count=public_profile.igtvcount,
     ):
         post_checker(active_instaloader, post, f"{public_profile.username}-igtv")
 
@@ -223,6 +231,7 @@ def test_profile_igtv_further_pages_download(
         public_profile.get_igtv_posts(),
         max_items,
         f"IGTV posts of profile {public_profile.username!r}",
+        expected_count=public_profile.igtvcount,
     ):
         post_checker(active_instaloader, post, f"{public_profile.username}-igtv")
 
@@ -239,7 +248,9 @@ def test_profile_stories_first_page_download(
     if not stories:
         pytest.skip(f"profile {public_profile.username!r} has no visible stories")
     for story_item in first_page(
-        stories[0].get_items(), f"stories of profile {public_profile.username!r}"
+        stories[0].get_items(),
+        f"stories of profile {public_profile.username!r}",
+        expected_count=stories[0].itemcount,
     ):
         active_instaloader.download_storyitem(
             story_item, f"{public_profile.username}-stories"
@@ -262,6 +273,7 @@ def test_profile_stories_further_pages_download(
         stories[0].get_items(),
         max_items,
         f"stories of profile {public_profile.username!r}",
+        expected_count=stories[0].itemcount,
     ):
         active_instaloader.download_storyitem(
             story_item, f"{public_profile.username}-stories"
@@ -328,6 +340,7 @@ def test_profile_followers_first_page_listable(
     for follower in first_page(
         public_profile.get_followers(),
         f"followers of profile {public_profile.username!r}",
+        expected_count=public_profile.followers,
     ):
         assert follower.username
 
@@ -341,6 +354,7 @@ def test_profile_followers_further_pages_listable(
         public_profile.get_followers(),
         max_items,
         f"followers of profile {public_profile.username!r}",
+        expected_count=public_profile.followers,
     ):
         assert follower.username
 
@@ -352,6 +366,7 @@ def test_profile_followees_first_page_listable(
     for followee in first_page(
         public_profile.get_followees(),
         f"followees of profile {public_profile.username!r}",
+        expected_count=public_profile.followees,
     ):
         assert followee.username
 
@@ -365,5 +380,6 @@ def test_profile_followees_further_pages_listable(
         public_profile.get_followees(),
         max_items,
         f"followees of profile {public_profile.username!r}",
+        expected_count=public_profile.followees,
     ):
         assert followee.username

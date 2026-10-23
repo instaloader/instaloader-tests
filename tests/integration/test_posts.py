@@ -54,7 +54,9 @@ def test_shortcode_post_likes_first_page_listable(
     shortcode_post: instaloader.Post,
 ) -> None:
     for profile in first_page(
-        shortcode_post.get_likes(), f"likes of post {shortcode_post.shortcode!r}"
+        shortcode_post.get_likes(),
+        f"likes of post {shortcode_post.shortcode!r}",
+        expected_count=shortcode_post.likes,
     ):
         assert profile.username
 
@@ -68,6 +70,7 @@ def test_shortcode_post_likes_further_pages_listable(
         shortcode_post.get_likes(),
         max_items,
         f"likes of post {shortcode_post.shortcode!r}",
+        expected_count=shortcode_post.likes,
     ):
         assert profile.username
 
@@ -79,6 +82,7 @@ def test_shortcode_post_comments_first_page_listable(
     for comment in first_page(
         shortcode_post.get_comments(),
         f"comments of post {shortcode_post.shortcode!r}",
+        expected_count=shortcode_post.comments,
     ):
         assert comment.owner.username
 
@@ -92,6 +96,8 @@ def test_shortcode_post_comments_further_pages_listable(
         shortcode_post.get_comments(),
         max_items,
         f"comments of post {shortcode_post.shortcode!r}",
+        # The comment count includes replies, not just the top-level items yielded.
+        expected_count=min(shortcode_post.comments, 1),
     ):
         assert comment.owner.username
 
