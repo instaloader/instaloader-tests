@@ -69,6 +69,17 @@ def public_profile_from_id(
     )
 
 
+@pytest.fixture()
+def private_profile_from_id(
+    active_instaloader: instaloader.Instaloader,
+    private_profile: instaloader.Profile,
+) -> instaloader.Profile:
+    active_instaloader.context.profile_id_cache.pop(private_profile.userid, None)
+    return instaloader.Profile.from_id(
+        active_instaloader.context, private_profile.userid
+    )
+
+
 @requirement("profile-from-id-public")
 def test_public_profile_from_id(
     public_profile: instaloader.Profile,
@@ -80,15 +91,11 @@ def test_public_profile_from_id(
 
 @requirement("profile-from-id-private-logged-in")
 def test_private_profile_from_id(
-    active_instaloader: instaloader.Instaloader,
     private_profile: instaloader.Profile,
+    private_profile_from_id: instaloader.Profile,
 ) -> None:
-    active_instaloader.context.profile_id_cache.pop(private_profile.userid, None)
-    resolved_profile = instaloader.Profile.from_id(
-        active_instaloader.context, private_profile.userid
-    )
-    assert resolved_profile.userid == private_profile.userid
-    assert resolved_profile.username == private_profile.username
+    assert private_profile_from_id.userid == private_profile.userid
+    assert private_profile_from_id.username == private_profile.username
 
 
 @requirement("profile-picture-public")
@@ -113,6 +120,70 @@ def test_public_profile_from_id_first_page_posts_download(
         expected_count=public_profile_from_id.mediacount,
     ):
         post_checker(active_instaloader, post, public_profile_from_id.username)
+
+
+@requirement("profile-posts-further-pages")
+def test_public_profile_from_id_further_pages_posts_download(
+    active_instaloader: instaloader.Instaloader,
+    public_profile_from_id: instaloader.Profile,
+    max_items: int,
+    output_dir: Path,
+    post_checker: PostChecker,
+) -> None:
+    for post in further_pages(
+        public_profile_from_id.get_posts(),
+        max_items,
+        f"profile {public_profile_from_id.username!r}",
+        expected_count=public_profile_from_id.mediacount,
+    ):
+        post_checker(active_instaloader, post, public_profile_from_id.username)
+
+
+@requirement("profile-picture-private-logged-in")
+def test_private_profile_from_id_picture_download(
+    active_instaloader: instaloader.Instaloader,
+    private_profile_from_id: instaloader.Profile,
+    output_dir: Path,
+) -> None:
+    active_instaloader.download_profilepic(private_profile_from_id)
+
+
+@requirement("profile-posts-first-page-private-logged-in")
+def test_private_profile_from_id_first_page_posts_download(
+    active_instaloader: instaloader.Instaloader,
+    private_profile_from_id: instaloader.Profile,
+    output_dir: Path,
+    post_checker: PostChecker,
+) -> None:
+    try:
+        for post in first_page(
+            private_profile_from_id.get_posts(),
+            f"profile {private_profile_from_id.username!r}",
+            expected_count=private_profile_from_id.mediacount,
+        ):
+            post_checker(active_instaloader, post, private_profile_from_id.username)
+    except PrivateProfileNotFollowedException as error:
+        pytest.skip(str(error))
+
+
+@requirement("profile-posts-further-pages-private-logged-in")
+def test_private_profile_from_id_further_pages_posts_download(
+    active_instaloader: instaloader.Instaloader,
+    private_profile_from_id: instaloader.Profile,
+    max_items: int,
+    output_dir: Path,
+    post_checker: PostChecker,
+) -> None:
+    try:
+        for post in further_pages(
+            private_profile_from_id.get_posts(),
+            max_items,
+            f"profile {private_profile_from_id.username!r}",
+            expected_count=private_profile_from_id.mediacount,
+        ):
+            post_checker(active_instaloader, post, private_profile_from_id.username)
+    except PrivateProfileNotFollowedException as error:
+        pytest.skip(str(error))
 
 
 @requirement("profile-picture-public")
