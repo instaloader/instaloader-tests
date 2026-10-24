@@ -276,6 +276,18 @@ REQUIREMENTS: dict[str, list[RequirementVariant]] = {
     "post-geotag-logged-in": [
         RequirementVariant(Authentication.LOGGED_IN, Importance.LOW),
     ],
+    # Profile Metadata / Resolve Public Profile by ID
+    # Instaloader shall be able to resolve a public Profile from its ID.
+    "profile-from-id-public": [
+        RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
+        RequirementVariant(Authentication.ANONYMOUS, Importance.HIGH),
+    ],
+    # Profile Metadata / Resolve Private Profile by ID
+    # Instaloader shall be able to resolve a private Profile from its ID (if
+    # logged-in).
+    "profile-from-id-private-logged-in": [
+        RequirementVariant(Authentication.LOGGED_IN, Importance.CRITICAL),
+    ],
     # Profile Metadata / Followers
     # Instaloader shall be able to list the followers of a Profile (if logged-
     # in). (first page)
