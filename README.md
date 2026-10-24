@@ -111,14 +111,6 @@ For example, logged-in tests are skipped unless `--username` is set, and
 target-specific tests are skipped unless their corresponding `--target-*`
 option is configured.
 
-Profile-by-ID tests use the existing public/private profile targets to obtain
-their IDs, then check that `Profile.from_id()` resolves the expected profile and
-its current username without a cached ID lookup. This covers the ID-resolution
-behavior needed to detect profile name changes and rename target directories.
-Logged-in public and private lookups have critical importance; anonymous public
-lookups have high importance. Private-profile tests assume that the logged-in
-account follows the target profile.
-
 Empty paging results are skipped only when no reported count indicates missing
 items. Paging checks use the iterator's count when available, or an explicit count
 from the profile, post, or story. If a first-page iterator is empty despite a
