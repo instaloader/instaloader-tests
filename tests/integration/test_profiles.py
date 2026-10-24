@@ -58,6 +58,32 @@ def private_profile(
     )
 
 
+@requirement("profile-from-id-public")
+def test_public_profile_from_id(
+    active_instaloader: instaloader.Instaloader,
+    public_profile: instaloader.Profile,
+) -> None:
+    active_instaloader.context.profile_id_cache.pop(public_profile.userid, None)
+    resolved_profile = instaloader.Profile.from_id(
+        active_instaloader.context, public_profile.userid
+    )
+    assert resolved_profile.userid == public_profile.userid
+    assert resolved_profile.username == public_profile.username
+
+
+@requirement("profile-from-id-private-logged-in")
+def test_private_profile_from_id(
+    active_instaloader: instaloader.Instaloader,
+    private_profile: instaloader.Profile,
+) -> None:
+    active_instaloader.context.profile_id_cache.pop(private_profile.userid, None)
+    resolved_profile = instaloader.Profile.from_id(
+        active_instaloader.context, private_profile.userid
+    )
+    assert resolved_profile.userid == private_profile.userid
+    assert resolved_profile.username == private_profile.username
+
+
 @requirement("profile-picture-public")
 def test_public_profile_picture_download(
     active_instaloader: instaloader.Instaloader,
