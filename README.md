@@ -111,6 +111,15 @@ For example, logged-in tests are skipped unless `--username` is set, and
 target-specific tests are skipped unless their corresponding `--target-*`
 option is configured.
 
+Empty paging results are skipped only when no reported count indicates missing
+items. Paging checks use the iterator's count when available, or an explicit count
+from the profile, post, or story. If a first-page iterator is empty despite a
+positive count, or a further-pages iterator stops before the reported count
+without yielding any items beyond the first 12, the test fails instead of skipping.
+Comment counts include replies, so further-page comment checks use them only to
+detect a completely empty iterator, not to require more top-level comments.
+When no count is available, empty results continue to skip.
+
 The short test summary lists skipped tests individually, with the test file,
 test name (including its authentication variant), and skip reason, matching the
 format used for failures rather than grouping skips by their source location.
