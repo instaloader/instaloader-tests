@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import cast
 
 import instaloader
 import pytest
@@ -10,15 +11,19 @@ from tests.support.post_checkers import (
 )
 from tests.support.pagination import first_page, further_pages
 from tests.support.requirements_map import requirement
+from tests.support.targets import IntegrationTargets
 
 
 @pytest.fixture()
 def shortcode_post(
     active_instaloader: instaloader.Instaloader,
-    integration_targets,
+    integration_targets: IntegrationTargets,
 ) -> instaloader.Post:
     shortcode = integration_targets.require("public_shortcode")
-    return instaloader.Post.from_shortcode(active_instaloader.context, shortcode)
+    return cast(
+        instaloader.Post,
+        instaloader.Post.from_shortcode(active_instaloader.context, shortcode),
+    )
 
 
 @requirement("post-basic-information")

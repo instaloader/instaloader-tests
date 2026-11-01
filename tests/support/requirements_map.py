@@ -16,7 +16,7 @@ items) and a further-pages requirement (the first 50 items).
 
 from dataclasses import dataclass
 from enum import IntEnum, StrEnum
-from typing import Callable
+from typing import Callable, cast
 
 import pytest
 
@@ -354,6 +354,6 @@ def requirement(
             "active_authentication", params, indirect=True
         )(marked)
         marked = pytest.mark.requirement_id(requirement_id)(marked)
-        return pytest.mark.integration(marked)
+        return cast(Callable[..., object], pytest.mark.integration(marked))
 
     return decorator

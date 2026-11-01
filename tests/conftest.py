@@ -365,7 +365,7 @@ def logged_in_instaloader(
 
 @pytest.fixture()
 def active_authentication(request: pytest.FixtureRequest) -> Authentication:
-    return request.param
+    return cast(Authentication, request.param)
 
 
 @pytest.fixture()
@@ -374,15 +374,19 @@ def active_instaloader(
     active_authentication: Authentication,
 ) -> instaloader.Instaloader:
     if active_authentication is Authentication.ANONYMOUS:
-        return request.getfixturevalue("anonymous_instaloader")
+        return cast(
+            instaloader.Instaloader, request.getfixturevalue("anonymous_instaloader")
+        )
     if active_authentication is Authentication.LOGGED_IN:
-        return request.getfixturevalue("logged_in_instaloader")
+        return cast(
+            instaloader.Instaloader, request.getfixturevalue("logged_in_instaloader")
+        )
     raise pytest.UsageError(f"Unknown authentication variant: {active_authentication}")
 
 
 @pytest.fixture(scope="session")
 def post_checker_name(pytestconfig: pytest.Config) -> PostCheckerName:
-    return pytestconfig.getoption("--post-checker")
+    return cast(PostCheckerName, pytestconfig.getoption("--post-checker"))
 
 
 @pytest.fixture(scope="session")

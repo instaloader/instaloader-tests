@@ -1,5 +1,6 @@
 import itertools
 from pathlib import Path
+from typing import cast
 
 import instaloader
 import pytest
@@ -64,8 +65,9 @@ def public_profile_from_id(
     public_profile: instaloader.Profile,
 ) -> instaloader.Profile:
     active_instaloader.context.profile_id_cache.pop(public_profile.userid, None)
-    return instaloader.Profile.from_id(
-        active_instaloader.context, public_profile.userid
+    return cast(
+        instaloader.Profile,
+        instaloader.Profile.from_id(active_instaloader.context, public_profile.userid),
     )
 
 
@@ -75,8 +77,9 @@ def private_profile_from_id(
     private_profile: instaloader.Profile,
 ) -> instaloader.Profile:
     active_instaloader.context.profile_id_cache.pop(private_profile.userid, None)
-    return instaloader.Profile.from_id(
-        active_instaloader.context, private_profile.userid
+    return cast(
+        instaloader.Profile,
+        instaloader.Profile.from_id(active_instaloader.context, private_profile.userid),
     )
 
 

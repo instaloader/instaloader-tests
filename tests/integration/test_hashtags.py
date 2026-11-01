@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import cast
 
 import instaloader
 import pytest
@@ -14,8 +15,11 @@ def hashtag(
     active_instaloader: instaloader.Instaloader,
     integration_targets: IntegrationTargets,
 ) -> instaloader.Hashtag:
-    return instaloader.Hashtag.from_name(
-        active_instaloader.context, integration_targets.require("hashtag")
+    return cast(
+        instaloader.Hashtag,
+        instaloader.Hashtag.from_name(
+            active_instaloader.context, integration_targets.require("hashtag")
+        ),
     )
 
 

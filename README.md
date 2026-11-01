@@ -65,7 +65,7 @@ example by keeping those tests behind explicit markers or explicit local-only
 commands that CI never enables.
 
 The current GitHub Actions workflow therefore installs the project, runs Black
-and mypy, and performs pytest collection only.
+and mypy in strict mode, and performs pytest collection only.
 
 ## Integration Test Execution
 
