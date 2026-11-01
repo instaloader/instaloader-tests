@@ -106,10 +106,11 @@ The suite is driven entirely through pytest CLI options:
 poetry run pytest [pytest selection options...] [instaloader test options...]
 ```
 
-Tests that need data you did not provide are skipped with a short explanation.
-For example, logged-in tests are skipped unless `--username` is set, and
-target-specific tests are skipped unless their corresponding `--target-*`
-option is configured.
+Tests excluded by `--max-importance` or `--authentication` are deselected during
+collection, so they do not appear as skipped tests. Tests that need data you did
+not provide are still skipped with a short explanation. For example, logged-in
+tests are skipped unless `--username` is set, and target-specific tests are
+skipped unless their corresponding `--target-*` option is configured.
 
 Empty paging results are skipped only when no reported count indicates missing
 items. Paging checks use the iterator's count when available, or an explicit count

@@ -143,6 +143,17 @@ def pytest_collection_modifyitems(
     requested_authentication = (
         None if authentication_scope == "all" else Authentication(authentication_scope)
     )
+    setattr(
+        config,
+        "_instaloader_collected_requirement_ids",
+        {
+            marker.args[0]
+            for item in items
+            for marker in item.iter_markers("requirement_id")
+        },
+    )
+    selected_items: list[pytest.Item] = []
+    deselected_items: list[pytest.Item] = []
     for item_index, item in enumerate(items):
         setattr(item, "_instaloader_summary_key", f"{item_index}:{item.nodeid}")
         requirement_marker = item.get_closest_marker("requirement_id")
@@ -157,30 +168,26 @@ def pytest_collection_modifyitems(
         if importance_marker and not is_importance_enabled(
             max_importance, _importance_label(item)
         ):
-            item.add_marker(
-                pytest.mark.skip(
-                    reason=f"requires --max-importance >= {_importance_label(item)}"
-                )
-            )
+            deselected_items.append(item)
+            continue
 
         authentication_label = _authentication_label(item)
         if (
             requested_authentication is not None
             and authentication_label != requested_authentication
         ):
-            if authentication_label is None:
-                reason = (
-                    "missing authentication marker; skipped because "
-                    f"--authentication={authentication_scope} was requested"
-                )
-            else:
-                reason = f"requires --authentication={authentication_label.value}"
-            item.add_marker(pytest.mark.skip(reason=reason))
+            deselected_items.append(item)
+            continue
         if (
             authentication_label
             and f"[{authentication_label.value}]" not in item.nodeid
         ):
             item._nodeid = f"{item.nodeid}[{authentication_label.value}]"
+        selected_items.append(item)
+
+    items[:] = selected_items
+    if deselected_items:
+        config.hook.pytest_deselected(items=deselected_items)
 
 
 @pytest.hookimpl(hookwrapper=True)
@@ -203,11 +210,9 @@ def pytest_runtest_makereport(
 
 
 def pytest_collection_finish(session: pytest.Session) -> None:
-    covered = {
-        marker.args[0]
-        for item in session.items
-        for marker in item.iter_markers("requirement_id")
-    }
+    covered: set[str] = getattr(
+        session.config, "_instaloader_collected_requirement_ids", set()
+    )
     setattr(
         session.config,
         "_instaloader_uncovered_requirements",
