@@ -182,7 +182,7 @@ def pytest_collection_modifyitems(
             authentication_label
             and f"[{authentication_label.value}]" not in item.nodeid
         ):
-            item._nodeid = f"{item.nodeid}[{authentication_label.value}]"
+            setattr(item, "_nodeid", f"{item.nodeid}[{authentication_label.value}]")
         selected_items.append(item)
 
     items[:] = selected_items
