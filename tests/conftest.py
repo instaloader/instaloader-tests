@@ -178,11 +178,6 @@ def pytest_collection_modifyitems(
         ):
             deselected_items.append(item)
             continue
-        if (
-            authentication_label
-            and f"[{authentication_label.value}]" not in item.nodeid
-        ):
-            setattr(item, "_nodeid", f"{item.nodeid}[{authentication_label.value}]")
         selected_items.append(item)
 
     items[:] = selected_items
