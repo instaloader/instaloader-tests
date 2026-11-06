@@ -5,12 +5,8 @@ updates:
     schedule:
       interval: monthly
     versioning-strategy: increase-if-necessary
-    cooldown:
-      default-days: 7
 
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
       interval: monthly
-    cooldown:
-      default-days: 7
